@@ -6,7 +6,7 @@ import { useGlobalContext } from "../contexts/GlobalContext";
 const Home = () => {
   const [currentList, setCurrentList] = useState("top_rated");
 
-  const {movieLists, tvLists, mediaType,lang} = useGlobalContext();
+  const {movieLists, tvLists, mediaType, lang} = useGlobalContext();
 
   const list = mediaType === 'movie' ? movieLists : tvLists;
 
@@ -24,7 +24,7 @@ const Home = () => {
       <div className="genres-list-container"></div>
       }
 
-      
+
 
     </section>
   );

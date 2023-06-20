@@ -1,10 +1,11 @@
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
-const ContentTypeLinks = () => {
- const {mediaType,setMediaType} = useGlobalContext()
+const MediaTypeLinks = () => {
+
+ const {mediaType,setMediaType} = useGlobalContext();
 
  return (
-        <div className="content-type-links">
+        <div className="media-type-links">
 
         <a href="#" 
         className={mediaType === 'movie' ? 'active' : ''} 
@@ -24,4 +25,4 @@ const ContentTypeLinks = () => {
  )
 }
 
-export default ContentTypeLinks;
+export default MediaTypeLinks;

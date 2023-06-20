@@ -3,28 +3,20 @@ import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
-const GenresList = ({active}) => {
-  const {mediaType,lang} = useGlobalContext();
+const GenresList = () => {
+  const {mediaType,lang, getGenresList} = useGlobalContext();
 
   const [genresList, setGenresList] = useState([]);
   const [genresListWidth, setGenresListWidth] = useState(0);
   const [activeGenre, setActiveGenre] = useState(99);
 
-
   const control = useAnimation();
   const genresListContainerRef = useRef(null);
 
-  const fetchGenres = async () => {
-    const response = await fetch(
-      `https://api.themoviedb.org/3/genre/${mediaType}/list?api_key=582f9e2d6f3a1dc803b350bf76f168f2&language=${lang}`
-    );
-    const data = await response.json();
-    setGenresList(data.genres);
-  };
-
   useEffect(() => {
-    fetchGenres();
-  }, [mediaType,,lang]);
+    getGenresList()
+    .then(genres => setGenresList(genres))
+  }, [mediaType,lang, getGenresList]);
 
   useLayoutEffect(() => {
     if(genresListContainerRef.current.querySelectorAll('[data-genre]').length !==0){
@@ -59,7 +51,7 @@ const GenresList = ({active}) => {
         opacity: 0,
       }}
     >
-      
+
       <motion.ul
         ref={genresListContainerRef}
         drag="x"

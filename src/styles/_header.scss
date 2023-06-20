@@ -37,7 +37,7 @@
    
   }
 
-  .content-type-links {
+  .media-type-links {
     flex: 4 40%;
     display: flex;
     justify-content: center;
@@ -72,7 +72,6 @@
     flex: 3 30%;
     display: flex;
     justify-content: center;
-    // margin-left: 1rem;
 
     .search-box-form {
         position: relative;
@@ -160,7 +159,7 @@
       min-width: 50%;
     }
 
-    .content-type-links {
+    .media-type-links {
       order: 3;
       flex: 10 100%;
       min-width: 100%;

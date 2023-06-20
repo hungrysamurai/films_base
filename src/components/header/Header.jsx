@@ -1,10 +1,11 @@
 import Logo from "./Logo";
-import ContentTypeLinks from "./ContentTypeLinks";
+import MediaTypeLinks from "./MediaTypeLinks";
 import SearchBox from "./SearchBox";
 import HeaderIconsContainer from "./HeaderIconsContainer";
 import Title from "./Title";
 
 import { useLocation } from "react-router-dom";
+
 
 const Header = () => {
 
@@ -14,7 +15,7 @@ const {pathname} = useLocation();
     <header className="header-container">
       <Logo />
 
-      {pathname === '/' ? <ContentTypeLinks/> : <Title />}
+      {pathname === '/' ? <MediaTypeLinks/> : <Title />}
   
       <SearchBox/>
       <HeaderIconsContainer/>

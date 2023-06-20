@@ -1,4 +1,5 @@
 import { useState, useContext, createContext, useEffect } from "react";
+import { useFetch } from "../hooks/useFetch";
 
 import { getTheme } from "../utils/getTheme";
 
@@ -10,10 +11,15 @@ const AppContext = createContext();
 const AppProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => getTheme());
   const [lang, setLang] = useState('ru');
-
-  // API params
   const [mediaType,setMediaType] = useState('movie');
 
+  const {fetchGenresList} = useFetch();
+
+  const getGenresList = () => {
+    return fetchGenresList(mediaType,lang);
+  }
+
+  // Set color theme
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   },[theme])
@@ -26,7 +32,8 @@ const AppProvider = ({ children }) => {
     mediaType,
     setMediaType,
     movieLists, 
-    tvLists
+    tvLists,
+    getGenresList
   }}>{children}</AppContext.Provider>;
 };
 
