@@ -2,6 +2,7 @@
 @import "./fonts";
 
 @import "./header";
+@import './home';
 
 * {
   margin: 0;
@@ -20,14 +21,12 @@ body {
 h1 {
   font-family: Palatino-bold;
   font-size: 3.75rem;
-  font-weight: normal;
   line-height: 4rem;
 }
 
 h2 {
   font-family: Palatino-regular;
   font-size: 2.5rem;
-  font-weight: normal;
   line-height: 3rem;
 }
 
@@ -45,8 +44,20 @@ p {
   line-height: 1.25rem;
 }
 
+header,
+section {
+  max-width: 75rem;
+  width: 95vw;
+  margin: 0 auto;
+}
+
+section{
+  overflow-x: hidden;
+}
+
 .page-wrapper {
   width: 100%;
+  margin: 0 auto;
   min-height: 100vh;
   position: relative;
   .bg-noise-container {
@@ -63,77 +74,36 @@ p {
   }
 }
 
-header,
-section {
-  max-width: 75rem;
-  margin: 0 auto;
-}
 
-.section-home {
-  .lists-container {
-    width: 100%;
-    height: 3.125rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
-    ul {
-      list-style: none;
-      display: flex;
-      gap: 1.25rem;
-
-      li {
-        cursor: pointer;
-        font-size: 1rem;
-        font-weight: 900;
-        color: var(--primary-color);
-
-        &.active {
-          color: var(--accent-color);
-        }
-      }
+@media only screen and (max-width: 990px){
+  header,section {
+      max-width: 95vw;
     }
-  }
 
-  .genres-list-container {
-    width: 100%;
-    height: 3.125rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow-x: hidden;
-    mask-image: linear-gradient(
-      270deg,
-      rgba(0, 0, 0, 0) 0%,
-      #ffffff 39.58%,
-      #ffffff 50.52%,
-      #ffffff 62.5%,
-      rgba(0, 0, 0, 0) 100%
-    );
-    -webkit-mask-image: linear-gradient(
-      270deg,
-      rgba(0, 0, 0, 0) 0%,
-      #ffffff 39.58%,
-      #ffffff 50.52%,
-      #ffffff 62.5%,
-      rgba(0, 0, 0, 0) 100%
-    );
-    ul {
-      list-style: none;
-      display: flex;
-      gap: 0.75rem;
-
-      li {
-        cursor: pointer;
-        font-size: 1rem;
-        font-weight: 900;
-        color: var(--primary-color);
-        white-space: nowrap;
-
-        &.active {
-          color: var(--accent-color);
+        h1 {
+          font-family: Palatino-bold;
+          font-size: 3rem;
+          line-height: 3rem;
         }
-      }
-    }
-  }
+    
+        h2 {
+          font-family: Palatino-regular;
+          font-size: 1.75rem;
+          line-height: 2rem;
+        }
+    
+        h3 {
+          font-family: "Montserrat";
+          font-weight: 700;
+          font-size: 1.25rem;
+          line-height: 1.5rem;
+        }
+    
+        p {
+          font-family: "Montserrat";
+          font-weight: 500;
+          font-size: 1rem;
+          line-height: 1.25rem;
+        }
 }

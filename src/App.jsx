@@ -9,6 +9,7 @@ function App() {
       <Routes>
         <Route path="/" element={<PageWrapper />}>
           <Route index element={<Home />} />
+          <Route path='/ad' element={<div>route</div>} />
         </Route>
       </Routes>
     </BrowserRouter>
