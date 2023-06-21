@@ -3,7 +3,7 @@ import axios from "axios";
 
 
  const apiBase = 'https://api.themoviedb.org/3';
- const apiKey = 'api_key=582f9e2d6f3a1dc803b350bf76f168f2';
+ const apiKey = import.meta.env.VITE_TMDB_API_KEY;
 
 export const useFetch = () => {
     const [loading, setLoading] = useState(false);

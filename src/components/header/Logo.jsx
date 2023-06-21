@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
+import { useGlobalContext } from "../../contexts/GlobalContext";
 
 const Logo = () => {
+  const {baseName} = useGlobalContext();
+
   return (
     <div className="logo-container">
-      <Link to='/'>
+      <Link to={baseName}>
       <img src="./assets/images/logo.svg" alt="FilmsBase" />
       <h3>
         FILMS<span className="logo-accent">BASE</span>

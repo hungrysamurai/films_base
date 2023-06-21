@@ -1,31 +1,27 @@
-import { useState } from "react";
+import { movieLists, tvLists } from "../data/Lists";
 import GenresList from "../components/home/GenresList";
 import ListsContainer from "../components/home/ListsContainer";
+import MoviesList from "../components/moviesList/MoviesList";
 import { useGlobalContext } from "../contexts/GlobalContext";
+import { Link } from "react-router-dom";
+
 
 const Home = () => {
-  const [currentList, setCurrentList] = useState("top_rated");
-
-  const {movieLists, tvLists, mediaType, lang} = useGlobalContext();
+  const { filterList,setFilterList, mediaType, lang, baseName} = useGlobalContext();
 
   const list = mediaType === 'movie' ? movieLists : tvLists;
 
   const setList = (list) => {
-    setCurrentList(list);
+    setFilterList(list);
   };
 
   return (
     <section className="section-home">
-
-      <ListsContainer currentList={currentList} setList={setList} list={list[lang]}/>
-
-      {currentList === "genres" ? 
-      <GenresList  /> : 
-      <div className="genres-list-container"></div>
-      }
-
-
-
+      <ListsContainer currentList={filterList} setList={setList} list={list[lang]}/>
+     <GenresList  /> 
+     <MoviesList/>
+     {/* <Link to={`${baseName}test`}>test</Link> */}
+    
     </section>
   );
 };

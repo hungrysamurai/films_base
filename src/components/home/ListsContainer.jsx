@@ -1,5 +1,4 @@
 const ListsContainer = ({ currentList, setList, list }) => {
-  
   return (
     <div className="lists-container">
       <ul>

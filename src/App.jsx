@@ -1,18 +1,22 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useGlobalContext } from "./contexts/GlobalContext";
 
 import PageWrapper from "./components/PageWrapper";
 import Home from "./pages/Home";
 
+
 function App() {
+  const {baseName} = useGlobalContext();
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<PageWrapper />}>
-          <Route index element={<Home />} />
-          <Route path='/ad' element={<div>route</div>} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+  <BrowserRouter>
+    <Routes>
+      <Route path={baseName} element={<PageWrapper />}>
+        <Route index element={<Home />} />
+        <Route path="test" element={<div>test route</div>} />
+        <Route path="*" element={<div>some error</div>}/>
+      </Route>
+    </Routes>
+  </BrowserRouter>
   );
 }
 
