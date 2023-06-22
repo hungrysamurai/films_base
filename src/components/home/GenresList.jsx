@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useLayoutEffect, useCallback } from "react";
+import { useState, useEffect, useRef, useLayoutEffect} from "react";
 
 import { motion, useAnimation } from "framer-motion";
 import { useGlobalContext } from "../../contexts/GlobalContext";
@@ -14,15 +14,11 @@ const GenresList = () => {
   const genresListContainerRef = useRef(null);
   const firstGenreListEl = useRef(null);
 
-
   useEffect(() => {
     getGenresList()
     .then(genres => {
       setGenresList(genres); 
     })
-    // .catch(err => {
-    //     console.log(genresFetchError);
-    // })
   }, [getGenresList]);
 
   useLayoutEffect(() => {
@@ -58,7 +54,6 @@ const GenresList = () => {
       </div>
     )
   }
-
 
   return (
     <div className="genres-list-container" >
