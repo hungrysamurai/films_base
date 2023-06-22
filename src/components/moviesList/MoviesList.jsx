@@ -1,28 +1,41 @@
-import SingleMovie from "./SingleMovie"
+import SingleMovie from "./SingleMovie";
 
-const MoviesList = () =>{
- return (
-  <div className="movies-list-container">
+import { useGlobalContext } from "../../contexts/GlobalContext";
+import { useEffect, useState } from "react";
 
-  <SingleMovie 
-  title={'Властелин Колец: Возвращение Короля'}
-  poster={'./assets/images/poster.jpg'}/>
-  <SingleMovie 
-  title={'Властелин Колец: Возвращение Короля'}
-  poster={'./assets/images/poster.jpg'}/>
-  <SingleMovie 
-  title={'Властелин Колец: Возвращение Короля'}
-  poster={'./assets/images/poster.jpg'}/>
-  <SingleMovie 
-  title={'Властелин Колец: Возвращение Короля'}
-  poster={'./assets/images/poster.jpg'}/>
-  <SingleMovie 
-  title={'Властелин Колец: Возвращение Короля'}
-  poster={'./assets/images/poster.jpg'}/>
+const MoviesList = () => {
+  const { moviesFetchedList, currentMoviesListPage, setCurrentMoviesListPage } =
+    useGlobalContext();
 
-  </div>
+  const [moviesList, setMoviesList] = useState([]);
 
- )
-}
+  useEffect(() => {
+    if (currentMoviesListPage === 1) {
+      setMoviesList(moviesFetchedList);
+    } else {
+      setMoviesList((oldList) => [...oldList, ...moviesFetchedList]);
+    }
+  }, [moviesFetchedList]);
 
-export default MoviesList
+  return (
+    <div className="movies-list-container">
+      {moviesList.map(({ posterUrl, title, id }) => {
+        if (title.length > 35) {
+          title = title.slice(0, 35) + "...";
+        }
+
+        return <SingleMovie key={id} poster={posterUrl} title={title} />;
+      })}
+
+      <button
+        onClick={() => {
+          setCurrentMoviesListPage((prevPage) => prevPage + 1);
+        }}
+      >
+        Increase!
+      </button>
+    </div>
+  );
+};
+
+export default MoviesList;

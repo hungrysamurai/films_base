@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef, useLayoutEffect} from "react";
+import { useState, useEffect, useRef, useLayoutEffect, useCallback} from "react";
 
 import { motion, useAnimation } from "framer-motion";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
 const GenresList = () => {
-  const { getGenresList, filterGenre, setFilterGenre, genresFetchError} = useGlobalContext();
+  const { genresFetchLoading, genresFetchError, genresFetchedList, filterGenre, setFilterGenre } = useGlobalContext();
 
   const [genresList, setGenresList] = useState([]);
   const [genresListWidth, setGenresListWidth] = useState(0);
@@ -15,18 +15,15 @@ const GenresList = () => {
   const firstGenreListEl = useRef(null);
 
   useEffect(() => {
-    getGenresList()
-    .then(genres => {
-      setGenresList(genres); 
-    })
-  }, [getGenresList]);
+    setGenresList(genresFetchedList)
+  }, [genresFetchedList]);
 
   useLayoutEffect(() => {
     if(genresListContainerRef.current) {
         setGenresListWidth(() => {
           return genresListContainerRef.current.offsetWidth
     });
-    }
+  }
   
     if(firstGenreListEl.current){
     control.start({
@@ -46,6 +43,15 @@ const GenresList = () => {
     
   };
 
+
+
+  if(genresFetchLoading){
+    return <div className="genres-list-container" >
+      <h3>
+        Loading...
+      </h3>
+      </div>
+  }
 
   if (genresFetchError.show){
     return (

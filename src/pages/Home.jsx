@@ -20,7 +20,7 @@ const Home = () => {
       <ListsContainer currentList={filterList} setList={setList} list={list[lang]}/>
      <GenresList  /> 
      <MoviesList/>
-     {/* <Link to={`${baseName}test`}>test</Link> */}
+     <Link to={`${baseName}test`}>test</Link>
     
     </section>
   );
