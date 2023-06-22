@@ -61,6 +61,14 @@
     }
    }
   }
+
+  .error-message{
+    font-size: 1.25rem;
+    text-align: center;
+    span{
+      color: var(--accent-color)
+    }
+  }
  }
 }
 
@@ -77,7 +85,7 @@
    flex-wrap: wrap;
    align-items: center;
    justify-content: center;
-   row-gap: 0.25rem;
+   row-gap: 0.5rem;
 
    li {
     cursor: pointer;

@@ -6,12 +6,16 @@ import axios from "axios";
  const apiKey = import.meta.env.VITE_TMDB_API_KEY;
 
 export const useFetch = () => {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [genresFetchLoading, setGenresFetchLoading] = useState(false);
+    const [genresFetchError, setGenresFetchError] = useState(
+  { show: false, 
+    msg: '',
+  }
+ );
     const [data, setData] = useState(null);
 
     
-  const fetchData = useCallback(async (url) => {
+  const fetchMoviesList = useCallback(async (url) => {
 
       setLoading(true);
 
@@ -35,13 +39,27 @@ export const useFetch = () => {
 
     const fetchGenresList = useCallback(async (mediaType,lang) => {
 
+
+      try {
+
     const {data} = await axios(
       `${apiBase}/genre/${mediaType}/list?${apiKey}&language=${lang}`
     );
 
     return data.genres;
+
+      } catch (err) {
+
+         setGenresFetchError({
+          show: true,
+          message: err.message,
+        });
+
+        throw new Error(err.message);
+      }
+
   },[]);
 
 
-    return {loading, error, data,fetchGenresList}
+    return {genresFetchLoading, genresFetchError,fetchGenresList}
 }

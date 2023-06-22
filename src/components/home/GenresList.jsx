@@ -4,7 +4,7 @@ import { motion, useAnimation } from "framer-motion";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
 const GenresList = () => {
-  const { getGenresList, filterGenre, setFilterGenre} = useGlobalContext();
+  const { getGenresList, filterGenre, setFilterGenre, genresFetchError} = useGlobalContext();
 
   const [genresList, setGenresList] = useState([]);
   const [genresListWidth, setGenresListWidth] = useState(0);
@@ -19,7 +19,10 @@ const GenresList = () => {
     getGenresList()
     .then(genres => {
       setGenresList(genres); 
-    });
+    })
+    // .catch(err => {
+    //     console.log(genresFetchError);
+    // })
   }, [getGenresList]);
 
   useLayoutEffect(() => {
@@ -46,6 +49,16 @@ const GenresList = () => {
     });
     
   };
+
+
+  if (genresFetchError.show){
+    return (
+        <div className="genres-list-container" >
+        <h3 className="error-message">Ошибка при загрузке списка жанров: <span>{genresFetchError.message}</span></h3>
+      </div>
+    )
+  }
+
 
   return (
     <div className="genres-list-container" >

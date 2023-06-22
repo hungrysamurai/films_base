@@ -1,4 +1,4 @@
-import { movieLists, tvLists } from "../data/Lists";
+import { movieLists, tvLists } from "../data/lists";
 import GenresList from "../components/home/GenresList";
 import ListsContainer from "../components/home/ListsContainer";
 import MoviesList from "../components/moviesList/MoviesList";

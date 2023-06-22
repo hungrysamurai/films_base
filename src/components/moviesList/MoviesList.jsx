@@ -7,6 +7,18 @@ const MoviesList = () =>{
   <SingleMovie 
   title={'Властелин Колец: Возвращение Короля'}
   poster={'./assets/images/poster.jpg'}/>
+  <SingleMovie 
+  title={'Властелин Колец: Возвращение Короля'}
+  poster={'./assets/images/poster.jpg'}/>
+  <SingleMovie 
+  title={'Властелин Колец: Возвращение Короля'}
+  poster={'./assets/images/poster.jpg'}/>
+  <SingleMovie 
+  title={'Властелин Колец: Возвращение Короля'}
+  poster={'./assets/images/poster.jpg'}/>
+  <SingleMovie 
+  title={'Властелин Колец: Возвращение Короля'}
+  poster={'./assets/images/poster.jpg'}/>
 
   </div>
 
