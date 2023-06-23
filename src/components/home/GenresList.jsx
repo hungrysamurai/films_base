@@ -4,7 +4,7 @@ import { motion, useAnimation } from "framer-motion";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
 const GenresList = () => {
-  const { genresFetchLoading, genresFetchError, genresFetchedList, filterGenre, setFilterGenre } = useGlobalContext();
+  const { genresFetchLoading, genresFetchError, genresFetchedList, filterGenre, dispatch } = useGlobalContext();
 
   const [genresList, setGenresList] = useState([]);
   const [genresListWidth, setGenresListWidth] = useState(0);
@@ -35,8 +35,8 @@ const GenresList = () => {
 
 
   const setAndAnimateActiveGenre = (el, id) => {
-    setFilterGenre(`${id}`);
-
+    dispatch({type: 'SET_FILTER_GENRE', payload: `${id}`})
+   
     control.start({
       x: genresListWidth / 2 - el.offsetLeft - el.offsetWidth,
     });

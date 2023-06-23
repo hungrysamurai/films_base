@@ -1,7 +1,7 @@
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
 const HeaderIconsContainer = () => {
-  const {theme,setTheme, lang, setLang} = useGlobalContext();
+  const {theme,setTheme, lang, dispatch} = useGlobalContext();
 
   const toggleTheme = () => {
     if (theme === 'dark') {
@@ -15,9 +15,9 @@ const HeaderIconsContainer = () => {
 
   const toggleLang = () => {
    if(lang === 'ru'){
-    setLang('en')
+    dispatch({type: 'SET_LANG', payload: 'en'})
    } else {
-    setLang('ru')
+    dispatch({type: 'SET_LANG', payload: 'ru'})
    }
   }
 

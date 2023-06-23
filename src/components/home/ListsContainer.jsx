@@ -4,7 +4,7 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 
 const ListsContainer = () => {
 
-  const {mediaType,filterList, setFilterList, lang} =  useGlobalContext();
+  const {mediaType,filterList, lang, dispatch} =  useGlobalContext();
 
   const list = mediaType === 'movie' ? movieLists[lang]: tvLists[lang];
 
@@ -18,7 +18,7 @@ const ListsContainer = () => {
       
           return (
             <li key={i}
-              onClick={() => setFilterList(dataValue)}
+              onClick={() => dispatch({type: 'SET_FILTER_LIST', payload: dataValue})}
               className={filterList === dataValue ? "active" : ""}
         >
           {title}

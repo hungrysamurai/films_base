@@ -5,7 +5,6 @@ import HeaderIconsContainer from "./HeaderIconsContainer";
 import Title from "./Title";
 
 import { useGlobalContext } from "../../contexts/GlobalContext";
-
 import { useLocation } from "react-router-dom";
 
 

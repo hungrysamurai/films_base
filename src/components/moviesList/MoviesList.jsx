@@ -1,54 +1,63 @@
 import SingleMovie from "./SingleMovie";
+import Loader from "../Loader";
+
 
 import { useGlobalContext } from "../../contexts/GlobalContext";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 
 const MoviesList = () => {
-  const { moviesFetchedList, currentMoviesListPage, setCurrentMoviesListPage, moviesFetchLoading, newMovies } =
+  const { moviesFetchLoading, moviesFetchError, dispatch, moviesList, lastPage } =
     useGlobalContext();
 
-  const [moviesList, setMoviesList] = useState([]);
+  const [currentList, setCurrentList] = useState([]);
+  const [newMovies, setNewMovies] = useState(false);
 
   useLayoutEffect(() => {
-    if (currentMoviesListPage === 1) {
-      setMoviesList(() => {
-        return moviesFetchedList;
-      });
+  setCurrentList(moviesList);
+  }, [moviesList]);
+
+  // get next portion of movies
+  useEffect(() => {
+
+    if(lastPage){
+      console.log('this is the end');
     } else {
-      setMoviesList((oldList) => {
-        return [...oldList, ...moviesFetchedList]
-      });
+      dispatch({type: 'INCREASE_PAGE'});
     }
-  }, [moviesFetchedList]);
 
+},[newMovies, dispatch, lastPage])
 
-  // if(moviesFetchLoading){
-  //   return (
-  //     <h3>Loading...</h3>
-  //   )
-  // }
+// scroll trigger
+ const event = () => {
+    if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 200) {
+      console.log('reach');
+      setNewMovies((prev) => !prev);
+    }
+  }
+
+  // scroll event listener
+ useEffect(() => {
+    window.addEventListener('scroll', event);
+    return () => window.removeEventListener('scroll', event)
+  }, [])
+
   return (
+    <>
     <div className="movies-list-container">
-      {moviesList.map(({ posterUrl, title, id }) => {
+      {currentList.map(({ posterUrl, title, id }) => {
         if (title.length > 35) {
           title = title.slice(0, 35) + "...";
         }
 
         return <SingleMovie key={id} poster={posterUrl} title={title} />;
       })}
-      {moviesFetchLoading ? <h3>Loading...</h3> : null}
-      <button
-        onClick={() => {
-          if(newMovies){
-            setCurrentMoviesListPage((prevPage) => prevPage + 1);
-          } else {
-            console.log('this is the end');
-          }
-        }}
-      >
-        Increase!
-      </button>
+      
+      
     </div>
+
+    {moviesFetchLoading && <Loader/> }
+    
+    </>
   );
 };
 
