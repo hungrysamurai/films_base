@@ -1,4 +1,4 @@
-import { movieLists, tvLists } from "../data/lists";
+
 import GenresList from "../components/home/GenresList";
 import ListsContainer from "../components/home/ListsContainer";
 import MoviesList from "../components/moviesList/MoviesList";
@@ -7,17 +7,11 @@ import { Link } from "react-router-dom";
 
 
 const Home = () => {
-  const { filterList,setFilterList, mediaType, lang, baseName} = useGlobalContext();
-
-  const list = mediaType === 'movie' ? movieLists : tvLists;
-
-  const setList = (list) => {
-    setFilterList(list);
-  };
+  const { baseName} = useGlobalContext();
 
   return (
     <section className="section-home">
-      <ListsContainer currentList={filterList} setList={setList} list={list[lang]}/>
+      <ListsContainer/>
      <GenresList  /> 
      <MoviesList/>
      <Link to={`${baseName}test`}>test</Link>

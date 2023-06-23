@@ -1,22 +1,32 @@
 import SingleMovie from "./SingleMovie";
 
 import { useGlobalContext } from "../../contexts/GlobalContext";
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 
 const MoviesList = () => {
-  const { moviesFetchedList, currentMoviesListPage, setCurrentMoviesListPage } =
+  const { moviesFetchedList, currentMoviesListPage, setCurrentMoviesListPage, moviesFetchLoading, newMovies } =
     useGlobalContext();
 
   const [moviesList, setMoviesList] = useState([]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (currentMoviesListPage === 1) {
-      setMoviesList(moviesFetchedList);
+      setMoviesList(() => {
+        return moviesFetchedList;
+      });
     } else {
-      setMoviesList((oldList) => [...oldList, ...moviesFetchedList]);
+      setMoviesList((oldList) => {
+        return [...oldList, ...moviesFetchedList]
+      });
     }
   }, [moviesFetchedList]);
 
+
+  // if(moviesFetchLoading){
+  //   return (
+  //     <h3>Loading...</h3>
+  //   )
+  // }
   return (
     <div className="movies-list-container">
       {moviesList.map(({ posterUrl, title, id }) => {
@@ -26,10 +36,14 @@ const MoviesList = () => {
 
         return <SingleMovie key={id} poster={posterUrl} title={title} />;
       })}
-
+      {moviesFetchLoading ? <h3>Loading...</h3> : null}
       <button
         onClick={() => {
-          setCurrentMoviesListPage((prevPage) => prevPage + 1);
+          if(newMovies){
+            setCurrentMoviesListPage((prevPage) => prevPage + 1);
+          } else {
+            console.log('this is the end');
+          }
         }}
       >
         Increase!

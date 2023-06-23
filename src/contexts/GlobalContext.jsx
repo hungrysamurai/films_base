@@ -20,10 +20,10 @@ const AppProvider = ({ children }) => {
 
   // API Params
   const [lang, setLang] = useState("ru");
-  const [currentMoviesListPage, setCurrentMoviesListPage] = useState(1);
+  // const [currentMoviesListPage, setCurrentMoviesListPage] = useState(1);
   // & Filters
   const [mediaType, setMediaType] = useState("movie");
-  const [filterList, setFilterList] = useState("top_rated");
+  const [filterList, setFilterList] = useState("popular");
   const [filterGenre, setFilterGenre] = useState("all");
 
   const {
@@ -36,27 +36,50 @@ const AppProvider = ({ children }) => {
     isLoading: moviesFetchLoading,
     error: moviesFetchError,
     data: moviesFetchedList,
+    pageIndex: currentMoviesListPage,
+    setPageIndex: setCurrentMoviesListPage,
+    newMovies
   } = useFetchMoviesList(
     mediaType,
     lang,
     filterList,
-    filterGenre,
-    currentMoviesListPage
+    filterGenre
   );
 
-  const resetGenresAndFilters = useCallback(() => {
-    setFilterGenre("all");
-    setFilterList("top_rated");
-  }, []);
-
   // When change lang or media type
-  useEffect(() => {
-    resetGenresAndFilters();
-  }, [lang, mediaType, resetGenresAndFilters]);
+  // useEffect(() => {
+  //     console.log('media or lang changes:');
+  //     setFilterGenre(() => 'all');
+  //     setFilterList(() => "popular");
+  //     setCurrentMoviesListPage(() => 1);
+  //     console.log(filterGenre, filterList);
+  // }, [mediaType, lang])
 
   useEffect(() => {
-    setCurrentMoviesListPage(1);
-  }, [lang, mediaType, filterGenre, filterList]);
+    console.log('first useEffect');
+    setFilterGenre(() => 'all');
+    setCurrentMoviesListPage(() => 1);
+    
+    setFilterList(() => "popular");
+  }, [lang,setCurrentMoviesListPage]);
+
+  useEffect(() => {
+    console.log('second useEffect');
+    setFilterGenre(() => 'all');
+    setCurrentMoviesListPage(() => 1);
+    
+    setFilterList(() => "popular");
+  }, [mediaType,setCurrentMoviesListPage]);
+
+  useEffect(() => {
+    console.log('third useEffect');
+    setCurrentMoviesListPage(() => 1);
+  }, [filterList,setCurrentMoviesListPage])
+
+useEffect(() => {
+  console.log('fourth useEffect');
+    setCurrentMoviesListPage(() => 1);
+},[filterGenre, setCurrentMoviesListPage])
 
   // Set color theme
   useEffect(() => {
@@ -81,8 +104,11 @@ const AppProvider = ({ children }) => {
         genresFetchError,
         genresFetchedList,
         moviesFetchedList,
+        moviesFetchError,
+        moviesFetchLoading,
         currentMoviesListPage,
         setCurrentMoviesListPage,
+        newMovies
       }}
     >
       {children}
@@ -90,8 +116,8 @@ const AppProvider = ({ children }) => {
   );
 };
 
-export const useGlobalContext = () => {
+const useGlobalContext = () => {
   return useContext(AppContext);
 };
 
-export { AppProvider };
+export { AppProvider,useGlobalContext };

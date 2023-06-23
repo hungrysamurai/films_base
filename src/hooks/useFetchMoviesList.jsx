@@ -9,21 +9,38 @@ export const useFetchMoviesList = (
   mediaType,
   lang,
   filterList,
-  filterGenre,
-  currentPage
+  filterGenre
 ) => {
+
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState({ show: false, msg: "" });
+  const [pageIndex, setPageIndex] = useState(1);
+  const [newMovies, setNewMovies] = useState(true);
 
   const fetchMoviesList = useCallback(
     async (mediaType, lang, filterList, filterGenre, currentPage) => {
-      setIsLoading(true);
+      setIsLoading();
       try {
+        console.log(`fetched ${apiBase}/${mediaType}/${filterList}?${apiKey}&page=${currentPage}&language=${lang}&with_genres=${filterGenre}`);
         const response = await axios(
           `${apiBase}/${mediaType}/${filterList}?${apiKey}&page=${currentPage}&language=${lang}&with_genres=${filterGenre}`
         );
-        console.log(currentPage);
+        
+        // Check if there more movies 
+        if(response.data.total_pages === currentPage){
+        setNewMovies(false);
+        return;
+        } else {
+          setNewMovies(true);
+        }
+
+
+        if(response.data.total_results === 0){
+          console.log('here');
+            throw new Error('no resulte')
+        }
+
         const output = [];
 
         response.data.results.forEach((item) => {
@@ -37,10 +54,12 @@ export const useFetchMoviesList = (
 
           output.push(outputObj);
         });
-        console.log("fetched some movies");
+    
         setData(output);
         setIsLoading(false);
+
       } catch (err) {
+        console.log(err.message);
         setError({
           show: true,
           message: err.message,
@@ -53,8 +72,10 @@ export const useFetchMoviesList = (
   );
 
   useEffect(() => {
-    fetchMoviesList(mediaType, lang, filterList, filterGenre, currentPage);
-  }, [mediaType, lang, filterList, filterGenre, fetchMoviesList, currentPage]);
+    console.log(mediaType, lang, filterList, filterGenre, pageIndex);
+    fetchMoviesList(mediaType, lang, filterList, filterGenre, pageIndex);
+    
+  }, [mediaType, lang, filterList, filterGenre, pageIndex, fetchMoviesList]);
 
-  return { isLoading, error, data };
+  return { isLoading, error, data, pageIndex, setPageIndex, newMovies };
 };

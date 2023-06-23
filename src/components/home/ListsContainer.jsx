@@ -1,4 +1,13 @@
-const ListsContainer = ({ currentList, setList, list }) => {
+import { movieLists, tvLists } from "../../data/lists";
+
+import { useGlobalContext } from "../../contexts/GlobalContext";
+
+const ListsContainer = () => {
+
+  const {mediaType,filterList, setFilterList, lang} =  useGlobalContext();
+
+  const list = mediaType === 'movie' ? movieLists[lang]: tvLists[lang];
+
   return (
     <div className="lists-container">
       <ul>
@@ -9,8 +18,8 @@ const ListsContainer = ({ currentList, setList, list }) => {
       
           return (
             <li key={i}
-              onClick={() => setList(dataValue)}
-              className={currentList === dataValue ? "active" : ""}
+              onClick={() => setFilterList(dataValue)}
+              className={filterList === dataValue ? "active" : ""}
         >
           {title}
         </li>
