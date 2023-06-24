@@ -6,6 +6,7 @@ const moviesListInitialState = {
   page: 1,
   lastPage: false,
   moviesList: [],
+  uniqueIds: [],
 };
 
 const moviesListReducer = (state, action) => {
@@ -46,13 +47,26 @@ const moviesListReducer = (state, action) => {
     case "INITIAL_LOAD_MOVIES":
       return {
         ...state,
-        moviesList: [...action.payload],
+        moviesList: [...action.payload[0]],
+        uniqueIds: [...action.payload[1]],
       };
-    case "APPEND_MOVIES":
+    case "APPEND_MOVIES": {
+      const ids = [];
+      const filtered = action.payload[0].filter((movie) => {
+        if (state.uniqueIds.includes(movie.id)) {
+          return false;
+        } else {
+          ids.push(movie.id);
+          return true;
+        }
+      });
+
       return {
         ...state,
-        moviesList: [...state.moviesList, ...action.payload],
+        moviesList: [...state.moviesList, ...filtered],
+        uniqueIds: [...state.uniqueIds, ...ids],
       };
+    }
     case "SET_LAST_PAGE":
       return {
         ...state,
