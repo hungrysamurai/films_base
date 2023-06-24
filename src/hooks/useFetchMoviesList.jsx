@@ -15,6 +15,7 @@ export const useFetchMoviesList = (
 ) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState({ show: false, message: "" });
+  const [loadedItemsIds, setLoadedItemsIds] = useState([]);
 
   const fetchMoviesList = useCallback(
     async (mediaType, lang, filterList, filterGenre, currentPage) => {
@@ -55,9 +56,15 @@ export const useFetchMoviesList = (
             id: item.id,
           };
 
+          if (currentPage === 1) {
+            setLoadedItemsIds((arr) => {
+              return [...arr, item.id];
+            });
+          }
+
           output.push(outputObj);
         });
-
+        console.log(loadedItemsIds);
         if (currentPage === 1) {
           dispatch({ type: "INITIAL_LOAD_MOVIES", payload: output });
         } else {
