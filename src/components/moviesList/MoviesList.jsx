@@ -1,62 +1,83 @@
 import SingleMovie from "./SingleMovie";
 import Loader from "../Loader";
+import ErrorMessage from "../ErrorMessage";
 
+import { motion, AnimatePresence } from "framer-motion";
 
 import { useGlobalContext } from "../../contexts/GlobalContext";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState, useRef } from "react";
 
 const MoviesList = () => {
-  const { moviesFetchLoading, moviesFetchError, dispatch, moviesList, lastPage } =
-    useGlobalContext();
+  const {
+    moviesFetchLoading,
+    moviesFetchError,
+    dispatch,
+    moviesList,
+    lastPage,
+  } = useGlobalContext();
 
   const [currentList, setCurrentList] = useState([]);
   const [newMovies, setNewMovies] = useState(false);
 
+  const mounted = useRef(false);
+
   useLayoutEffect(() => {
-  setCurrentList(moviesList);
+    setCurrentList(moviesList);
   }, [moviesList]);
 
   // get next portion of movies
   useEffect(() => {
-
-    if(lastPage){
-      console.log('this is the end');
-    } else {
-      dispatch({type: 'INCREASE_PAGE'});
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
     }
 
-},[newMovies, dispatch, lastPage])
+    if (!lastPage) {
+      dispatch({ type: "INCREASE_PAGE" });
+    }
+  }, [newMovies, dispatch, lastPage]);
 
-// scroll trigger
- const event = () => {
-    if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 200) {
-      console.log('reach');
+  // scroll trigger
+  const event = () => {
+    if (
+      window.innerHeight + window.scrollY >=
+      document.body.scrollHeight - 500
+    ) {
       setNewMovies((prev) => !prev);
     }
-  }
+  };
 
   // scroll event listener
- useEffect(() => {
-    window.addEventListener('scroll', event);
-    return () => window.removeEventListener('scroll', event)
-  }, [])
+  useEffect(() => {
+    if (moviesFetchError.show) {
+      return;
+    }
+
+    window.addEventListener("scroll", event);
+    return () => window.removeEventListener("scroll", event);
+  }, [moviesFetchError]);
+
+  if (moviesFetchError.show) {
+    return <ErrorMessage message={moviesFetchError.message} />;
+  }
 
   return (
     <>
-    <div className="movies-list-container">
-      {currentList.map(({ posterUrl, title, id }) => {
-        if (title.length > 35) {
-          title = title.slice(0, 35) + "...";
-        }
+      <motion.div layout className="movies-list-container">
+        {currentList.map(({ posterUrl, title, id }) => {
+          if (title.length > 35) {
+            title = title.slice(0, 35) + "...";
+          }
 
-        return <SingleMovie key={id} poster={posterUrl} title={title} />;
-      })}
-      
-      
-    </div>
+          return (
+            <AnimatePresence key={id}>
+              <SingleMovie poster={posterUrl} title={title} id={id} />;
+            </AnimatePresence>
+          );
+        })}
+      </motion.div>
 
-    {moviesFetchLoading && <Loader/> }
-    
+      {moviesFetchLoading && <Loader />}
     </>
   );
 };

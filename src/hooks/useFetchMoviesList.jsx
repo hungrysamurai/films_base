@@ -13,33 +13,35 @@ export const useFetchMoviesList = (
   page,
   dispatch
 ) => {
-
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState({ show: false, msg: "" });
+  const [error, setError] = useState({ show: false, message: "" });
 
   const fetchMoviesList = useCallback(
     async (mediaType, lang, filterList, filterGenre, currentPage) => {
-
       setIsLoading(true);
+      setError({
+        show: false,
+        message: "",
+      });
 
       try {
-
         const response = await axios(
           `${apiBase}/${mediaType}/${filterList}?${apiKey}&page=${currentPage}&language=${lang}&with_genres=${filterGenre}`
         );
-        
-        // Check if there more movies 
-        if(response.data.total_pages === currentPage){
+        // Check if there more movies
+        if (response.data.total_pages === currentPage) {
           // if no more pages
-        dispatch({type: 'SET_LAST_PAGE', payload: true});
-        return;
+          dispatch({ type: "SET_LAST_PAGE", payload: true });
         } else {
-         dispatch({type: 'SET_LAST_PAGE', payload: false});
+          dispatch({ type: "SET_LAST_PAGE", payload: false });
         }
 
-        if(response.data.total_results === 0){
-          console.log('here');
-            throw new Error('no resulte')
+        if (response.data.total_results === 0) {
+          throw new Error(
+            lang === "ru"
+              ? "Нет результатов, удовлетворяющих заданным условиям"
+              : "No matching results"
+          );
         }
 
         const output = [];
@@ -55,27 +57,23 @@ export const useFetchMoviesList = (
 
           output.push(outputObj);
         });
-    
-        if(currentPage === 1){
-          dispatch({type: 'INITIAL_LOAD_MOVIES', payload: output})
-        } else {
-          console.log('fires!');
-          dispatch({type: 'APPEND_MOVIES', payload: output})
-        }
-        
-        setIsLoading(false);
 
+        if (currentPage === 1) {
+          dispatch({ type: "INITIAL_LOAD_MOVIES", payload: output });
+        } else {
+          dispatch({ type: "APPEND_MOVIES", payload: output });
+        }
+
+        setIsLoading(false);
       } catch (err) {
-        console.log(err.message);
         setError({
           show: true,
           message: err.message,
         });
         setIsLoading(false);
-        throw new Error(err.message);
       }
     },
-    []
+    [dispatch]
   );
 
   useEffect(() => {

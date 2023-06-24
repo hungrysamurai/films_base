@@ -19,7 +19,7 @@ import { getBaseName } from "../utils/getBaseName";
 const AppContext = createContext();
 
 const AppProvider = ({ children }) => {
-  
+
   const baseName = getBaseName();
   const [theme, setTheme] = useState(() => getTheme());
 
@@ -40,7 +40,7 @@ const AppProvider = ({ children }) => {
     moviesListState.filterList,
     moviesListState.filterGenre,
     moviesListState.page,
-    dispatch
+    dispatch,
   );
 
   // Set color theme
