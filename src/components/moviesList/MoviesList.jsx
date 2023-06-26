@@ -23,7 +23,7 @@ const MoviesList = () => {
     if(page < totalPages){
         if (
           window.innerHeight + window.scrollY >=
-          document.body.scrollHeight - 50
+          document.body.scrollHeight - 150
         ) {
 
           dispatch({ type: "INCREASE_PAGE" });
