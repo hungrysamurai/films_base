@@ -5,7 +5,7 @@ import ErrorMessage from "../ErrorMessage";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useGlobalContext } from "../../contexts/GlobalContext";
-import { useEffect, useLayoutEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useLayoutEffect, useState,useCallback, useRef } from "react";
 
 const MoviesList = () => {
   const {
@@ -13,58 +13,40 @@ const MoviesList = () => {
     moviesFetchError,
     dispatch,
     moviesList,
-    lastPage,
+    page,
     totalPages
   } = useGlobalContext();
 
   const [currentList, setCurrentList] = useState([]);
-  const [newMovies, setNewMovies] = useState(false);
-  const [nextPage, setNextPage] = useState(1);
 
-  const mounted = useRef(false);
+  const loadMore = useCallback(() => {
+    if(page < totalPages){
+        if (
+          window.innerHeight + window.scrollY >=
+          document.body.scrollHeight - 50
+        ) {
+
+          dispatch({ type: "INCREASE_PAGE" });
+        }
+    }
+
+  },[dispatch, page, totalPages])
 
   useLayoutEffect(() => {
     setCurrentList(moviesList);
   }, [moviesList]);
 
-    // scroll trigger
-  const event = useCallback(() => {
-    if(lastPage || nextPage > totalPages){
-      return;
-    }
-
-    if (
-      window.innerHeight + window.scrollY >=
-      document.body.scrollHeight - 100
-    ) {
-      setNextPage((prev) => prev + 1);
-    }
-
-  },[lastPage, nextPage, totalPages]);
-
-  // get next portion of movies
-  useEffect(() => {
-    if (!mounted.current) {
-      mounted.current = true;
-      return;
-    }
-
-    if (!lastPage) {
-      dispatch({ type: "INCREASE_PAGE" });
-    }
-  }, [newMovies, dispatch, lastPage, event]);
-
-  // scroll event listener
-  useEffect(() => {
-    
+ useEffect(() => {
     if (moviesFetchError.show) {
       return;
     }
-
-    window.addEventListener("scroll", event);
-    return () => window.removeEventListener("scroll", event);
     
-  }, [moviesFetchError]);
+    if(totalPages > 1){
+      window.addEventListener("scroll", loadMore);
+    }
+
+    return () => window.removeEventListener("scroll", loadMore);
+  }, [moviesFetchError, totalPages, loadMore]);
 
 
   if (moviesFetchError.show) {

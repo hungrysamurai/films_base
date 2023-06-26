@@ -25,16 +25,18 @@ export const useFetchMoviesList = (
       });
 
       try {
+
         const response = await axios(
           `${apiBase}/${mediaType}/${filterList}?${apiKey}&page=${currentPage}&language=${lang}&with_genres=${filterGenre}`
         );
-        // Check if there more movies
-        if (response.data.total_pages === currentPage) {
-          // if no more pages
-          dispatch({ type: "SET_LAST_PAGE", payload: true });
-        } else {
-          dispatch({ type: "SET_LAST_PAGE", payload: false });
-        }
+
+        // // Check if there more movies
+        // if (response.data.total_pages === currentPage) {
+        //   // if no more pages
+        //   dispatch({ type: "SET_LAST_PAGE", payload: true });
+        // } else {
+        //   dispatch({ type: "SET_LAST_PAGE", payload: false });
+        // }
 
         if (response.data.total_results === 0) {
           throw new Error(
@@ -66,7 +68,7 @@ export const useFetchMoviesList = (
         if (currentPage === 1) {
           // If amount of pages is more than 500 - set to 500 (API restrictions)
           const pagesNum = response.data.total_pages > 500 ? 500 : response.data.total_pages;
-          
+
           const initialData = [output, ids, pagesNum];
           dispatch({ type: "INITIAL_LOAD_MOVIES", payload: initialData });
         } else {

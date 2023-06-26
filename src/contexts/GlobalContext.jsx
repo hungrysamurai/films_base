@@ -50,7 +50,6 @@ const AppProvider = ({ children }) => {
     filterList,
     filterGenre,
     page,
-    lastPage,
     moviesList,
     totalPages
   } = moviesListState;
@@ -71,7 +70,6 @@ const AppProvider = ({ children }) => {
         filterList,
         filterGenre,
         page,
-        lastPage,
         totalPages,
         dispatch,
         moviesList,

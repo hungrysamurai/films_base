@@ -4,7 +4,6 @@ const initialState = {
   filterList: "popular",
   filterGenre: "all",
   page: 1,
-  lastPage: false,
   moviesList: [],
   uniqueIds: [],
   totalPages: 0,
@@ -69,11 +68,8 @@ const mainReducer = (state, action) => {
         uniqueIds: [...state.uniqueIds, ...ids],
       };
     }
-    case "SET_LAST_PAGE":
-      return {
-        ...state,
-        lastPage: action.payload,
-      };
+    default:
+      return state;
   }
 };
 
