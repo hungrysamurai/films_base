@@ -13,7 +13,6 @@ function App() {
       <Routes>
         <Route path={baseName} element={<PageWrapper />}>
           <Route index element={<Home />} />
-          <Route path="test" element={<div>test route</div>} />
           <Route path="movies/:id" element={<MoviePage />} />
           <Route path="*" element={<div>some error</div>} />
         </Route>

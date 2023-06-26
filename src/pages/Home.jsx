@@ -12,7 +12,7 @@ const Home = () => {
       <ListsContainer />
       <GenresList />
       <MoviesList />
-      <Link to={`${baseName}test`}>test</Link>
+      {/* <Link to={`${baseName}test`}>test</Link> */}
     </section>
   );
 };

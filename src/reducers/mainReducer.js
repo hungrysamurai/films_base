@@ -1,4 +1,4 @@
-const moviesListInitialState = {
+const initialState = {
   lang: "ru",
   mediaType: "movie",
   filterList: "popular",
@@ -7,9 +7,10 @@ const moviesListInitialState = {
   lastPage: false,
   moviesList: [],
   uniqueIds: [],
+  totalPages: 0,
 };
 
-const moviesListReducer = (state, action) => {
+const mainReducer = (state, action) => {
   switch (action.type) {
     case "SET_LANG":
       return {
@@ -49,6 +50,7 @@ const moviesListReducer = (state, action) => {
         ...state,
         moviesList: [...action.payload[0]],
         uniqueIds: [...action.payload[1]],
+        totalPages: action.payload[2]
       };
     case "APPEND_MOVIES": {
       const ids = [];
@@ -75,4 +77,4 @@ const moviesListReducer = (state, action) => {
   }
 };
 
-export { moviesListInitialState, moviesListReducer };
+export { initialState, mainReducer };

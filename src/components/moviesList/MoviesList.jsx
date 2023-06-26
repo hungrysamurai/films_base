@@ -5,7 +5,7 @@ import ErrorMessage from "../ErrorMessage";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useGlobalContext } from "../../contexts/GlobalContext";
-import { useEffect, useLayoutEffect, useState, useRef } from "react";
+import { useEffect, useLayoutEffect, useState, useRef, useCallback } from "react";
 
 const MoviesList = () => {
   const {
@@ -14,16 +14,33 @@ const MoviesList = () => {
     dispatch,
     moviesList,
     lastPage,
+    totalPages
   } = useGlobalContext();
 
   const [currentList, setCurrentList] = useState([]);
   const [newMovies, setNewMovies] = useState(false);
+  const [nextPage, setNextPage] = useState(1);
 
   const mounted = useRef(false);
 
   useLayoutEffect(() => {
     setCurrentList(moviesList);
   }, [moviesList]);
+
+    // scroll trigger
+  const event = useCallback(() => {
+    if(lastPage || nextPage > totalPages){
+      return;
+    }
+
+    if (
+      window.innerHeight + window.scrollY >=
+      document.body.scrollHeight - 100
+    ) {
+      setNextPage((prev) => prev + 1);
+    }
+
+  },[lastPage, nextPage, totalPages]);
 
   // get next portion of movies
   useEffect(() => {
@@ -35,27 +52,20 @@ const MoviesList = () => {
     if (!lastPage) {
       dispatch({ type: "INCREASE_PAGE" });
     }
-  }, [newMovies, dispatch, lastPage]);
-
-  // scroll trigger
-  const event = () => {
-    if (
-      window.innerHeight + window.scrollY >=
-      document.body.scrollHeight - 500
-    ) {
-      setNewMovies((prev) => !prev);
-    }
-  };
+  }, [newMovies, dispatch, lastPage, event]);
 
   // scroll event listener
   useEffect(() => {
+    
     if (moviesFetchError.show) {
       return;
     }
 
     window.addEventListener("scroll", event);
     return () => window.removeEventListener("scroll", event);
+    
   }, [moviesFetchError]);
+
 
   if (moviesFetchError.show) {
     return <ErrorMessage message={moviesFetchError.message} />;
@@ -63,7 +73,10 @@ const MoviesList = () => {
 
   return (
     <>
-      <motion.div layout className="movies-list-container">
+      <motion.div 
+      layout 
+      layoutRoot    
+      className="movies-list-container">
         {currentList.map(({ posterUrl, title, id }) => {
           if (title.length > 35) {
             title = title.slice(0, 35) + "...";

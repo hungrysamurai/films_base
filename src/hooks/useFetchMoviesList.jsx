@@ -64,7 +64,10 @@ export const useFetchMoviesList = (
         });
 
         if (currentPage === 1) {
-          const initialData = [output, ids];
+          // If amount of pages is more than 500 - set to 500 (API restrictions)
+          const pagesNum = response.data.total_pages > 500 ? 500 : response.data.total_pages;
+          
+          const initialData = [output, ids, pagesNum];
           dispatch({ type: "INITIAL_LOAD_MOVIES", payload: initialData });
         } else {
           const initialData = [output, ids];

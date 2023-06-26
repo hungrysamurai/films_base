@@ -1,0 +1,104 @@
+.section-single-movie {
+  min-height: calc(100vh - 12.5rem + 1vh);
+  display: flex;
+  flex-direction: column;
+  margin-top: 3.125rem;
+
+  .movie-wrapper {
+    display: flex;
+
+    .left-col {
+      flex: 3;
+      max-width: 30%;
+      display: flex;
+      flex-direction: column;
+
+      .movie-poster-container {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+          max-width: 100%;
+          display: block;
+          filter: var(--container-shadow);
+        }
+      }
+    }
+
+    .right-col {
+      flex: 7;
+      max-width: 70%;
+      display: flex;
+      flex-direction: column;
+
+      .data-container {
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        margin-left: 1rem;
+
+        .data-item {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border-bottom: 1px solid var(--primary-color);
+          padding: 0 0 0.25rem 0.5rem;
+
+          &:not(:first-child) {
+            margin-top: 0.75rem;
+          }
+
+          .label {
+            width: 35%;
+            color: var(--accent-color);
+            font-weight: 700;
+          }
+
+          .data-info {
+            width: 65%;
+            padding-left: 1rem;
+            text-align: left;
+          }
+        }
+      }
+
+      .description-container {
+        padding: 1rem;
+        display: flex;
+        margin-left: 1rem;
+
+        p {
+          padding-left: 0.5rem;
+        }
+      }
+
+      .gallery-container {
+        width: 100%;
+        padding: 1rem;
+
+        .gallery-wrapper {
+          display: flex;
+          flex-wrap: nowrap;
+          gap: 1.25rem;
+          margin-left: 1rem;
+          max-width: 100%;
+          overflow: visible;
+          padding-left: 0.5rem;
+
+          .gallery-image-container {
+            max-width: 12.5rem;
+            height: 9rem;
+            img {
+              max-height: 100%;
+              max-width: 100%;
+              object-fit: cover;
+            }
+          }
+        }
+      }
+    }
+  }
+}

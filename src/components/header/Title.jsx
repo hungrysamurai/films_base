@@ -1,11 +1,14 @@
 import { useLocation } from "react-router-dom";
+import { useGlobalContext } from "../../contexts/GlobalContext";
 
 const Title = () => {
- const {pathname} = useLocation();
+  const { currentTitle } = useGlobalContext();
 
- return <div className="title-container">
-  <h2 className="title-heading">This is undbelievable long sample heading</h2>
-  </div>
-}
+  return (
+    <div className="title-container">
+      <h2 className="title-heading">{currentTitle}</h2>
+    </div>
+  );
+};
 
 export default Title;

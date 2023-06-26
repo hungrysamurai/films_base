@@ -1,47 +1,40 @@
 import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 
- const apiBase = import.meta.env.VITE_TMDB_API_BASE;
- const apiKey = import.meta.env.VITE_TMDB_API_KEY;
+const apiBase = import.meta.env.VITE_TMDB_API_BASE;
+const apiKey = import.meta.env.VITE_TMDB_API_KEY;
 
-export const useFetchGenres = (mediaType,lang) => { 
+export const useFetchGenres = (mediaType, lang) => {
   const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState(
-  { show: false, 
-    msg: '',
-  }
- );
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState({ show: false, msg: "" });
 
-  const fetchGenresList = useCallback(async (mediaType,lang) => {
+  const fetchGenresList = useCallback(async (mediaType, lang) => {
+    setIsLoading(true);
 
-    setIsLoading(true)
+    try {
+      const { data } = await axios(
+        `${apiBase}/genre/${mediaType}/list?${apiKey}&language=${lang}`
+      );
 
-      try {
+      const all = { id: "all", name: lang === "ru" ? "Все" : "All" };
 
-  const {data} = await axios(
-      `${apiBase}/genre/${mediaType}/list?${apiKey}&language=${lang}`
-    );
-    console.log('fetched genres');
-    const all = {id:'all', name: lang === 'ru' ? 'Все' : 'All'};
+      setData(() => [all, ...data.genres]);
 
-    setData(() => [all, ...data.genres]);
-
-    setIsLoading(false);
-      } catch (err) {
-
-         setError({
-          show: true,
-          message: err.message,
-        });
-        setIsLoading(false)
-        throw new Error(err.message);
-      }
-  },[])
+      setIsLoading(false);
+    } catch (err) {
+      setError({
+        show: true,
+        message: err.message,
+      });
+      setIsLoading(false);
+      throw new Error(err.message);
+    }
+  }, []);
 
   useEffect(() => {
-    fetchGenresList(mediaType,lang);
-  },[mediaType, lang, fetchGenresList])
+    fetchGenresList(mediaType, lang);
+  }, [mediaType, lang, fetchGenresList]);
 
-    return {isLoading, error, data}
-}
+  return { isLoading, error, data };
+};
