@@ -3,7 +3,6 @@ import {
   useEffect,
   useRef,
   useLayoutEffect,
-  useCallback,
 } from "react";
 
 import { motion, useAnimation } from "framer-motion";

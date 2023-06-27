@@ -2,7 +2,7 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 import { useState,useEffect, useRef, useLayoutEffect, useMemo } from "react";
 import { motion, useAnimation } from 'framer-motion';
 
-const ImageGallery = () => {
+const ImageGallery = ({openModal}) => {
   const { baseName } = useGlobalContext();
 
   const tempImages = useMemo(() => {
@@ -31,7 +31,6 @@ const ImageGallery = () => {
   const control = useAnimation();
 
   const galleryRowContainerRef = useRef(null);
-  const firstGalleryEl = useRef(null);
 
   useEffect(() => {
     setGalleryRow(() => tempImages);
@@ -45,20 +44,17 @@ const ImageGallery = () => {
     }
   },[totalImagesLoaded, galleryRow.length])
 
-  useLayoutEffect(() => {
 
-  if (firstGalleryEl.current) {
-    console.log(galleryRowWidth / 2);
-    control.start({
-      x: 0,
-    });
+  const openImage = (index) => {
+    if(totalImagesLoaded === galleryRow.length){
+      openModal('images', galleryRow, index);
+    }
   }
-}, [control,galleryRowWidth]);
 
   return (
     <div className="gallery-container">
 
-      <motion.div
+    <motion.div
       ref={galleryRowContainerRef}
       drag="x"
       dragConstraints={{
@@ -71,11 +67,15 @@ const ImageGallery = () => {
 
         {galleryRow.map((image, i) => {
           return (
-            <div className="gallery-image-container"
+            <div 
+            className="gallery-image-container"
             key={i}
-            ref={i === 0 ? firstGalleryEl : null}
+            onClick={() => openImage(i)}
             >
-              <img src={image} alt="img" onLoad={() => {
+              <img 
+              src={image} 
+              alt="img" 
+              onLoad={() => {
                 setTotalImagesLoaded((prev) => prev + 1);
               }} />
             </div>
