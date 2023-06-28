@@ -1,49 +1,35 @@
-import { useGlobalContext } from "../../contexts/GlobalContext";
-import { useState,useEffect, useRef, useLayoutEffect, useMemo } from "react";
+import { useState,useEffect, useRef } from "react";
 import { motion, useAnimation } from 'framer-motion';
 
-const ImageGallery = ({openModal}) => {
-  const { baseName } = useGlobalContext();
-
-  const tempImages = useMemo(() => {
-    return [
-    `${baseName}assets/images/gallery/1.jpg`,
-    `${baseName}assets/images/gallery/2.jpg`,
-    `${baseName}assets/images/gallery/3.jpg`,
-    `${baseName}assets/images/gallery/4.jpg`,
-    `${baseName}assets/images/gallery/5.jpg`,
-    `${baseName}assets/images/gallery/6.jpg`,
-    `${baseName}assets/images/gallery/7.jpg`,
-    `${baseName}assets/images/gallery/1.jpg`,
-    `${baseName}assets/images/gallery/2.jpg`,
-    `${baseName}assets/images/gallery/3.jpg`,
-    `${baseName}assets/images/gallery/3.jpg`,
-    `${baseName}assets/images/gallery/3.jpg`,
-    `${baseName}assets/images/gallery/3.jpg`,
-    `${baseName}assets/images/gallery/3.jpg`,
-  ]},[]);
-
-
+const ImageGallery = ({openModal, imagesArray}) => {
+  
   const [galleryRow, setGalleryRow] = useState([]);
   const [totalImagesLoaded, setTotalImagesLoaded] = useState(0)
   const [galleryRowWidth, setGalleryRowWidth] = useState(0);
 
-  const control = useAnimation();
+  const animationControl = useAnimation();
 
   const galleryRowContainerRef = useRef(null);
 
   useEffect(() => {
-    setGalleryRow(() => tempImages);
-  }, [tempImages]);
+    setGalleryRow(() => imagesArray);
+  }, [imagesArray]);
 
   useEffect(() => {
     if(totalImagesLoaded === galleryRow.length){
+
       setGalleryRowWidth(() => {
       return galleryRowContainerRef.current.scrollWidth;
       });
+      
+      if (galleryRowWidth !== 0 && galleryRow.length > 4){
+        animationControl.start({
+            x: -Math.floor(galleryRowWidth / galleryRow.length),
+            transition: {duration: 2}
+          })
+      }
     }
-  },[totalImagesLoaded, galleryRow.length])
-
+  },[totalImagesLoaded, galleryRow.length, animationControl,galleryRowWidth])
 
   const openImage = (index) => {
     if(totalImagesLoaded === galleryRow.length){
@@ -62,7 +48,7 @@ const ImageGallery = ({openModal}) => {
           right: 0,
         }}
       className="gallery-wrapper"
-      animate={control}
+      animate={animationControl}
       >
 
         {galleryRow.map((image, i) => {

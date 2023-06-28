@@ -1,7 +1,7 @@
 const initialState = {
   lang: "ru",
   mediaType: "movie",
-  filterList: "popular",
+  filterList: "top_rated",
   filterGenre: "all",
   page: 1,
   moviesList: [],

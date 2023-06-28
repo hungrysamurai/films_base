@@ -33,7 +33,7 @@ const GenresList = () => {
   useLayoutEffect(() => {
     if (genresListContainerRef.current) {
       setGenresListWidth(() => {
-        return genresListContainerRef.current.offsetWidth;
+        return genresListContainerRef.current.scrollWidth;
       });
     }
 
@@ -48,7 +48,7 @@ const GenresList = () => {
     dispatch({ type: "SET_FILTER_GENRE", payload: `${id}` });
 
     control.start({
-      x: genresListWidth / 2 - el.offsetLeft - el.offsetWidth,
+      x: genresListWidth / 2 - el.offsetLeft - el.scrollWidth,
     });
   };
 

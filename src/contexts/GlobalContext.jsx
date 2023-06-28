@@ -19,7 +19,7 @@ const AppContext = createContext();
 const AppProvider = ({ children }) => {
   const baseName = getBaseName();
   const [theme, setTheme] = useState(() => getTheme());
-  const [currentTitle, setCurrentTitle] = useState("asas");
+  const [currentTitle, setCurrentTitle] = useState("");
 
   const [moviesListState, dispatch] = useReducer(mainReducer, initialState);
 

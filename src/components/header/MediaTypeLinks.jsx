@@ -7,19 +7,19 @@ const MediaTypeLinks = () => {
  return (
         <div className="media-type-links">
 
-        <a href="#" 
+        <button href="#" 
         className={mediaType === 'movie' ? 'active' : ''} 
         onClick={() => {
          dispatch({type: 'SET_MEDIA_TYPE', payload: 'movie'})
         }}>
           Фильмы
-        </a>
-        <a href="#" 
+        </button>
+        <button href="#" 
         className={mediaType === 'tv' ? 'active':''} onClick={() => {
          dispatch({type: 'SET_MEDIA_TYPE', payload: 'tv'})
         }}>
          Сериалы
-         </a>
+         </button>
 
       </div>
  )

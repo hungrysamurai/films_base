@@ -12,8 +12,9 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path={baseName} element={<PageWrapper />}>
-          <Route index element={<Home />} />
-          <Route path="movies/:id" element={<MoviePage />} />
+          <Route index element={<Home />}  />
+          <Route path="movie/:id" element={<MoviePage />} />
+          <Route path="tv/:id" element={<MoviePage />}/>
           <Route path="*" element={<div>some error</div>} />
         </Route>
       </Routes>
