@@ -24,7 +24,7 @@ const mainReducer = (state, action) => {
         mediaType: action.payload,
         page: 1,
         filterGenre: "all",
-        filterList: "popular",
+        filterList: "top_rated",
       };
     case "SET_FILTER_LIST":
       return {

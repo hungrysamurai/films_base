@@ -123,3 +123,9 @@ section {
     line-height: 1.25rem;
   }
 }
+
+@keyframes loading {
+  to {
+    background-position-x: -20%;
+  }
+}
