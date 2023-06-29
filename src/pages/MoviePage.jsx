@@ -10,6 +10,7 @@ import ImageGallery from "../components/moviePage/ImageGallery";
 import Loader from "../components/Loader";
 import Modal from "../components/moviePage/Modal";
 import MoviePoster from "../components/moviePage/MoviePoster";
+import YoutubeEmbed from "../components/moviePage/Youtubeembed";
 
 const MoviePage = () => {
   
@@ -27,14 +28,14 @@ const MoviePage = () => {
 
   const control = useAnimation();
 
-  const {data, images, error, isLoading} = useFetchSingleMovie(mediaType === requestedMediaType ?
+  const {data, images, videos, error, isLoading} = useFetchSingleMovie(mediaType === requestedMediaType ?
     mediaType : 
     requestedMediaType, 
     lang, 
     id);
 
   const {data:mediaData, description, title, poster} = data;
- 
+
   useEffect(() => {
     if(isLoading){
       setCurrentTitle(() => '');
@@ -126,6 +127,10 @@ const MoviePage = () => {
 
         <div className="left-col">
           <MoviePoster image={poster}/>
+          {/* <YoutubeEmbed videoKey={'XZ8daibM3AE'}/> */}
+          {videos.map((videoKey,i) => {
+            return <YoutubeEmbed key={i} videoKey={videoKey}/>
+          })}
         </div>
         
         <div className="right-col">
@@ -134,8 +139,8 @@ const MoviePage = () => {
               const [label, info] = Object.entries(dataItem)[0];
               return (
                 <div className="data-item" key={i}>
-                <span className="label">{label}</span>
-              <span className="data-info">{info}</span>
+                  <span className="label">{label}</span>
+                  <span className="data-info">{info}</span>
                 </div>
               )
             })}

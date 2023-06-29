@@ -13,21 +13,27 @@ export const useFetchSingleMovie = (mediaType, lang, id) => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState({ show: false, msg: "" });
-
   const [images, setImages] =  useState([]);
+  const [videos, setVideos] = useState([]);
 
   const fetchSingleMovie = useCallback(async (mediaType, lang, id) => {
     setIsLoading(true);
 
     try {
+      // Fetch data
       const { data } = await axios(
         `${apiBase}/${mediaType}/${id}?${apiKey}&language=${lang}`
       );
 
+      // Fetch images
        const {data: {backdrops}} = await axios(
         `${apiBase}/${mediaType}/${id}/images?${apiKey}`
        );
 
+      // Fetch videos  
+       const {data: {results}} = await axios(
+        `${apiBase}/${mediaType}/${id}/videos?${apiKey}&language=${lang}`
+       );
 
         // Build data object
       const genresList = data.genres.reduce((string, current, i) => {
@@ -101,7 +107,7 @@ export const useFetchSingleMovie = (mediaType, lang, id) => {
         setData(() => output);
       }
 
-      // Build images gallery object
+      // Build images gallery array
       const imagesPaths = [];
 
       if (backdrops.length > 20){
@@ -112,9 +118,29 @@ export const useFetchSingleMovie = (mediaType, lang, id) => {
         imagesPaths.push(imagesUrlBase + backdropObj.file_path)
       })
       
-      setImages(() => imagesPaths)
+      setImages(() => imagesPaths);
+
+      // Build videos array
+       if(results.length !== 0) {
+         const videoKeys = [];
+
+         const trailers = results.filter(
+          item => item.type === 'Trailer' && item.site === 'YouTube'
+         );
+
+         if(trailers.length !== 0){
+            trailers.forEach(trailer => {
+              videoKeys.push(trailer.key)
+            })
+         }
+
+         setVideos(() => videoKeys)
+       }
+
+
 
       setIsLoading(false);
+
     } catch (err) {
       setError({
         show: true,
@@ -129,5 +155,5 @@ export const useFetchSingleMovie = (mediaType, lang, id) => {
     fetchSingleMovie(mediaType, lang, id);
   }, [fetchSingleMovie, mediaType, lang, id]);
 
-  return { isLoading, error, data, images };
+  return { isLoading, error, data, images, videos };
 };
