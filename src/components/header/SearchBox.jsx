@@ -1,7 +1,11 @@
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
 const SearchBox = () => {
-  const { baseName, theme, mediaType } = useGlobalContext();
+  const { baseName, theme, mediaType, lang } = useGlobalContext();
+
+  const text = lang === 'en' ?
+  ['Find', 'movie...', 'tv show...'] :
+  ['Найти', 'фильм...', 'сериал...']
 
   return (
     <div className="search-box-container">
@@ -15,8 +19,8 @@ const SearchBox = () => {
         <input
           type="text"
           className="search-box-input"
-          placeholder={`Найти ${
-            mediaType === "movie" ? "фильм..." : "сериал..."
+          placeholder={`${text[0]} ${
+            mediaType === "movie" ? text[1] : text[2]
           }`}
         />
       </form>

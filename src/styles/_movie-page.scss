@@ -105,21 +105,35 @@
         }
       }
 
-      .movie-video-container{
+      .movie-video-container {
         width: 100%;
         min-height: 15rem;
         margin-top: 1rem;
         overflow: hidden;
         position: relative;
+        filter: var(--container-shadow);
 
-        iframe {
-          left: 0;
-          top: 0;
-          height: 100%;
-          width: 100%;
-          position: absolute;
-          border: none;
-        }
+            iframe {
+              left: 0;
+              top: 0;
+              height: 100%;
+              width: 100%;
+              position: absolute;
+              border: none;
+            }
+
+            .video-loading-container {
+              position: absolute;
+              z-index: -1;
+              width: 100%;
+              height: 100%;
+              top: 0;
+              left: 0;
+              background: var(--bg-gradient);
+              background-size: 200% 100%;
+              background-position-x: 180%;
+              animation: 1s loading ease-in-out infinite;
+            }
       }
     }
 
@@ -220,6 +234,82 @@
           background-size: 200% 100%;
           background-position-x: 180%;
           animation: 1s loading ease-in-out infinite;
+        }
+      }
+    }
+  }
+}
+
+
+@media only screen and (max-width: 768px){
+.section-single-movie {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+
+    .movie-wrapper {
+      flex-direction: column;
+      align-items: center;
+
+      .left-col{
+        max-width: 95%;
+        flex-direction: column;
+
+        .movie-poster-container {
+          img{
+            max-height: 60vh;
+          }
+
+          .img-loading-container {
+            position: absolute;
+            z-index: -1;
+            width: 100%;
+            max-height: 60vh;
+            top: 0;
+            left: 0;
+            background: var(--bg-gradient);
+            background-size: 200% 100%;
+            background-position-x: 180%;
+            animation: 1s loading ease-in-out infinite;
+          }
+        }
+
+        .movie-video-container {
+          width: 80vw;
+          height: 40vh;
+        }
+      }
+
+      .right-col{
+        max-width: 95%;
+        margin-top: 1rem;
+
+        .data-container{
+          padding: 0.25rem;
+          margin-left: 0;
+          margin-bottom: 1rem;
+        }
+
+        .description-container{
+          padding: 0.5rem;
+          margin-left: 0;
+          margin-bottom: 1rem;
+
+          p {
+            padding: 0;
+          }
+        }
+
+        .gallery-container {
+          height: 12rem;
+          margin-bottom: 2rem;
+          .gallery-wrapper {
+            margin-left: 0.25rem;
+
+            .gallery-image-container{
+              height: 12rem;
+              width: 16rem;
+            }
+          }
         }
       }
     }

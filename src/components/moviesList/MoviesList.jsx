@@ -5,7 +5,7 @@ import ErrorMessage from "../ErrorMessage";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useGlobalContext } from "../../contexts/GlobalContext";
-import { useEffect, useLayoutEffect, useState,useCallback, useRef } from "react";
+import { useEffect, useLayoutEffect, useState,useCallback } from "react";
 
 const MoviesList = () => {
   const {
@@ -25,7 +25,6 @@ const MoviesList = () => {
           window.innerHeight + window.scrollY >=
           document.body.scrollHeight - 150
         ) {
-
           dispatch({ type: "INCREASE_PAGE" });
         }
     }

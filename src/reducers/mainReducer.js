@@ -1,5 +1,5 @@
 const initialState = {
-  lang: "ru",
+  lang: "en",
   mediaType: "movie",
   filterList: "top_rated",
   filterGenre: "all",
