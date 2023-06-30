@@ -20,6 +20,7 @@ export const getRuntime = (mins, lang) => {
    hoursEndString = 'часов'
   }
 
+
   if (minsString[minsString.length - 1] === '1') {
    minutesEndString = 'минута';
   } else if (
@@ -30,10 +31,17 @@ export const getRuntime = (mins, lang) => {
    minutesEndString = 'минут';
   }
 
+  if (minsString === '11' || minsString === '12' || minsString === '13' || minsString === '14') {
+   minutesEndString = 'минут';
+  }
+
   if (totalHours === 0) {
    return `${minsString} ${minutesEndString}`
   }
 
+  if (appMins === 0) {
+   return `${hoursString} ${hoursEndString}`
+  }
 
   return `${hoursString} ${hoursEndString} ${minsString} ${minutesEndString}`
  }

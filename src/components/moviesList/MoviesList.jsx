@@ -5,7 +5,7 @@ import ErrorMessage from "../ErrorMessage";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useGlobalContext } from "../../contexts/GlobalContext";
-import { useEffect, useLayoutEffect, useState,useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 const MoviesList = () => {
   const {
@@ -31,7 +31,7 @@ const MoviesList = () => {
 
   },[dispatch, page, totalPages])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setCurrentList(moviesList);
   }, [moviesList]);
 

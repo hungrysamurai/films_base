@@ -1,6 +1,6 @@
 .loader-container {
   width: 100%;
-  height: 75vh;
+  min-height: calc(100vh - 12.5rem + 1vh);
   display: flex;
   align-items: center;
   justify-content: center;

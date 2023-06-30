@@ -5,6 +5,8 @@ import PageWrapper from "./components/PageWrapper";
 import Home from "./pages/Home";
 import MoviePage from "./pages/MoviePage";
 
+import { AnimatePresence } from "framer-motion";
+
 function App() {
   const { baseName } = useGlobalContext();
 

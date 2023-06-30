@@ -4,9 +4,9 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 
 const ListsContainer = () => {
 
-  const {mediaType,filterList, lang, dispatch} =  useGlobalContext();
+  const { mediaType, filterList, lang, dispatch } =  useGlobalContext();
 
-  const list = mediaType === 'movie' ? movieLists[lang]: tvLists[lang];
+  const list = mediaType === 'movie' ? movieLists[lang] : tvLists[lang];
 
   return (
     <div className="lists-container">

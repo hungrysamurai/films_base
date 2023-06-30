@@ -1,9 +1,4 @@
-import {
-  useState,
-  useEffect,
-  useRef,
-  useLayoutEffect,
-} from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { motion, useAnimation } from "framer-motion";
 import { useGlobalContext } from "../../contexts/GlobalContext";
@@ -30,18 +25,13 @@ const GenresList = () => {
     setGenresList(genresFetchedList);
   }, [genresFetchedList]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (genresListContainerRef.current) {
       setGenresListWidth(() => {
         return genresListContainerRef.current.scrollWidth;
       });
     }
 
-    if (firstGenreListEl.current) {
-      control.start({
-        x: genresListWidth / 2,
-      });
-    }
   }, [genresList, genresListWidth, control]);
 
   const setAndAnimateActiveGenre = (el, id) => {
@@ -49,6 +39,10 @@ const GenresList = () => {
 
     control.start({
       x: genresListWidth / 2 - el.offsetLeft - el.scrollWidth,
+      transition: {
+        stiffness: 50,
+        type: "spring",
+      },
     });
   };
 
@@ -81,6 +75,13 @@ const GenresList = () => {
           right: genresListWidth / 2,
         }}
         animate={control}
+        transition={{
+          stiffness: 100,
+          type: "spring",
+        }}
+        initial={{
+          x: "50%",
+        }}
       >
         {genresList.map((genre) => {
           return (

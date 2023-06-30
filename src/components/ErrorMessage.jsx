@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
+import { useGlobalContext } from "../contexts/GlobalContext";
+const ErrorMessage = ({ errorMessage, componentMessage }) => {
 
-const ErrorMessage = ({ message }) => {
+  const { baseName } = useGlobalContext();
   return (
     <div className="error-message-container">
       <motion.img
@@ -12,10 +14,10 @@ const ErrorMessage = ({ message }) => {
           // repeatType: "reverse",
           duration: 4,
         }}
-        src="./assets/images/void.png"
+        src={`${baseName}assets/images/void.png`}
         alt="error"
       />
-      <h3>{message}</h3>
+      <h3>{errorMessage}</h3>
     </div>
   );
 };

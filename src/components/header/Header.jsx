@@ -15,13 +15,9 @@ const {pathname} = useLocation();
   return (
     <header className="header-container">
       <Logo />
-
       {pathname === baseName ? <MediaTypeLinks/> : <Title />}
-  
       <SearchBox/>
-      
       <HeaderIconsContainer/>
-
     </header>
   );
 };

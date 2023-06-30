@@ -2,10 +2,10 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 
 const MediaTypeLinks = () => {
 
- const {lang,mediaType,dispatch} = useGlobalContext();
+ const { lang , mediaType, dispatch } = useGlobalContext();
 
  return (
-        <div className="media-type-links">
+    <div className="media-type-links">
 
         <button 
         className={mediaType === 'movie' ? 'active' : ''} 
@@ -14,14 +14,15 @@ const MediaTypeLinks = () => {
         }}>
           {lang === 'en' ? 'Movies' : 'Фильмы'}
         </button>
+
         <button
         className={mediaType === 'tv' ? 'active':''} onClick={() => {
          dispatch({type: 'SET_MEDIA_TYPE', payload: 'tv'})
         }}>
          {lang === 'en' ? 'TV Shows' : 'Сериалы'}
-         </button>
+        </button>
 
-      </div>
+  </div>
  )
 }
 

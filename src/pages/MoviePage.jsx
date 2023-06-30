@@ -2,7 +2,7 @@ import { useParams, useLocation } from "react-router-dom";
 import { useGlobalContext } from "../contexts/GlobalContext";
 import { useEffect, useState } from "react";
 
-import { motion, useAnimation, AnimatePresence } from 'framer-motion';
+import { useAnimation, AnimatePresence } from 'framer-motion';
 
 import { useFetchSingleMovie } from "../hooks/useFetchSingleMovie";
 
@@ -11,6 +11,7 @@ import Loader from "../components/Loader";
 import Modal from "../components/moviePage/Modal";
 import MoviePoster from "../components/moviePage/MoviePoster";
 import YoutubeEmbed from "../components/moviePage/Youtubeembed";
+import ErrorMessage from "../components/ErrorMessage";
 
 const MoviePage = () => {
   
@@ -18,7 +19,8 @@ const MoviePage = () => {
 
   const { id } = useParams();
   const location = useLocation();
-  const requestedMediaType = location.pathname.split('/')[1];
+
+  const requestedMediaType = location.pathname.split('/')[import.meta.env.DEV ? 1 : 3];
 
   const [modal, setModal] = useState({
     show: false,
@@ -28,21 +30,27 @@ const MoviePage = () => {
 
   const control = useAnimation();
 
-  const {data, images, videos, error, isLoading} = useFetchSingleMovie(mediaType === requestedMediaType ?
+  const { data, images, videos, dataError,imagesError, videosError, isLoading } = useFetchSingleMovie(mediaType === requestedMediaType ?
     mediaType : 
     requestedMediaType, 
     lang, 
     id);
 
-  const {data:mediaData, description, title, poster} = data;
+  const { data:mediaData, description, title, poster } = data;
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+  
   useEffect(() => {
     if(isLoading){
       setCurrentTitle(() => '');
+    } else if (dataError.show) {
+      setCurrentTitle(dataError.message);
     } else {
-      setCurrentTitle(title);
+      setCurrentTitle(title)
     }
-  }, [title, setCurrentTitle, isLoading, lang]);
+  }, [title, setCurrentTitle, isLoading, lang, dataError]);
 
   useEffect(() => {
      control.start({
@@ -50,9 +58,8 @@ const MoviePage = () => {
     });
   },[modal.index, control])
 
-
   const openModal = (mode, data, imageIndex) => {
-    if(mode === 'images'){
+    if (mode === 'images') {
       setModal(() => {
         const images = data.map((item, i) => {
                 return (
@@ -102,14 +109,15 @@ const MoviePage = () => {
       })
   }
 
-  if(isLoading){
+  if (isLoading){
     return (
       <Loader/>
     )
   }
 
   return (
-    <section className="section-single-movie">
+    <section
+    className="section-single-movie">
 
       <AnimatePresence>
 
@@ -126,24 +134,38 @@ const MoviePage = () => {
       <div className="movie-wrapper">
 
         <div className="left-col">
+
+          {dataError.show ?
+          <ErrorMessage message={dataError.message}/> :
           <MoviePoster image={poster}/>
-          {/* <YoutubeEmbed videoKey={'XZ8daibM3AE'}/> */}
-          {videos.map((videoKey,i) => {
+          }
+
+          {videosError.show ? 
+          <ErrorMessage message={videosError.message}/> :
+          videos.map((videoKey,i) => {
             return <YoutubeEmbed key={i} videoKey={videoKey}/>
-          })}
+          })
+          }
+         
         </div>
         
         <div className="right-col">
           <div className="data-container">
-            {mediaData.map((dataItem, i) => {
+
+          {dataError.show ? 
+          <ErrorMessage message={dataError.message}/> : 
+
+            mediaData.map((dataItem, i) => {
               const [label, info] = Object.entries(dataItem)[0];
+
               return (
                 <div className="data-item" key={i}>
                   <span className="label">{label}</span>
                   <span className="data-info">{info}</span>
                 </div>
               )
-            })}
+            })
+          }
            
           </div>
           <div className="description-container">
@@ -151,8 +173,9 @@ const MoviePage = () => {
              {description}
             </p>
           </div>
-
-          <ImageGallery openModal={openModal} imagesArray={images}/>
+          {imagesError.show ? 
+          <ErrorMessage message={imagesError.message}/> : <ImageGallery openModal={openModal} imagesArray={images}/>}
+          
         </div>
       </div>
     </section>

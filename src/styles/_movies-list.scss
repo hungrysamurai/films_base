@@ -84,7 +84,7 @@
 
 @media only screen and (max-width: 500px) {
   .movies-list-container {
-    row-gap: 1.5rem;
+    row-gap: 2rem;
     grid-template-columns: 80%;
 
     .movie-container {
@@ -99,6 +99,11 @@
           &::after {
             border-radius: 1rem;
           }
+        }
+
+        .img-loading-container{
+          height: 100%;
+          border-radius: 1rem;
         }
 
         .movie-title-container {

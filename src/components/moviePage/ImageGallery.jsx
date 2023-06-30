@@ -6,13 +6,17 @@ const ImageGallery = ({ openModal, imagesArray }) => {
   const [totalImagesLoaded, setTotalImagesLoaded] = useState(0);
   const [galleryRowWidth, setGalleryRowWidth] = useState(0);
   const [loading, setLoading] = useState(true);
-
   const animationControl = useAnimation();
 
   const galleryRowContainerRef = useRef(null);
 
   useEffect(() => {
     setGalleryRow(() => imagesArray);
+
+    if(imagesArray.length === 0){
+      setLoading(false)
+    }
+    
   }, [imagesArray]);
 
   useEffect(() => {
@@ -49,7 +53,7 @@ const ImageGallery = ({ openModal, imagesArray }) => {
         drag="x"
         dragConstraints={{
           left:
-            (galleryRowWidth - (galleryRowWidth / galleryRow.length) * 4) * -1,
+            (galleryRowWidth - (galleryRowWidth / galleryRow.length) * 2) * -1,
           right: 0,
         }}
         className="gallery-wrapper"
