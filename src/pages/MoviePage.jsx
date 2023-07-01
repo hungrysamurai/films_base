@@ -136,12 +136,16 @@ const MoviePage = () => {
         <div className="left-col">
 
           {dataError.show ?
-          <ErrorMessage message={dataError.message}/> :
+          <ErrorMessage 
+            errorMessage={dataError.message} componentMessage='Ошибка при загрузке данных' 
+            showImage={true}/> :
           <MoviePoster image={poster}/>
           }
 
           {videosError.show ? 
-          <ErrorMessage message={videosError.message}/> :
+           <ErrorMessage 
+            errorMessage={videosError.message} componentMessage='Ошибка при загрузке видео' 
+            showImage={true}/> :
           videos.map((videoKey,i) => {
             return <YoutubeEmbed key={i} videoKey={videoKey}/>
           })
@@ -153,7 +157,9 @@ const MoviePage = () => {
           <div className="data-container">
 
           {dataError.show ? 
-          <ErrorMessage message={dataError.message}/> : 
+           <ErrorMessage 
+            errorMessage={dataError.message} componentMessage='Ошибка при загрузке данных' 
+            showImage={false}/> : 
 
             mediaData.map((dataItem, i) => {
               const [label, info] = Object.entries(dataItem)[0];
@@ -174,7 +180,10 @@ const MoviePage = () => {
             </p>
           </div>
           {imagesError.show ? 
-          <ErrorMessage message={imagesError.message}/> : <ImageGallery openModal={openModal} imagesArray={images}/>}
+          <ErrorMessage 
+            errorMessage={videosError.message} componentMessage='Ошибка при загрузке галереи' 
+            showImage={true}/> : 
+            <ImageGallery openModal={openModal} imagesArray={images}/>}
           
         </div>
       </div>

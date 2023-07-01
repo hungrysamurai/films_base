@@ -14,50 +14,51 @@ const MoviesList = () => {
     dispatch,
     moviesList,
     page,
-    totalPages
+    totalPages,
   } = useGlobalContext();
 
   const [currentList, setCurrentList] = useState([]);
 
   const loadMore = useCallback(() => {
-    if(page < totalPages){
-        if (
-          window.innerHeight + window.scrollY >=
-          document.body.scrollHeight - 150
-        ) {
-          dispatch({ type: "INCREASE_PAGE" });
-        }
+    if (page < totalPages) {
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.scrollHeight - 150
+      ) {
+        dispatch({ type: "INCREASE_PAGE" });
+      }
     }
-
-  },[dispatch, page, totalPages])
+  }, [dispatch, page, totalPages]);
 
   useEffect(() => {
     setCurrentList(moviesList);
   }, [moviesList]);
 
- useEffect(() => {
+  useEffect(() => {
     if (moviesFetchError.show) {
       return;
     }
-    
-    if(totalPages > 1){
+
+    if (totalPages > 1) {
       window.addEventListener("scroll", loadMore);
     }
 
     return () => window.removeEventListener("scroll", loadMore);
   }, [moviesFetchError, totalPages, loadMore]);
 
-
   if (moviesFetchError.show) {
-    return <ErrorMessage message={moviesFetchError.message} />;
+    return (
+      <ErrorMessage
+        errorMessage={moviesFetchError.message}
+        componentMessage="Ошибка при загрузке списка"
+        showImage={true}
+      />
+    );
   }
 
   return (
     <>
-      <motion.div 
-      layout 
-      layoutRoot    
-      className="movies-list-container">
+      <motion.div layout layoutRoot className="movies-list-container">
         {currentList.map(({ posterUrl, title, id }) => {
           if (title.length > 35) {
             title = title.slice(0, 35) + "...";

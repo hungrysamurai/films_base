@@ -33,7 +33,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow-x: hidden;
+    overflow: hidden;
     margin-bottom: 2rem;
     mask-image: linear-gradient(
       270deg,
@@ -66,14 +66,6 @@
         &.active {
           color: var(--accent-color);
         }
-      }
-    }
-
-    .error-message {
-      font-size: 1.25rem;
-      text-align: center;
-      span {
-        color: var(--accent-color);
       }
     }
   }

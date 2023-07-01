@@ -23,12 +23,13 @@ export const useFetchGenres = (mediaType, lang) => {
 
       setIsLoading(false);
     } catch (err) {
+      
       setError({
         show: true,
         message: err.message,
       });
+
       setIsLoading(false);
-      throw new Error(err.message);
     }
   }, []);
 

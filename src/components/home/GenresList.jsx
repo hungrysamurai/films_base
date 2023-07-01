@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
+import ErrorMessage from '../ErrorMessage';
+
 const GenresList = () => {
   const {
     genresFetchLoading,
@@ -57,10 +59,14 @@ const GenresList = () => {
   if (genresFetchError.show) {
     return (
       <div className="genres-list-container">
-        <h3 className="error-message">
+        <ErrorMessage 
+        errorMessage={genresFetchError.message} componentMessage='Ошибка при загрузке списка жанров' 
+        showImage={false}/>
+
+        {/* <h3 className="error-message">
           Ошибка при загрузке списка жанров:{" "}
           <span>{genresFetchError.message}</span>
-        </h3>
+        </h3> */}
       </div>
     );
   }

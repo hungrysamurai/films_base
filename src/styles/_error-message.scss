@@ -1,34 +1,58 @@
 .error-message-container {
   width: 100%;
-  min-height: 100%;
-  flex: 1;
+  height: 100%;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  margin-top: 3rem;
+  justify-content: center;
+  overflow: hidden;
 
   img {
-    width: 24rem;
+    width: 70%;
+    max-width: 25rem;
     filter: var(--container-shadow);
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
   }
 
   h3 {
     text-align: center;
-    padding: 2rem;
+    font-size: 1.25rem;
+    span {
+      color: var(--accent-color);
+    }
   }
+
 }
 
 @media only screen and (max-width: 990px) {
   .error-message-container {
-    margin-top: 0;
+    padding: 3rem;    
+
     img {
-      width: 10rem;
+      max-width: 15rem;
     }
 
-    h3 {
-      padding: 1rem;
+    h3{
+      font-size: 1rem;
+      margin-top: 1rem;
+      line-height: 1rem;
     }
   }
+}
+
+
+@media only screen and (max-width: 500px){
+  .error-message-container {
+
+      h3 {
+        text-align: center;
+        font-size: 0.75rem;
+        line-height: 1rem;
+  
+        span {
+          color: var(--accent-color);
+        }
+      }
+    }
 }

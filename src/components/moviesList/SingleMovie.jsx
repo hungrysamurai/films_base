@@ -4,9 +4,8 @@ import { Link } from "react-router-dom";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
 const SingleMovie = ({ title, poster, id }) => {
-
   const [imageLoading, setImageLoading] = useState(true);
-  const { mediaType } = useGlobalContext();
+  const { mediaType, baseName } = useGlobalContext();
   const imageLoaded = () => {
     setImageLoading(false);
   };
@@ -23,7 +22,7 @@ const SingleMovie = ({ title, poster, id }) => {
       }}
       className="movie-container"
     >
-      <Link to={`${mediaType}/${id}`}>
+      <Link to={`${baseName}${mediaType}/${id}`}>
         <div className="movie-poster-container">
           <motion.img
             initial={{

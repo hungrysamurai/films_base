@@ -36,6 +36,7 @@ const AppProvider = ({ children }) => {
       moviesListState.filterList,
       moviesListState.filterGenre,
       moviesListState.page,
+      moviesListState.searchQuery,
       dispatch
     );
 
@@ -51,7 +52,8 @@ const AppProvider = ({ children }) => {
     filterGenre,
     page,
     moviesList,
-    totalPages
+    totalPages,
+    searchQuery,
   } = moviesListState;
 
   return (
@@ -71,6 +73,7 @@ const AppProvider = ({ children }) => {
         filterGenre,
         page,
         totalPages,
+        searchQuery,
         dispatch,
         moviesList,
         currentTitle,

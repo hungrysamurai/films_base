@@ -7,6 +7,7 @@ const initialState = {
   moviesList: [],
   uniqueIds: [],
   totalPages: 0,
+  searchQuery: "",
 };
 
 const mainReducer = (state, action) => {
@@ -49,7 +50,7 @@ const mainReducer = (state, action) => {
         ...state,
         moviesList: [...action.payload[0]],
         uniqueIds: [...action.payload[1]],
-        totalPages: action.payload[2]
+        totalPages: action.payload[2],
       };
     case "APPEND_MOVIES": {
       const ids = [];
@@ -68,6 +69,12 @@ const mainReducer = (state, action) => {
         uniqueIds: [...state.uniqueIds, ...ids],
       };
     }
+    case "SET_SEARCH_QUERY":
+      return {
+        ...state,
+        page: 1,
+        searchQuery: action.payload,
+      };
     default:
       return state;
   }

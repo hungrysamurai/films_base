@@ -11,6 +11,7 @@ export const useFetchMoviesList = (
   filterList,
   filterGenre,
   page,
+  searchQuery,
   dispatch
 ) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -25,18 +26,17 @@ export const useFetchMoviesList = (
       });
 
       try {
+        let response;
 
-        const response = await axios(
-          `${apiBase}/${mediaType}/${filterList}?${apiKey}&page=${currentPage}&language=${lang}&with_genres=${filterGenre}`
-        );
-
-        // // Check if there more movies
-        // if (response.data.total_pages === currentPage) {
-        //   // if no more pages
-        //   dispatch({ type: "SET_LAST_PAGE", payload: true });
-        // } else {
-        //   dispatch({ type: "SET_LAST_PAGE", payload: false });
-        // }
+        if (searchQuery === "") {
+          response = await axios(
+            `${apiBase}/${mediaType}/${filterList}?${apiKey}&page=${currentPage}&language=${lang}&with_genres=${filterGenre}`
+          );
+        } else {
+          response = await axios(
+            `${apiBase}/search/${mediaType}?${apiKey}&query=${searchQuery}&page=${currentPage}&language=${lang}`
+          );
+        }
 
         if (response.data.total_results === 0) {
           throw new Error(
@@ -53,7 +53,7 @@ export const useFetchMoviesList = (
           const outputObj = {
             posterUrl: item.poster_path
               ? imagesUrlBase + item.poster_path
-              : "./assets/images/no-poster.jpg",
+              : "/assets/images/no-poster.jpg",
             title: item.title ? item.title : item.name,
             id: item.id,
           };
@@ -67,7 +67,8 @@ export const useFetchMoviesList = (
 
         if (currentPage === 1) {
           // If amount of pages is more than 500 - set to 500 (API restrictions)
-          const pagesNum = response.data.total_pages > 500 ? 500 : response.data.total_pages;
+          const pagesNum =
+            response.data.total_pages > 500 ? 500 : response.data.total_pages;
 
           const initialData = [output, ids, pagesNum];
           dispatch({ type: "INITIAL_LOAD_MOVIES", payload: initialData });
@@ -85,12 +86,27 @@ export const useFetchMoviesList = (
         setIsLoading(false);
       }
     },
-    [dispatch]
+    [dispatch, searchQuery]
   );
 
   useEffect(() => {
-    fetchMoviesList(mediaType, lang, filterList, filterGenre, page);
-  }, [mediaType, lang, filterList, filterGenre, page, fetchMoviesList]);
+    fetchMoviesList(
+      mediaType,
+      lang,
+      filterList,
+      filterGenre,
+      page,
+      searchQuery
+    );
+  }, [
+    mediaType,
+    lang,
+    filterList,
+    filterGenre,
+    page,
+    fetchMoviesList,
+    searchQuery,
+  ]);
 
   return { isLoading, error };
 };
