@@ -9,7 +9,7 @@ const SearchResults = () => {
 
   useEffect(() => {
     setCurrentTitle(query);
-    dispatch({ type: "SET_SEARCH_QUERY", payload: query });
+    dispatch({ type: "SET_SEARCH_QUERY", payload: ["search", query] });
   }, [query, setCurrentTitle, dispatch]);
 
   return (

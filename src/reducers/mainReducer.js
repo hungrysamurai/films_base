@@ -8,6 +8,8 @@ const initialState = {
   uniqueIds: [],
   totalPages: 0,
   searchQuery: "",
+  currentUserList: [238, 129, 155],
+  mode: "home",
 };
 
 const mainReducer = (state, action) => {
@@ -73,7 +75,10 @@ const mainReducer = (state, action) => {
       return {
         ...state,
         page: 1,
-        searchQuery: action.payload,
+        filterList: "top_rated",
+        filterGenre: "all",
+        mode: action.payload[0],
+        searchQuery: action.payload[1],
       };
     default:
       return state;

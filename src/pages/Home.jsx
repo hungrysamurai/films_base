@@ -5,13 +5,13 @@ import MoviesList from "../components/moviesList/MoviesList";
 import { useGlobalContext } from "../contexts/GlobalContext";
 
 const Home = () => {
-  const { searchQuery, dispatch } = useGlobalContext();
+  const { mode, searchQuery, dispatch } = useGlobalContext();
 
   useEffect(() => {
-    if (searchQuery) {
-      dispatch({ type: "SET_SEARCH_QUERY", payload: "" });
+    if (mode !== "home") {
+      dispatch({ type: "SET_SEARCH_QUERY", payload: ["home", ""] });
     }
-  }, [searchQuery, dispatch]);
+  }, [searchQuery, dispatch, mode]);
 
   return (
     <section className="section-home">

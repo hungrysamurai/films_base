@@ -8,7 +8,6 @@ import {
 
 import { initialState, mainReducer } from "../reducers/mainReducer";
 
-import { useFetchGenres } from "../hooks/useFetchGenres";
 import { useFetchMoviesList } from "../hooks/useFetchMoviesList";
 
 import { getTheme } from "../utils/getTheme";
@@ -23,12 +22,6 @@ const AppProvider = ({ children }) => {
 
   const [moviesListState, dispatch] = useReducer(mainReducer, initialState);
 
-  const {
-    isLoading: genresFetchLoading,
-    error: genresFetchError,
-    data: genresFetchedList,
-  } = useFetchGenres(moviesListState.mediaType, moviesListState.lang);
-
   const { isLoading: moviesFetchLoading, error: moviesFetchError } =
     useFetchMoviesList(
       moviesListState.mediaType,
@@ -37,6 +30,8 @@ const AppProvider = ({ children }) => {
       moviesListState.filterGenre,
       moviesListState.page,
       moviesListState.searchQuery,
+      moviesListState.mode,
+      moviesListState.currentUserList,
       dispatch
     );
 
@@ -54,6 +49,7 @@ const AppProvider = ({ children }) => {
     moviesList,
     totalPages,
     searchQuery,
+    mode,
   } = moviesListState;
 
   return (
@@ -63,9 +59,6 @@ const AppProvider = ({ children }) => {
         lang,
         theme,
         setTheme,
-        genresFetchLoading,
-        genresFetchError,
-        genresFetchedList,
         moviesFetchError,
         moviesFetchLoading,
         mediaType,
@@ -74,6 +67,7 @@ const AppProvider = ({ children }) => {
         page,
         totalPages,
         searchQuery,
+        mode,
         dispatch,
         moviesList,
         currentTitle,

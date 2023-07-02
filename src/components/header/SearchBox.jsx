@@ -15,8 +15,10 @@ const SearchBox = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const search = () => {
-    navigate(`/search/${searchTerm}`);
-    setSearchTerm("");
+    if (searchTerm) {
+      navigate(`/search/${searchTerm}`);
+      setSearchTerm("");
+    }
   };
 
   return (

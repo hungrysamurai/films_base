@@ -2,18 +2,17 @@ import { useState, useEffect, useRef } from "react";
 
 import { motion, useAnimation } from "framer-motion";
 import { useGlobalContext } from "../../contexts/GlobalContext";
-
-import ErrorMessage from '../ErrorMessage';
+import { useFetchGenres } from "../../hooks/useFetchGenres";
+import ErrorMessage from "../ErrorMessage";
 
 const GenresList = () => {
+  const { filterGenre, dispatch, lang, mediaType } = useGlobalContext();
+
   const {
-    genresFetchLoading,
-    genresFetchError,
-    genresFetchedList,
-    filterGenre,
-    dispatch,
-    lang,
-  } = useGlobalContext();
+    isLoading: genresFetchLoading,
+    error: genresFetchError,
+    data: genresFetchedList,
+  } = useFetchGenres(mediaType, lang);
 
   const [genresList, setGenresList] = useState([]);
   const [genresListWidth, setGenresListWidth] = useState(0);
@@ -21,7 +20,6 @@ const GenresList = () => {
   const control = useAnimation();
 
   const genresListContainerRef = useRef(null);
-  const firstGenreListEl = useRef(null);
 
   useEffect(() => {
     setGenresList(genresFetchedList);
@@ -33,7 +31,6 @@ const GenresList = () => {
         return genresListContainerRef.current.scrollWidth;
       });
     }
-
   }, [genresList, genresListWidth, control]);
 
   const setAndAnimateActiveGenre = (el, id) => {
@@ -59,14 +56,11 @@ const GenresList = () => {
   if (genresFetchError.show) {
     return (
       <div className="genres-list-container">
-        <ErrorMessage 
-        errorMessage={genresFetchError.message} componentMessage='Ошибка при загрузке списка жанров' 
-        showImage={false}/>
-
-        {/* <h3 className="error-message">
-          Ошибка при загрузке списка жанров:{" "}
-          <span>{genresFetchError.message}</span>
-        </h3> */}
+        <ErrorMessage
+          errorMessage={genresFetchError.message}
+          componentMessage="Ошибка при загрузке списка жанров"
+          showImage={false}
+        />
       </div>
     );
   }
@@ -95,7 +89,6 @@ const GenresList = () => {
               key={genre.id}
               onClick={(e) => setAndAnimateActiveGenre(e.target, genre.id)}
               className={filterGenre === `${genre.id}` ? "active" : ""}
-              ref={genre.id === "all" ? firstGenreListEl : null}
             >
               {`${genre.name[0].toUpperCase()}${genre.name.slice(1)}`}
             </li>

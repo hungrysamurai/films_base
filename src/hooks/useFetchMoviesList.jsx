@@ -12,6 +12,8 @@ export const useFetchMoviesList = (
   filterGenre,
   page,
   searchQuery,
+  mode,
+  currentUserList,
   dispatch
 ) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -28,14 +30,25 @@ export const useFetchMoviesList = (
       try {
         let response;
 
-        if (searchQuery === "") {
+        if (mode === "home") {
           response = await axios(
             `${apiBase}/${mediaType}/${filterList}?${apiKey}&page=${currentPage}&language=${lang}&with_genres=${filterGenre}`
           );
-        } else {
+        } else if (mode === "search") {
           response = await axios(
             `${apiBase}/search/${mediaType}?${apiKey}&query=${searchQuery}&page=${currentPage}&language=${lang}`
           );
+        } else if (mode === "userList") {
+          response = [];
+          console.log(currentUserList);
+          currentUserList.forEach(async (id) => {
+            const movie = await axios(
+              `${apiBase}/${mediaType}/${id}?${apiKey}&language=${lang}`
+            );
+            response.push(movie);
+          });
+
+          console.log(response);
         }
 
         if (response.data.total_results === 0) {
