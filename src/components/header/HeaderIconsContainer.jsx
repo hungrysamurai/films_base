@@ -1,4 +1,5 @@
 import { useGlobalContext } from "../../contexts/GlobalContext";
+import { Link } from "react-router-dom";
 
 const HeaderIconsContainer = () => {
   const { baseName, theme, setTheme, lang, dispatch } = useGlobalContext();
@@ -23,12 +24,12 @@ const HeaderIconsContainer = () => {
 
   return (
     <div className="header-icons-container">
-      <a href="#">
+      <Link to="auth">
         <img
           src={`${baseName}assets/images/icons/icon-user-${theme}.svg`}
           alt="user-profile"
         />
-      </a>
+      </Link>
 
       <a href="#" onClick={toggleTheme}>
         <img

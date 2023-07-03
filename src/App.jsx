@@ -5,6 +5,7 @@ import PageWrapper from "./components/PageWrapper";
 import Home from "./pages/Home";
 import MoviePage from "./pages/MoviePage";
 import SearchResults from "./pages/SearchResults";
+import AuthPage from "./pages/AuthPage";
 
 function App() {
   const { baseName } = useGlobalContext();
@@ -17,6 +18,7 @@ function App() {
           <Route path="movie/:id" element={<MoviePage />} />
           <Route path="tv/:id" element={<MoviePage />} />
           <Route path="search/:query" element={<SearchResults />} />
+          <Route path="auth" element={<AuthPage />} />
           <Route path="*" element={<div>some error</div>} />
         </Route>
       </Routes>

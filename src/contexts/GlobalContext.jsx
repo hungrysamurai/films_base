@@ -6,7 +6,7 @@ import {
   useReducer,
 } from "react";
 
-import { initialState, mainReducer } from "../reducers/mainReducer";
+import { initialState, moviesListReducer } from "../reducers/moviesListReducer";
 
 import { useFetchMoviesList } from "../hooks/useFetchMoviesList";
 
@@ -20,7 +20,10 @@ const AppProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => getTheme());
   const [currentTitle, setCurrentTitle] = useState("");
 
-  const [moviesListState, dispatch] = useReducer(mainReducer, initialState);
+  const [moviesListState, dispatch] = useReducer(
+    moviesListReducer,
+    initialState
+  );
 
   const { isLoading: moviesFetchLoading, error: moviesFetchError } =
     useFetchMoviesList(
@@ -30,7 +33,7 @@ const AppProvider = ({ children }) => {
       moviesListState.filterGenre,
       moviesListState.page,
       moviesListState.searchQuery,
-      moviesListState.mode,
+      moviesListState.moviesListMode,
       moviesListState.currentUserList,
       dispatch
     );
@@ -49,7 +52,7 @@ const AppProvider = ({ children }) => {
     moviesList,
     totalPages,
     searchQuery,
-    mode,
+    moviesListMode,
   } = moviesListState;
 
   return (
@@ -67,7 +70,7 @@ const AppProvider = ({ children }) => {
         page,
         totalPages,
         searchQuery,
-        mode,
+        moviesListMode,
         dispatch,
         moviesList,
         currentTitle,

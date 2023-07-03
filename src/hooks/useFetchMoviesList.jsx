@@ -3,7 +3,7 @@ import axios from "axios";
 
 const apiBase = import.meta.env.VITE_TMDB_API_BASE;
 const apiKey = import.meta.env.VITE_TMDB_API_KEY;
-const imagesUrlBase = `${import.meta.env.VITE_IMAGES_BASE_URL}w500`;
+const imagesUrlBase = `${import.meta.env.VITE_IMAGES_BASE_URL}w300`;
 
 export const useFetchMoviesList = (
   mediaType,
@@ -12,7 +12,7 @@ export const useFetchMoviesList = (
   filterGenre,
   page,
   searchQuery,
-  mode,
+  moviesListMode,
   currentUserList,
   dispatch
 ) => {
@@ -20,35 +20,44 @@ export const useFetchMoviesList = (
   const [error, setError] = useState({ show: false, message: "" });
 
   const fetchMoviesList = useCallback(
-    async (mediaType, lang, filterList, filterGenre, currentPage) => {
+    async (mediaType, lang, filterList, filterGenre, currentPage, searchQuery) => {
+  
       setIsLoading(true);
       setError({
         show: false,
         message: "",
       });
-
+      
       try {
         let response;
 
-        if (mode === "home") {
+        if (moviesListMode === "home") {
           response = await axios(
             `${apiBase}/${mediaType}/${filterList}?${apiKey}&page=${currentPage}&language=${lang}&with_genres=${filterGenre}`
           );
-        } else if (mode === "search") {
+        } else if (moviesListMode === "search") {
           response = await axios(
             `${apiBase}/search/${mediaType}?${apiKey}&query=${searchQuery}&page=${currentPage}&language=${lang}`
           );
-        } else if (mode === "userList") {
-          response = [];
-          console.log(currentUserList);
-          currentUserList.forEach(async (id) => {
+        } else if (moviesListMode === "userList") {
+          
+          response = {
+            data: {
+              results: [],
+              total_pages: 1,
+            },
+            total_results: currentUserList.length,
+          };
+    
+          for (let { id, mediaType } of currentUserList) {
+
             const movie = await axios(
               `${apiBase}/${mediaType}/${id}?${apiKey}&language=${lang}`
             );
-            response.push(movie);
-          });
 
-          console.log(response);
+            movie.data.mediaType = mediaType;
+            response.data.results.push(movie.data);
+          }
         }
 
         if (response.data.total_results === 0) {
@@ -69,11 +78,19 @@ export const useFetchMoviesList = (
               : "/assets/images/no-poster.jpg",
             title: item.title ? item.title : item.name,
             id: item.id,
+            mediaType: item.mediaType ? item.mediaType : mediaType
           };
 
+          
           if (currentPage === 1) {
             ids.push(item.id);
           }
+
+          // if(!item.mediaType){
+          //   outputObj.mediaType = mediaType;
+          // } else {
+          //   outputObj.mediaType = item.mediaType
+          // }
 
           output.push(outputObj);
         });
@@ -99,10 +116,11 @@ export const useFetchMoviesList = (
         setIsLoading(false);
       }
     },
-    [dispatch, searchQuery]
+    [dispatch, currentUserList, moviesListMode]
   );
 
   useEffect(() => {
+    console.log('movies list effect fires!');
     fetchMoviesList(
       mediaType,
       lang,

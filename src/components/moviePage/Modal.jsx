@@ -37,6 +37,10 @@ const Modal = ({hideModal, changeModalImage, control, modal}) => {
           initial={{
             x: `-${modal.index * 100}%`
           }}
+          transition={{
+          stiffness: 50,
+          type: "spring",
+        }}
         >
             {modal.data}
         </motion.div>

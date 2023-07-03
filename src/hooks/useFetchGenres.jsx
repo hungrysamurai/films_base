@@ -7,7 +7,7 @@ const apiKey = import.meta.env.VITE_TMDB_API_KEY;
 export const useFetchGenres = (mediaType, lang) => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState({ show: false, msg: "" });
+  const [error, setError] = useState({ show: false, message: "" });
 
   const fetchGenresList = useCallback(async (mediaType, lang) => {
     setIsLoading(true);
@@ -34,6 +34,7 @@ export const useFetchGenres = (mediaType, lang) => {
   }, []);
 
   useEffect(() => {
+    console.log('genres effect fires!');
     fetchGenresList(mediaType, lang);
   }, [mediaType, lang, fetchGenresList]);
 

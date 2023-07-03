@@ -14,10 +14,13 @@ export const useFetchSingleMovie = (mediaType, lang, id) => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [dataError, setDataError] = useState({ show: false, message: "" });
-  const [imagesError, setImagesError] = useState({ show: false, message: "" });
-  const [videosError, setVideosError] = useState({ show: false, message: "" });
+
   const [images, setImages] = useState([]);
+  const [imagesError, setImagesError] = useState({ show: false, message: "" });
+
   const [videos, setVideos] = useState([]);
+  const [videosError, setVideosError] = useState({ show: false, message: "" });
+
 
   const fetchSingleMovie = useCallback(async (mediaType, lang, id) => {
     setIsLoading(true);
@@ -242,8 +245,9 @@ export const useFetchSingleMovie = (mediaType, lang, id) => {
   }, []);
 
   useEffect(() => {
+    console.log('single movie effect fires!');
     fetchSingleMovie(mediaType, lang, id);
-  }, [fetchSingleMovie, mediaType, lang, id]);
+  }, [mediaType, lang, id,fetchSingleMovie, ]);
 
   return {
     isLoading,

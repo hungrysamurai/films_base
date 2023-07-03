@@ -23,9 +23,10 @@ const MoviesList = () => {
     if (page < totalPages) {
       if (
         window.innerHeight + window.scrollY >=
-        document.body.scrollHeight - 150
+        document.body.scrollHeight - 50
       ) {
-        dispatch({ type: "INCREASE_PAGE" });
+        const nextPage = page + 1;
+        dispatch({ type: "INCREASE_PAGE", payload: nextPage });
       }
     }
   }, [dispatch, page, totalPages]);
@@ -59,14 +60,14 @@ const MoviesList = () => {
   return (
     <>
       <motion.div layout layoutRoot className="movies-list-container">
-        {currentList.map(({ posterUrl, title, id }) => {
+        {currentList.map(({ posterUrl, title, id, mediaType }) => {
           if (title.length > 35) {
             title = title.slice(0, 35) + "...";
           }
-
+          
           return (
             <AnimatePresence key={id}>
-              <SingleMovie poster={posterUrl} title={title} id={id} />;
+              <SingleMovie poster={posterUrl} title={title} id={id} mediaType={mediaType}/>;
             </AnimatePresence>
           );
         })}

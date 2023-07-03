@@ -3,9 +3,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
-const SingleMovie = ({ title, poster, id }) => {
+const SingleMovie = ({ title, poster, id, mediaType }) => {
   const [imageLoading, setImageLoading] = useState(true);
-  const { mediaType, baseName } = useGlobalContext();
+  const { baseName } = useGlobalContext();
   const imageLoaded = () => {
     setImageLoading(false);
   };

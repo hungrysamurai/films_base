@@ -4,22 +4,28 @@ const initialState = {
   filterList: "top_rated",
   filterGenre: "all",
   page: 1,
+  totalPages: 0,
   moviesList: [],
   uniqueIds: [],
-  totalPages: 0,
+  moviesListMode: "home",
   searchQuery: "",
-  currentUserList: [238, 129, 155],
-  mode: "home",
+  currentUserList: [
+    { id: 238, mediaType: 'movie' },
+    { id: 129, mediaType: 'movie' },
+    { id: 155, mediaType: 'movie' },
+    { id: 94605, mediaType: 'tv' },
+    { id: 772071, mediaType: 'movie' },
+    { id: 39102, mediaType: 'movie' }
+  ],
 };
 
-const mainReducer = (state, action) => {
+const moviesListReducer = (state, action) => {
   switch (action.type) {
     case "SET_LANG":
       return {
         ...state,
         lang: action.payload,
         page: 1,
-        moviesList: [],
       };
     case "SET_MEDIA_TYPE":
       return {
@@ -34,7 +40,6 @@ const mainReducer = (state, action) => {
         ...state,
         filterList: action.payload,
         page: 1,
-        moviesList: [],
       };
     case "SET_FILTER_GENRE":
       return {
@@ -45,7 +50,7 @@ const mainReducer = (state, action) => {
     case "INCREASE_PAGE":
       return {
         ...state,
-        page: state.page + 1,
+        page: action.payload,
       };
     case "INITIAL_LOAD_MOVIES":
       return {
@@ -64,25 +69,37 @@ const mainReducer = (state, action) => {
           return true;
         }
       });
-
       return {
         ...state,
         moviesList: [...state.moviesList, ...filtered],
         uniqueIds: [...state.uniqueIds, ...ids],
       };
     }
-    case "SET_SEARCH_QUERY":
+    case "SET_SEARCH_MODE":
       return {
         ...state,
         page: 1,
         filterList: "top_rated",
         filterGenre: "all",
-        mode: action.payload[0],
-        searchQuery: action.payload[1],
+        moviesListMode: 'search',
+        searchQuery: action.payload,
       };
+    case 'SET_HOME_MODE':
+      return {
+        ...state,
+        page: 1,
+        filterList: "top_rated",
+        filterGenre: "all",
+        moviesListMode: "home",
+      }
+    case 'SET_USER_MODE':
+      return {
+        ...state,
+        moviesListMode: 'userList'
+      }
     default:
       return state;
   }
 };
 
-export { initialState, mainReducer };
+export { initialState, moviesListReducer };
