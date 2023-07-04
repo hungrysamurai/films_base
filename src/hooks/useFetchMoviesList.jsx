@@ -50,13 +50,15 @@ export const useFetchMoviesList = (
           };
     
           for (let { id, mediaType } of currentUserList) {
-
+            try{
             const movie = await axios(
               `${apiBase}/${mediaType}/${id}?${apiKey}&language=${lang}`
-            );
-
-            movie.data.mediaType = mediaType;
-            response.data.results.push(movie.data);
+              );
+              movie.data.mediaType = mediaType;
+              response.data.results.push(movie.data);
+            } catch (err){
+              console.log(err);
+            }
           }
         }
 
@@ -81,16 +83,9 @@ export const useFetchMoviesList = (
             mediaType: item.mediaType ? item.mediaType : mediaType
           };
 
-          
           if (currentPage === 1) {
             ids.push(item.id);
           }
-
-          // if(!item.mediaType){
-          //   outputObj.mediaType = mediaType;
-          // } else {
-          //   outputObj.mediaType = item.mediaType
-          // }
 
           output.push(outputObj);
         });

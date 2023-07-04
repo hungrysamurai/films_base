@@ -247,7 +247,7 @@ export const useFetchSingleMovie = (mediaType, lang, id) => {
   useEffect(() => {
     console.log('single movie effect fires!');
     fetchSingleMovie(mediaType, lang, id);
-  }, [mediaType, lang, id,fetchSingleMovie, ]);
+  }, [mediaType, lang, id, fetchSingleMovie ]);
 
   return {
     isLoading,

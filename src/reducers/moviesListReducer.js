@@ -10,7 +10,7 @@ const initialState = {
   moviesListMode: "home",
   searchQuery: "",
   currentUserList: [
-    { id: 238, mediaType: 'movie' },
+    { id: 6321321321321, mediaType: 'movie' },
     { id: 129, mediaType: 'movie' },
     { id: 155, mediaType: 'movie' },
     { id: 94605, mediaType: 'tv' },

@@ -5,6 +5,7 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 import { useFetchGenres } from "../../hooks/useFetchGenres";
 import ErrorMessage from "../ErrorMessage";
 
+
 const GenresList = () => {
   const { filterGenre, dispatch, lang, mediaType } = useGlobalContext();
 
@@ -14,16 +15,9 @@ const GenresList = () => {
     data: genresFetchedList,
   } = useFetchGenres(mediaType, lang);
 
-  const [genresList, setGenresList] = useState([]);
   const [genresListWidth, setGenresListWidth] = useState(0);
-
   const control = useAnimation();
-
   const genresListContainerRef = useRef(null);
-
-  useEffect(() => {
-    setGenresList(genresFetchedList);
-  }, [genresFetchedList]);
 
   useEffect(() => {
     if (genresListContainerRef.current) {
@@ -31,7 +25,7 @@ const GenresList = () => {
         return genresListContainerRef.current.scrollWidth;
       });
     }
-  }, [genresList, genresListWidth, control]);
+  }, [genresFetchedList, genresListWidth, control]);
 
   const setAndAnimateActiveGenre = (el, id) => {
     dispatch({ type: "SET_FILTER_GENRE", payload: `${id}` });
@@ -83,7 +77,7 @@ const GenresList = () => {
           x: "50%",
         }}
       >
-        {genresList.map((genre) => {
+        {genresFetchedList.map((genre) => {
           return (
             <li
               key={genre.id}
