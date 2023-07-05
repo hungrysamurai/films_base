@@ -115,7 +115,6 @@ export const useFetchMoviesList = (
   );
 
   useEffect(() => {
-    console.log('movies list effect fires!');
     fetchMoviesList(
       mediaType,
       lang,

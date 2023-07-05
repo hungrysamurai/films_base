@@ -1,8 +1,11 @@
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { Link } from "react-router-dom";
+import { useUserContext } from "../../contexts/UserContext";
 
 const HeaderIconsContainer = () => {
   const { baseName, theme, setTheme, lang, dispatch } = useGlobalContext();
+
+  const { currentUser } = useUserContext();
 
   const toggleTheme = () => {
     if (theme === "dark") {
@@ -24,7 +27,7 @@ const HeaderIconsContainer = () => {
 
   return (
     <div className="header-icons-container">
-      <Link to="auth">
+      <Link to={currentUser ? 'profile' : 'auth'}>
         <img
           src={`${baseName}assets/images/icons/icon-user-${theme}.svg`}
           alt="user-profile"

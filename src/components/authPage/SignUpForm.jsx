@@ -2,7 +2,12 @@ import FormInput from "./FormInput";
 
 import { useState } from "react";
 
-import { AnimatePresence, motion } from 'framer-motion';
+import {
+  createAuthUserWithEmailAndPassword,
+  createUserDocumentFromAuth,
+} from '../../utils/firebase/firebase.utils';
+
+import { motion } from 'framer-motion';
 
 const defaultSignUpFormFields = {
   displayName: "",
@@ -19,7 +24,33 @@ const SignUpForm = () => {
 
    const handleSignUpSubmit = async (e) => {
     e.preventDefault();
+
+     if (password !== confirmPassword) {
+      alert("Passwords don't match!");
+      return;
+    }//если пароли не совпадают
+
+
+    try {
+      const { user } = await createAuthUserWithEmailAndPassword(
+        email,
+        password
+      );//делаем запрос с почтой паролем, и если ок то:
+
+
+    await createUserDocumentFromAuth(user, { displayName });//…создаём нового пользователя
+
+    } catch (e) {
+      if (e.code === "auth/email-already-in-use") {
+        alert("Email already in use!");
+      }
+      console.log(e);
+    }
   }
+
+  // const resetFormFields = () => {
+  //   setSignUpFormFields(defaultSignUpFormFields);
+  // };
 
   const handleSignUpChanges = (e) => {
     const { name, value } = e.target;

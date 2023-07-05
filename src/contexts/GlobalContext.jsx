@@ -6,12 +6,33 @@ import {
   useReducer,
 } from "react";
 
-import { initialState, moviesListReducer } from "../reducers/moviesListReducer";
+import moviesListReducer from "../reducers/moviesListReducer";
 
 import { useFetchMoviesList } from "../hooks/useFetchMoviesList";
 
 import { getTheme } from "../utils/getTheme";
 import { getBaseName } from "../utils/getBaseName";
+
+const initialState = {
+  lang: "en",
+  mediaType: "movie",
+  filterList: "top_rated",
+  filterGenre: "all",
+  page: 1,
+  totalPages: 0,
+  moviesList: [],
+  uniqueIds: [],
+  moviesListMode: "home",
+  searchQuery: "",
+  currentUserList: [
+    { id: 6321321321321, mediaType: 'movie' },
+    { id: 129, mediaType: 'movie' },
+    { id: 155, mediaType: 'movie' },
+    { id: 94605, mediaType: 'tv' },
+    { id: 772071, mediaType: 'movie' },
+    { id: 39102, mediaType: 'movie' }
+  ],
+};
 
 const AppContext = createContext();
 

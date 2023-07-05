@@ -34,7 +34,6 @@ export const useFetchGenres = (mediaType, lang) => {
   }, []);
 
   useEffect(() => {
-    console.log('genres effect');
     fetchGenresList(mediaType, lang);
   }, [mediaType, lang, fetchGenresList]);
 

@@ -1,7 +1,17 @@
 import FormInput from "./FormInput";
 
+import { 
+ signInWithGoogglePopup,
+ signInAuthUserWithEmailAndPassword,
+ createUserDocumentFromAuth
+} from "../../utils/firebase/firebase.utils";
+
 import { useState } from "react";
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { useNavigate } from "react-router-dom";
+
+import { useUserContext } from "../../contexts/UserContext";
+
 
 const defaultSignInFormFields = {
   email: "",
@@ -10,13 +20,44 @@ const defaultSignInFormFields = {
 
 const SignInForm = () => {
 
+  const { dispatch } = useUserContext();
+
+  const navigate = useNavigate();
+
   const [signInFormFields, setSignInFormFields] = useState(defaultSignInFormFields);
-
   const { email, password } = signInFormFields;
+  
 
-   const handleSignInSubmit = async (e) => {
+  const handleSignInSubmit = async (e) => {
     e.preventDefault();
+
+  try {
+      const { user } = await signInAuthUserWithEmailAndPassword(
+        email,
+        password
+      );
+      
+      dispatch({type: 'LOGIN', payload: user});
+
+      resetFormFields();
+      navigate('/profile')
+  } catch (err) {
+   console.log(err);
   }
+ }
+
+
+ const logGoogleUser = async () => {
+  const { user } = await signInWithGoogglePopup();
+
+  const userDocRef = await createUserDocumentFromAuth(user);
+  resetFormFields();
+  navigate('/profile');
+}
+
+  const resetFormFields = () => {
+    setSignInFormFields(defaultSignInFormFields);
+  };
 
   const handleSignInChanges = (e) => {
     const { name, value } = e.target;
@@ -62,7 +103,9 @@ const SignInForm = () => {
         <button type='submit'>
           <span>Войти</span>
         </button>
-        <button type='submit'>
+        <button type='submit'
+        onClick={logGoogleUser}
+        >
          <span><img src="/assets/images/icons/icon-google.svg" alt="google sign-in" /></span>
         </button>
         

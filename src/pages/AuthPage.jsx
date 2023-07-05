@@ -1,13 +1,20 @@
 import { useState, useEffect } from "react";
+
 import { useGlobalContext } from "../contexts/GlobalContext";
+import { useUserContext } from "../contexts/UserContext";
 
 import AuthModeToggler from "../components/authPage/AuthModeToggler";
+
 import SignUpForm from "../components/authPage/SignUpForm";
 import SignInForm from "../components/authPage/SignInForm";
+import { useNavigate } from "react-router-dom";
+
 
 const AuthPage = () => {
   const { setCurrentTitle, lang } = useGlobalContext();
-  const [formMode, setFormMode] = useState('sign-up');
+  const [formMode, setFormMode] = useState('sign-in');
+
+  const { currentUser } = useUserContext();
 
   useEffect(() => {
     setCurrentTitle(() => {
@@ -15,23 +22,21 @@ const AuthPage = () => {
     })
   },[setCurrentTitle, lang]);
 
-  return (
+ return (
     <section className="section-auth">
       <AuthModeToggler activeMode={formMode} setActiveMode={setFormMode}/>
      
      <div className="form-container">
 
-
-          {formMode === 'sign-up' ?
+      {formMode === 'sign-up' ?
           <SignUpForm/> :
           <SignInForm/>
-          }
-
+      }
 
      </div>
-
     </section>
   );
+  
 };
 
 export default AuthPage;
