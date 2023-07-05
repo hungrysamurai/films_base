@@ -5,6 +5,8 @@ import {
   createUserDocumentFromAuth 
 } from "../utils/firebase/firebase.utils";
 
+import { updateProfile } from "firebase/auth";
+
 import userReducer from '../reducers/userReducer'
 
 const initialUserState = {
@@ -19,20 +21,19 @@ const UserProvider = ({ children }) => {
   const { currentUser } = userState;
 
   useEffect(() => {
-
      const unsubscribe =  onAuthStateChangedListener((user) => {
-      
       if(user){
          createUserDocumentFromAuth(user);
       }
       dispatch({type: 'LOGIN', payload: user});
      })
-
+     
      return unsubscribe;
   },[])
 
 
   return <UserContext.Provider value={{currentUser, dispatch}}>{children}</UserContext.Provider>;
+  
 };
 
 export const useUserContext = () => {

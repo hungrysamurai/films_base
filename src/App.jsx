@@ -15,11 +15,11 @@ function App() {
   const { baseName } = useGlobalContext();
   const { currentUser } = useUserContext();
 
-  const RequireAuth = ({ children }) => {
+  const ProtectedRoute = ({ children }) => {
     return currentUser ? children : <Navigate to='/auth'/>
   }
 
-  const UserRedirect = ({ children }) => {
+  const PublicRoute = ({ children }) => {
     return currentUser ? <Navigate to='/profile'/> : children
   }
 
@@ -32,12 +32,16 @@ function App() {
           <Route path="tv/:id" element={<MoviePage />} />
           <Route path="search/:query" element={<SearchResults />} />
 
-          <Route path="auth" element={<AuthPage/>} />
+          <Route path="auth" element={
+            <PublicRoute>
+              <AuthPage/>
+            </PublicRoute>
+          } />
 
           <Route path="profile" element={
-            <RequireAuth>
+            <ProtectedRoute>
               <ProfilePage />
-            </RequireAuth>
+            </ProtectedRoute>
           } />
 
           <Route path="*" element={<div>some error</div>} />

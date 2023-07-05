@@ -9,6 +9,8 @@ import {
 
 import { motion } from 'framer-motion';
 
+import { useGlobalContext } from "../../contexts/GlobalContext";
+
 const defaultSignUpFormFields = {
   displayName: "",
   email: "",
@@ -17,6 +19,7 @@ const defaultSignUpFormFields = {
 };
 
 const SignUpForm = () => {
+  const { setCurrentTitle } = useGlobalContext();
 
   const [signUpFormFields, setSignUpFormFields] = useState(defaultSignUpFormFields);
 
@@ -24,33 +27,32 @@ const SignUpForm = () => {
 
    const handleSignUpSubmit = async (e) => {
     e.preventDefault();
+    if (!email || !password) return;
 
-     if (password !== confirmPassword) {
+    if (password !== confirmPassword) {
       alert("Passwords don't match!");
       return;
-    }//если пароли не совпадают
-
+    }
 
     try {
       const { user } = await createAuthUserWithEmailAndPassword(
         email,
-        password
-      );//делаем запрос с почтой паролем, и если ок то:
+        password,
+      );
 
+      await createUserDocumentFromAuth(user, displayName);
+      setCurrentTitle(displayName);
+      
+    } catch (err) {
+      console.log('error from handleSignUpSubmit:');
+      console.log(err);
 
-    await createUserDocumentFromAuth(user, { displayName });//…создаём нового пользователя
-
-    } catch (e) {
-      if (e.code === "auth/email-already-in-use") {
+      if (err.code === "auth/email-already-in-use") {
         alert("Email already in use!");
       }
-      console.log(e);
     }
   }
 
-  // const resetFormFields = () => {
-  //   setSignUpFormFields(defaultSignUpFormFields);
-  // };
 
   const handleSignUpChanges = (e) => {
     const { name, value } = e.target;
@@ -59,10 +61,10 @@ const SignUpForm = () => {
       ...signUpFormFields,
       [name]: value,
     });
-    console.log(signUpFormFields);
   };
- return (
 
+
+ return (
      <motion.form 
      animate={{
       x:0,
@@ -111,9 +113,7 @@ const SignUpForm = () => {
           />
        
        <div className="buttons-container">
-
         <button type='submit'>Зарегистрироваться</button>
-        
        </div>
       </motion.form>
  )

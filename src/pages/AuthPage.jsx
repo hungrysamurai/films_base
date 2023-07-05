@@ -14,8 +14,6 @@ const AuthPage = () => {
   const { setCurrentTitle, lang } = useGlobalContext();
   const [formMode, setFormMode] = useState('sign-in');
 
-  const { currentUser } = useUserContext();
-
   useEffect(() => {
     setCurrentTitle(() => {
       return lang === 'en' ? 'Log In' : 'Авторизация'

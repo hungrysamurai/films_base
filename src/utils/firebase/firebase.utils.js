@@ -8,6 +8,7 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
+  updateProfile
 } from "firebase/auth";
 
 import {
@@ -17,8 +18,6 @@ import {
   setDoc,
 } from 'firebase/firestore'
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: "filmsbase-bea7b.firebaseapp.com",
@@ -43,53 +42,47 @@ export const auth = getAuth();
 export const signInWithGoogglePopup = () => signInWithPopup(auth, googleProvider);
 
 export const signInAuthUserWithEmailAndPassword = async (email, password) => {
-  if (!email || !password) return;
   return await signInWithEmailAndPassword(auth, email, password);
 };
 
-export const db = getFirestore();
+export const createAuthUserWithEmailAndPassword = async (email, password) => {
+  return await createUserWithEmailAndPassword(auth, email, password);
+};
 
-export const createUserDocumentFromAuth = async (userAuth, additionalInfo) => {
+const db = getFirestore();
+
+export const createUserDocumentFromAuth = async (userAuth, displayName) => {
   if (!userAuth) return;
-
-
   const userDocRef = doc(db, "users", userAuth.uid);
-
-
-  console.log(userDocRef);
-
-
   const userSnapshot = await getDoc(userDocRef);
+
   // Check if user exist
   // If not exist - create
   if (!userSnapshot.exists()) {
-    const { displayName, email } = userAuth;
+    const { email } = userAuth;
     const createdAt = new Date();
 
-
     try {
+
+      if (displayName) {
+        await updateProfile(userAuth, {
+          displayName
+        });
+      }
+
       await setDoc(userDocRef, {
-        displayName,
         email,
         createdAt,
-        ...additionalInfo,
       });
-    } catch (e) {
-      console.log(e);
+
+    } catch (err) {
+      console.log('createUserDocumentFromAuth error:');
+      console.log(err);
     }
   }
 
-  // return user ref
   return userDocRef;
 };
-
-export const createAuthUserWithEmailAndPassword = async (email, password) => {
-  if (!email || !password) return;
-  //…если нет почты и пароля - не делать ничего
-
-  return await createUserWithEmailAndPassword(auth, email, password);//помимо почты-пароля передаём в функцию текущий auth
-};
-
 
 export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback);
 
