@@ -1,14 +1,11 @@
 import { useState, useEffect } from "react";
 
 import { useGlobalContext } from "../contexts/GlobalContext";
-import { useUserContext } from "../contexts/UserContext";
 
 import AuthModeToggler from "../components/authPage/AuthModeToggler";
 
 import SignUpForm from "../components/authPage/SignUpForm";
 import SignInForm from "../components/authPage/SignInForm";
-import { useNavigate } from "react-router-dom";
-
 
 const AuthPage = () => {
   const { setCurrentTitle, lang } = useGlobalContext();
