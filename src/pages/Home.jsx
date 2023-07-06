@@ -8,9 +8,6 @@ const Home = () => {
   const { moviesListMode, searchQuery, dispatch, setCurrentTitle } = useGlobalContext();
 
   useEffect(() => {
-    // if (moviesListMode !== "userList") {
-    //   dispatch({ type: "SET_USER_MODE" });
-    // }
     if (moviesListMode !== "home") {
       dispatch({ type: "SET_HOME_MODE" });
     }
