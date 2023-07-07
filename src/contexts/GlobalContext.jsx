@@ -23,22 +23,13 @@ const initialState = {
   moviesList: [],
   uniqueIds: [],
   moviesListMode: "home",
-  searchQuery: "",
-  currentUserList: [
-    { id: 6321321321321, mediaType: 'movie' },
-    { id: 129, mediaType: 'movie' },
-    { id: 155, mediaType: 'movie' },
-    { id: 94605, mediaType: 'tv' },
-    { id: 772071, mediaType: 'movie' },
-    { id: 39102, mediaType: 'movie' }
-  ],
+  searchQuery: ""
 };
 
 const AppContext = createContext();
 
 const AppProvider = ({ children }) => {
   const baseName = getBaseName();
-  const [theme, setTheme] = useState(() => getTheme());
   const [currentTitle, setCurrentTitle] = useState("");
 
   const [moviesListState, dispatch] = useReducer(
@@ -55,14 +46,9 @@ const AppProvider = ({ children }) => {
       moviesListState.page,
       moviesListState.searchQuery,
       moviesListState.moviesListMode,
-      moviesListState.currentUserList,
       dispatch
     );
 
-  // Set color theme
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-  }, [theme]);
 
   const {
     lang,
@@ -81,8 +67,8 @@ const AppProvider = ({ children }) => {
       value={{
         baseName,
         lang,
-        theme,
-        setTheme,
+        // theme,
+        // setTheme,
         moviesFetchError,
         moviesFetchLoading,
         mediaType,

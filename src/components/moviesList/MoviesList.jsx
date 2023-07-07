@@ -17,23 +17,17 @@ const MoviesList = () => {
     totalPages,
   } = useGlobalContext();
 
-  const [currentList, setCurrentList] = useState([]);
-
   const loadMore = useCallback(() => {
     if (page < totalPages) {
       if (
         window.innerHeight + window.scrollY >=
-        document.body.scrollHeight - 50
+        document.body.scrollHeight - 100
       ) {
         const nextPage = page + 1;
         dispatch({ type: "INCREASE_PAGE", payload: nextPage });
       }
     }
   }, [dispatch, page, totalPages]);
-
-  useEffect(() => {
-    setCurrentList(moviesList);
-  }, [moviesList]);
 
   useEffect(() => {
     if (moviesFetchError.show) {
@@ -60,7 +54,7 @@ const MoviesList = () => {
   return (
     <>
       <motion.div layout layoutRoot className="movies-list-container">
-        {currentList.map(({ posterUrl, title, id, mediaType }) => {
+        {moviesList.map(({ posterUrl, title, id, mediaType }) => {
           if (title.length > 35) {
             title = title.slice(0, 35) + "...";
           }

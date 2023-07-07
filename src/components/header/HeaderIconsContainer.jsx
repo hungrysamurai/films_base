@@ -1,19 +1,27 @@
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { Link } from "react-router-dom";
 import { useUserContext } from "../../contexts/UserContext";
+import { getTheme } from "../../utils/getTheme";
+
+import { useEffect, useState } from "react";
 
 const HeaderIconsContainer = () => {
-  const { baseName, theme, setTheme, lang, dispatch } = useGlobalContext();
 
+  const { baseName, lang, dispatch } = useGlobalContext();
   const { currentUser } = useUserContext();
+
+  const [theme, setTheme] = useState(() => getTheme());
+  
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  },[theme])
 
   const toggleTheme = () => {
     if (theme === "dark") {
-      setTheme("light");
-      localStorage.setItem("theme", "light");
+      setTheme(() => "light");
     } else {
       setTheme("dark");
-      localStorage.setItem("theme", "dark");
     }
   };
 

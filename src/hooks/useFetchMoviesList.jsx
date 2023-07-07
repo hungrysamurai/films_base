@@ -13,7 +13,6 @@ export const useFetchMoviesList = (
   page,
   searchQuery,
   moviesListMode,
-  currentUserList,
   dispatch
 ) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -39,28 +38,7 @@ export const useFetchMoviesList = (
           response = await axios(
             `${apiBase}/search/${mediaType}?${apiKey}&query=${searchQuery}&page=${currentPage}&language=${lang}`
           );
-        } else if (moviesListMode === "userList") {
-          
-          response = {
-            data: {
-              results: [],
-              total_pages: 1,
-            },
-            total_results: currentUserList.length,
-          };
-    
-          for (let { id, mediaType } of currentUserList) {
-            try{
-            const movie = await axios(
-              `${apiBase}/${mediaType}/${id}?${apiKey}&language=${lang}`
-              );
-              movie.data.mediaType = mediaType;
-              response.data.results.push(movie.data);
-            } catch (err){
-              console.log(err);
-            }
-          }
-        }
+        } 
 
         if (response.data.total_results === 0) {
           throw new Error(
@@ -80,7 +58,7 @@ export const useFetchMoviesList = (
               : "/assets/images/no-poster.jpg",
             title: item.title ? item.title : item.name,
             id: item.id,
-            mediaType: item.mediaType ? item.mediaType : mediaType
+            mediaType: mediaType
           };
 
           if (currentPage === 1) {
@@ -111,7 +89,7 @@ export const useFetchMoviesList = (
         setIsLoading(false);
       }
     },
-    [dispatch, currentUserList, moviesListMode]
+    [dispatch, moviesListMode]
   );
 
   useEffect(() => {

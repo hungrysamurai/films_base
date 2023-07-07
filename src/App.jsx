@@ -10,6 +10,8 @@ import SearchResults from "./pages/SearchResults";
 import AuthPage from "./pages/AuthPage";
 import ProfilePage from "./pages/ProfilePage";
 
+import TestPage from "./pages/TestPAge";
+
 function App() {
 
   const { baseName } = useGlobalContext();
@@ -28,6 +30,7 @@ function App() {
       <Routes>
         <Route path={baseName} element={<PageWrapper />}>
           <Route index element={<Home />} />
+          <Route path='test' element={<TestPage />} />
           <Route path="movie/:id" element={<MoviePage />} />
           <Route path="tv/:id" element={<MoviePage />} />
           <Route path="search/:query" element={<SearchResults />} />

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useUserContext } from "../contexts/UserContext";
 import { useGlobalContext } from "../contexts/GlobalContext";
 
@@ -7,22 +7,28 @@ import { signOutUser } from "../utils/firebase/firebase.utils";
 import UserListItem from "../components/profilePage/UserListItem";
 import UserListIcon from "../components/profilePage/icons/UserListIcon";
 
-import MoviesList from '../components/moviesList/MoviesList'
+import CustomMoviesList from "../components/moviesList/CustomMoviesList";
+
+
 const ProfilePage = () => {
+  const tempData = useMemo(() => {
+    return [
+            { id: 238, mediaType: 'movie' },
+            { id: 129, mediaType: 'movie' },
+            { id: 155, mediaType: 'movie' },
+            { id: 94605, mediaType: 'tv' },
+            { id: 772071, mediaType: 'movie' },
+            { id: 39102, mediaType: 'movie' }
+          ]
+  },[])
 
 const { currentUser } = useUserContext();
-const { setCurrentTitle, moviesListMode, dispatch } = useGlobalContext();
+const { setCurrentTitle } = useGlobalContext();
 
 useEffect(() => {
   setCurrentTitle(currentUser.displayName);
+},[currentUser, setCurrentTitle]);
 
-  if (moviesListMode !== "userList") {
-    dispatch({ type: "SET_USER_MODE" });
-  }
-},[currentUser, setCurrentTitle, dispatch, moviesListMode]);
-
-
- 
  return (
   <section className="section-profile">
 
@@ -42,9 +48,9 @@ useEffect(() => {
       <div className="user-movies-list-title">
         <h2>Новый Год список🎅</h2>
       </div>
-
-        <MoviesList/>
-
+        <CustomMoviesList 
+        data={tempData}  
+        listMode='userList' />
     </div>
 
   </section>

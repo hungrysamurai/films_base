@@ -71,11 +71,6 @@ const moviesListReducer = (state, action) => {
         filterGenre: "all",
         moviesListMode: "home",
       }
-    case 'SET_USER_MODE':
-      return {
-        ...state,
-        moviesListMode: 'userList'
-      }
     default:
       return state;
   }
