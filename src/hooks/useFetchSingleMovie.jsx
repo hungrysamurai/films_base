@@ -21,6 +21,11 @@ export const useFetchSingleMovie = (mediaType, lang, id) => {
   const fetchSingleMovie = useCallback(async (mediaType, lang, id) => {
     setIsLoading(true);
 
+    // Clean states before fetch
+    setVideos(() => []);
+    setData(() => []);
+    setImages(() => []);
+
     // Fetch data
     try {
       const { data } = await axios(

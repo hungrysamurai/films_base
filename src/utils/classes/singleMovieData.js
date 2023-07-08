@@ -4,7 +4,9 @@ export default class SingleMovieData {
     this.lang = lang;
     this.mediaType = mediaType;
 
-    this.title = fetchedData.title;
+    this.title = this.fetchedData.title
+      ? this.fetchedData.title
+      : this.fetchedData.name;
     this.poster = fetchedData.poster_path
       ? `${imagesUrlBase}${fetchedData.poster_path}`
       : "/assets/images/no-poster.jpg";

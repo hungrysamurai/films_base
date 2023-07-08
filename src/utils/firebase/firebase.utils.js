@@ -8,15 +8,17 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
-  updateProfile
+  updateProfile,
 } from "firebase/auth";
 
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+
 import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc,
-} from 'firebase/firestore'
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -30,16 +32,19 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+export const db = getFirestore();
+export const storage = getStorage(app);
 
 const googleProvider = new GoogleAuthProvider();
 
 googleProvider.setCustomParameters({
-  prompt: "select_account"
+  prompt: "select_account",
 });
 
 export const auth = getAuth();
 
-export const signInWithGoogglePopup = () => signInWithPopup(auth, googleProvider);
+export const signInWithGoogglePopup = () =>
+  signInWithPopup(auth, googleProvider);
 
 export const signInAuthUserWithEmailAndPassword = async (email, password) => {
   return await signInWithEmailAndPassword(auth, email, password);
@@ -48,8 +53,6 @@ export const signInAuthUserWithEmailAndPassword = async (email, password) => {
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
   return await createUserWithEmailAndPassword(auth, email, password);
 };
-
-const db = getFirestore();
 
 export const createUserDocumentFromAuth = async (userAuth, displayName) => {
   if (!userAuth) return;
@@ -63,27 +66,30 @@ export const createUserDocumentFromAuth = async (userAuth, displayName) => {
     const createdAt = new Date();
 
     try {
-
       if (displayName) {
         await updateProfile(userAuth, {
-          displayName
+          displayName,
         });
       }
 
       await setDoc(userDocRef, {
         email,
         createdAt,
+        userLists: {
+          ["first List"]: [
+            { id: 238, mediaType: "movie" },
+            { id: 94605, mediaType: "tv" },
+          ],
+        },
       });
-
     } catch (err) {
-      console.log('createUserDocumentFromAuth error:');
+      console.log("createUserDocumentFromAuth error:");
       console.log(err);
     }
   }
-
   return userDocRef;
 };
-
-export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback);
-
 export const signOutUser = async () => await signOut(auth);
+
+export const onAuthStateChangedListener = (callback) =>
+  onAuthStateChanged(auth, callback);
