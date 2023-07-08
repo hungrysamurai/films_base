@@ -5,17 +5,23 @@ import { getTheme } from "../../utils/getTheme";
 
 import { useEffect, useState } from "react";
 
-const HeaderIconsContainer = () => {
+import { AnimatePresence } from "framer-motion";
 
+import ProfilePicPlaceholder from "../ProfilePicPlaceholder";
+import Modal from "../modal/Modal";
+import UserModal from "../modal/UserModal";
+
+const HeaderIconsContainer = () => {
   const { baseName, lang, dispatch } = useGlobalContext();
   const { currentUser } = useUserContext();
 
   const [theme, setTheme] = useState(() => getTheme());
-  
+  const [showModal, setShowModal] = useState(false);
+
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
-  },[theme])
+  }, [theme]);
 
   const toggleTheme = () => {
     if (theme === "dark") {
@@ -34,28 +40,50 @@ const HeaderIconsContainer = () => {
   };
 
   return (
-    <div className="header-icons-container">
-      <Link to={currentUser ? 'profile' : 'auth'}>
-        <img
-          src={`${baseName}assets/images/icons/icon-user-${theme}.svg`}
-          alt="user-profile"
-        />
-      </Link>
+    <>
+      <AnimatePresence>
+        {showModal && (
+          <Modal>
+            <UserModal setShowModal={setShowModal} />
+          </Modal>
+        )}
+      </AnimatePresence>
 
-      <a href="#" onClick={toggleTheme}>
-        <img
-          src={`${baseName}assets/images/icons/icon-theme-${theme}.svg`}
-          alt="switch-theme"
-        />
-      </a>
+      <div className="header-icons-container">
+        {currentUser ? (
+          <button onClick={() => setShowModal(() => true)}>
+            {currentUser.photoURL ? (
+              <div className="profile-pic-container">
+                <img className="profile-pic" src={currentUser.photoURL} />
+              </div>
+            ) : (
+              <ProfilePicPlaceholder />
+            )}
+          </button>
+        ) : (
+          <Link to="auth">
+            <img
+              src={`${baseName}assets/images/icons/icon-user-${theme}.svg`}
+              alt="user-profile"
+            />
+          </Link>
+        )}
 
-      <a href="#" onClick={toggleLang}>
-        <img
-          src={`${baseName}assets/images/icons/icon-lang-${lang}-${theme}.svg`}
-          alt="language"
-        />
-      </a>
-    </div>
+        <a href="#" onClick={toggleTheme}>
+          <img
+            src={`${baseName}assets/images/icons/icon-theme-${theme}.svg`}
+            alt="switch-theme"
+          />
+        </a>
+
+        <a href="#" onClick={toggleLang}>
+          <img
+            src={`${baseName}assets/images/icons/icon-lang-${lang}-${theme}.svg`}
+            alt="language"
+          />
+        </a>
+      </div>
+    </>
   );
 };
 

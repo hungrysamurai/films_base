@@ -13,10 +13,9 @@ const ImageGallery = ({ openModal, imagesArray }) => {
   useEffect(() => {
     setGalleryRow(() => imagesArray);
 
-    if(imagesArray.length === 0){
-      setLoading(false)
+    if (imagesArray.length === 0) {
+      setLoading(false);
     }
-    
   }, [imagesArray]);
 
   useEffect(() => {
@@ -42,7 +41,7 @@ const ImageGallery = ({ openModal, imagesArray }) => {
 
   const openImage = (index) => {
     if (totalImagesLoaded === galleryRow.length) {
-      openModal("images", galleryRow, index);
+      openModal(galleryRow, index);
     }
   };
 

@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: space-between;
   margin: 0 auto;
-  padding: 0 1rem ;
+  padding: 0 1rem;
 
   .logo-container {
     flex: 2 20%;
@@ -18,24 +18,23 @@
       text-align: center;
 
       img {
-          width: 8.125rem;
-          filter: var(--logo-shadow);
-          z-index: 1;
-        }
+        width: 8.125rem;
+        filter: var(--logo-shadow);
+        z-index: 1;
+      }
 
-        h3 {
-          position: relative;
-          margin-top: 0.25rem;
-          font-weight: 900;
-          font-size: 1.8rem;
-          z-index: 2;
+      h3 {
+        position: relative;
+        margin-top: 0.25rem;
+        font-weight: 900;
+        font-size: 1.8rem;
+        z-index: 2;
 
-          .logo-accent {
-            color: $color-main;
-          }
+        .logo-accent {
+          color: $color-main;
         }
+      }
     }
-   
   }
 
   .media-type-links {
@@ -61,7 +60,7 @@
     }
   }
 
-  .title-container{
+  .title-container {
     flex: 4 40%;
     padding: 0 1rem;
     text-align: center;
@@ -69,7 +68,7 @@
     justify-content: center;
     position: relative;
 
-    .title-heading{
+    .title-heading {
       display: block;
       font-size: 2rem;
       line-height: 2.5rem;
@@ -82,42 +81,41 @@
     justify-content: center;
 
     .search-box-form {
-        position: relative;
-        width: 16rem;
-        margin-left: -3rem;
-        
-      .search-button {
-          background: none;
-          border: none;
-          position: absolute;
-          top: 1.3rem;
-          left: 1.1rem;
-          transform: translateY(-50%);
-          cursor: pointer;
-        }
+      position: relative;
+      width: 16rem;
+      margin-left: -3rem;
 
-        .search-box-input {
-          display: block;
-          margin: 0 auto;
-          height: 2.5rem;
-          border-radius: 1.5rem;
-          padding: 0.5rem 1rem 0.5rem 2.8rem;
-          border: none;
-          background-color: var(--search-box-bg);
+      .search-button {
+        background: none;
+        border: none;
+        position: absolute;
+        top: 1.3rem;
+        left: 1.1rem;
+        transform: translateY(-50%);
+        cursor: pointer;
+      }
+
+      .search-box-input {
+        display: block;
+        margin: 0 auto;
+        height: 2.5rem;
+        border-radius: 1.5rem;
+        padding: 0.5rem 1rem 0.5rem 2.8rem;
+        border: none;
+        background-color: var(--search-box-bg);
+        color: var(--primary-color);
+        font-family: "Montserrat";
+        font-weight: 700;
+        font-size: 1rem;
+
+        &::placeholder {
           color: var(--primary-color);
           font-family: "Montserrat";
           font-weight: 700;
           font-size: 1rem;
-
-              &::placeholder {
-                color: var(--primary-color);
-                font-family: "Montserrat";
-                font-weight: 700;
-                font-size: 1rem;
-              }
-          }
+        }
       }
-    
+    }
   }
 
   .header-icons-container {
@@ -130,34 +128,52 @@
     a {
       cursor: pointer;
     }
+
+    button {
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+    .profile-pic-container {
+      width: 1.75rem;
+      height: 1.75rem;
+      border: 2px solid var(--primary-color);
+      border-radius: 50%;
+      overflow: hidden;
+      margin-top: -0.2rem;
+
+      img.profile-pic {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
   }
 }
 
-
-
-@media only screen and (max-width: 990px){
+@media only screen and (max-width: 990px) {
   .header-container {
     flex-wrap: wrap;
     padding: 1rem 0.5rem;
 
     .logo-container {
-        order:1;
-        flex: 3;
-        align-items: flex-start;
-        min-width: 50%;
+      order: 1;
+      flex: 3;
+      align-items: flex-start;
+      min-width: 50%;
 
-        a {   
-          img {
-            width: 5rem;
-          }
-  
-          h3 {
-            margin-top: 0.1rem;
-            font-size: 1.25rem;
-          }
+      a {
+        img {
+          width: 5rem;
+        }
+
+        h3 {
+          margin-top: 0.1rem;
+          font-size: 1.25rem;
         }
       }
-      
+    }
+
     .header-icons-container {
       order: 2;
       flex: 7;
@@ -183,18 +199,18 @@
       }
     }
 
-  .title-container {
-    order: 5;
-    flex: 10 100%;
-    padding: 0;
-    margin-top: 1.5rem;
-    height: 3.125rem;
+    .title-container {
+      order: 5;
+      flex: 10 100%;
+      padding: 0;
+      margin-top: 1.5rem;
+      height: 3.125rem;
 
-    .title-heading {
+      .title-heading {
         font-size: 2rem;
         line-height: 2.5rem;
       }
-  }
+    }
 
     .search-box-container {
       order: 4;
@@ -202,16 +218,14 @@
       margin-top: 1.5rem;
       margin-left: 0;
 
-      .search-box-form {       
+      .search-box-form {
         width: 100%;
         margin-left: 0;
-     
+
         .search-box-input {
-          width:100%;
+          width: 100%;
         }
       }
-    
+    }
   }
-
- }
 }

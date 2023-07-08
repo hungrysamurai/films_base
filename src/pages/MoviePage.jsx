@@ -8,11 +8,13 @@ import { useFetchSingleMovie } from "../hooks/useFetchSingleMovie";
 
 import ImageGallery from "../components/moviePage/ImageGallery";
 import Loader from "../components/Loader";
-import Modal from "../components/moviePage/Modal";
 import MoviePoster from "../components/moviePage/MoviePoster";
 import YoutubeEmbed from "../components/moviePage/Youtubeembed";
 import ErrorMessage from "../components/ErrorMessage";
 import CustomMoviesList from "../components/moviesList/CustomMoviesList";
+
+import Modal from "../components/modal/Modal";
+import ImagesGalleryModal from "../components/modal/ImagesGalleryModal";
 
 const MoviePage = () => {
   const { setCurrentTitle, lang, mediaType } = useGlobalContext();
@@ -23,10 +25,10 @@ const MoviePage = () => {
   const requestedMediaType =
     location.pathname.split("/")[import.meta.env.DEV ? 1 : 3];
 
-  const [modal, setModal] = useState({
+  const [imagesGalleryModalState, setImagesGalleryModalState] = useState({
     show: false,
-    data: [],
-    index: 0,
+    imagesArray: [],
+    imageIndex: 0,
   });
 
   const control = useAnimation();
@@ -63,28 +65,26 @@ const MoviePage = () => {
 
   useEffect(() => {
     control.start({
-      x: `-${modal.index * 100}%`,
+      x: `-${imagesGalleryModalState.imageIndex * 100}%`,
     });
-  }, [modal.index, control]);
+  }, [imagesGalleryModalState.imageIndex, control]);
 
-  const openModal = (mode, data, imageIndex) => {
-    if (mode === "images") {
-      setModal(() => {
-        const images = data.map((item, i) => {
-          return (
-            <div className="modal-image-container" key={i}>
-              <img src={item} alt="gallery-image" />
-            </div>
-          );
-        });
-        return { show: true, data: images, index: imageIndex };
+  const openModal = (data, imageIndex) => {
+    setImagesGalleryModalState(() => {
+      const images = data.map((item, i) => {
+        return (
+          <div className="modal-image-container" key={i}>
+            <img src={item} alt="gallery-image" />
+          </div>
+        );
       });
-    }
+      return { show: true, imagesArray: images, imageIndex };
+    });
   };
 
   const hideModal = (target) => {
     if (target.classList.contains("modal-index-controls")) {
-      setModal((prev) => {
+      setImagesGalleryModalState((prev) => {
         return {
           ...prev,
           show: false,
@@ -97,15 +97,22 @@ const MoviePage = () => {
     let nextIndex;
 
     if (direction === "next") {
-      nextIndex = modal.index === modal.data.length - 1 ? 0 : modal.index + 1;
+      nextIndex =
+        imagesGalleryModalState.imageIndex ===
+        imagesGalleryModalState.imagesArray.length - 1
+          ? 0
+          : imagesGalleryModalState.imageIndex + 1;
     } else {
-      nextIndex = modal.index === 0 ? modal.data.length - 1 : modal.index - 1;
+      nextIndex =
+        imagesGalleryModalState.imageIndex === 0
+          ? imagesGalleryModalState.imagesArray.length - 1
+          : imagesGalleryModalState.imageIndex - 1;
     }
 
-    setModal((prev) => {
+    setImagesGalleryModalState((prev) => {
       return {
         ...prev,
-        index: nextIndex,
+        imageIndex: nextIndex,
       };
     });
   };
@@ -117,13 +124,15 @@ const MoviePage = () => {
   return (
     <section className="section-single-movie">
       <AnimatePresence>
-        {modal.show && (
-          <Modal
-            hideModal={hideModal}
-            changeModalImage={changeModalImage}
-            control={control}
-            modal={modal}
-          />
+        {imagesGalleryModalState.show && (
+          <Modal>
+            <ImagesGalleryModal
+              hideModal={hideModal}
+              changeModalImage={changeModalImage}
+              control={control}
+              modal={imagesGalleryModalState}
+            />
+          </Modal>
         )}
       </AnimatePresence>
 
