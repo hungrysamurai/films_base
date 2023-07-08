@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
+import MoviesListItem from "../utils/classes/moviesListItem";
 
 const apiBase = import.meta.env.VITE_TMDB_API_BASE;
 const apiKey = import.meta.env.VITE_TMDB_API_KEY;
@@ -19,14 +20,20 @@ export const useFetchMoviesList = (
   const [error, setError] = useState({ show: false, message: "" });
 
   const fetchMoviesList = useCallback(
-    async (mediaType, lang, filterList, filterGenre, currentPage, searchQuery) => {
-  
+    async (
+      mediaType,
+      lang,
+      filterList,
+      filterGenre,
+      currentPage,
+      searchQuery
+    ) => {
       setIsLoading(true);
       setError({
         show: false,
         message: "",
       });
-      
+
       try {
         let response;
 
@@ -38,7 +45,7 @@ export const useFetchMoviesList = (
           response = await axios(
             `${apiBase}/search/${mediaType}?${apiKey}&query=${searchQuery}&page=${currentPage}&language=${lang}`
           );
-        } 
+        }
 
         if (response.data.total_results === 0) {
           throw new Error(
@@ -52,20 +59,10 @@ export const useFetchMoviesList = (
         const ids = [];
 
         response.data.results.forEach((item) => {
-          const outputObj = {
-            posterUrl: item.poster_path
-              ? imagesUrlBase + item.poster_path
-              : "/assets/images/no-poster.jpg",
-            title: item.title ? item.title : item.name,
-            id: item.id,
-            mediaType: mediaType
-          };
-
+          output.push(new MoviesListItem(imagesUrlBase, item, mediaType));
           if (currentPage === 1) {
             ids.push(item.id);
           }
-
-          output.push(outputObj);
         });
 
         if (currentPage === 1) {

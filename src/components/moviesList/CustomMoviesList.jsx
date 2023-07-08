@@ -4,23 +4,27 @@ import ErrorMessage from "../ErrorMessage";
 
 import { motion, AnimatePresence } from "framer-motion";
 
+import { useFetchCustomMoviesList } from "../../hooks/useFetchCustomMoviesList";
+
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
-import { useFetchCustomMoviesList } from "../../hooks/useFetchCustomMoviesList";
-import { useEffect, useState, useReducer } from "react";
-
-const CustomMoviesList = ({listMode, data}) => {
-  // const { lang } = useGlobalContext();
+const CustomMoviesList = ({
+  listMode,
+  currentUserList,
+  movieId,
+  movieMediaType,
+}) => {
+  const { lang } = useGlobalContext();
 
   const {
-   data: moviesFetchList,
-   isLoading: moviesFetchLoading, 
-   error: moviesFetchError
-  } = useFetchCustomMoviesList(
-   'ru',
-   listMode,
-   data
-  );
+    data: moviesFetchList,
+    isLoading: moviesFetchLoading,
+    error: moviesFetchError,
+  } = useFetchCustomMoviesList(lang, listMode, {
+    currentUserList,
+    movieId,
+    movieMediaType,
+  });
 
   if (moviesFetchError.show) {
     return (
@@ -31,10 +35,9 @@ const CustomMoviesList = ({listMode, data}) => {
       />
     );
   }
+
   if (moviesFetchLoading) {
-    return (
-      <Loader/>
-    );
+    return <Loader />;
   }
 
   return (
@@ -44,16 +47,20 @@ const CustomMoviesList = ({listMode, data}) => {
           if (title.length > 35) {
             title = title.slice(0, 35) + "...";
           }
-          
+
           return (
             <AnimatePresence key={id}>
-              <SingleMovie poster={posterUrl} title={title} id={id} mediaType={mediaType}/>;
+              <SingleMovie
+                poster={posterUrl}
+                title={title}
+                id={id}
+                mediaType={mediaType}
+              />
+              ;
             </AnimatePresence>
           );
         })}
       </motion.div>
-
-      {/* {moviesFetchLoading && <Loader />} */}
     </>
   );
 };

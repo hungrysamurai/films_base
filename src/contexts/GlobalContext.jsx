@@ -2,7 +2,6 @@ import {
   useState,
   useContext,
   createContext,
-  useEffect,
   useReducer,
 } from "react";
 
@@ -10,7 +9,6 @@ import moviesListReducer from "../reducers/moviesListReducer";
 
 import { useFetchMoviesList } from "../hooks/useFetchMoviesList";
 
-import { getTheme } from "../utils/getTheme";
 import { getBaseName } from "../utils/getBaseName";
 
 const initialState = {
@@ -67,8 +65,6 @@ const AppProvider = ({ children }) => {
       value={{
         baseName,
         lang,
-        // theme,
-        // setTheme,
         moviesFetchError,
         moviesFetchLoading,
         mediaType,

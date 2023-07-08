@@ -1,10 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 
-import { getCountryName } from "../utils/getCountryName";
-import { getBudgetString } from "../utils/getBudgetString";
-import { getRuntime } from "../utils/getRuntime";
-import { getReleaseDate } from "../utils/getReleaseDate";
+import SingleMovieData from "../utils/classes/singleMovieData";
 
 const apiBase = import.meta.env.VITE_TMDB_API_BASE;
 const apiKey = import.meta.env.VITE_TMDB_API_KEY;
@@ -21,7 +18,6 @@ export const useFetchSingleMovie = (mediaType, lang, id) => {
   const [videos, setVideos] = useState([]);
   const [videosError, setVideosError] = useState({ show: false, message: "" });
 
-
   const fetchSingleMovie = useCallback(async (mediaType, lang, id) => {
     setIsLoading(true);
 
@@ -31,147 +27,7 @@ export const useFetchSingleMovie = (mediaType, lang, id) => {
         `${apiBase}/${mediaType}/${id}?${apiKey}&language=${lang}`
       );
 
-      // Build data object
-      const genresList = data.genres.reduce((string, current, i) => {
-        return i === 0
-          ? current.name[0].toUpperCase() + current.name.slice(1)
-          : `${string}, ${current.name}`;
-      }, "");
-
-      const countriesList = data.production_countries.reduce(
-        (string, current, i) => {
-          return i === 0
-            ? getCountryName(current.iso_3166_1, lang)
-            : `${string}, ${getCountryName(current.iso_3166_1, lang)}`;
-        },
-        ""
-      );
-
-      if (mediaType === "movie") {
-        const output = {
-          title: data.title,
-          poster: data.poster_path
-            ? `${imagesUrlBase}${data.poster_path}`
-            : "/assets/images/no-poster.jpg",
-          data: [
-            ...(data.release_date
-              ? [
-                  {
-                    [`${lang === "en" ? "Release date" : "Дата выхода"}`]:
-                      getReleaseDate(data.release_date, lang),
-                  },
-                ]
-              : []),
-            ...(genresList.length > 0
-              ? [
-                  {
-                    [`${lang === "en" ? "Genres" : "Жанр"}`]: genresList,
-                  },
-                ]
-              : []),
-            ...(countriesList.length > 0
-              ? [
-                  {
-                    [`${lang === "en" ? "Country" : "Страна"}`]: countriesList,
-                  },
-                ]
-              : []),
-            ...(data.budget
-              ? [
-                  {
-                    [`${lang === "en" ? "Budget" : "Бюджет"}`]: getBudgetString(
-                      data.budget
-                    ),
-                  },
-                ]
-              : []),
-            ...(data.revenue
-              ? [
-                  {
-                    [`${lang === "en" ? "Revenue" : "Сборы"}`]: getBudgetString(
-                      data.revenue
-                    ),
-                  },
-                ]
-              : []),
-            ...(data.runtime
-              ? [
-                  {
-                    [`${lang === "en" ? "Runtime" : "Продолжительность"}`]:
-                      getRuntime(data.runtime, lang),
-                  },
-                ]
-              : []),
-            ...(data.vote_average
-              ? [
-                  {
-                    [`${lang === "en" ? "TMDB Rating" : "Рейтинг TMDB"}`]:
-                      data.vote_average,
-                  },
-                ]
-              : []),
-          ],
-          description: data.overview,
-        };
-
-        setData(() => output);
-      } else {
-        const output = {
-          title: data.name,
-          poster: `${imagesUrlBase}${data.poster_path}`,
-          data: [
-            ...(data.first_air_date
-              ? [
-                  {
-                    [`${lang === "en" ? "Release date" : "Дата выхода"}`]:
-                      getReleaseDate(data.first_air_date, lang),
-                  },
-                ]
-              : []),
-            ...(genresList.length > 0
-              ? [
-                  {
-                    [`${lang === "en" ? "Genres" : "Жанр"}`]: genresList,
-                  },
-                ]
-              : []),
-            ...(countriesList.length > 0
-              ? [
-                  {
-                    [`${lang === "en" ? "Country" : "Страна"}`]: countriesList,
-                  },
-                ]
-              : []),
-            ...(data.number_of_seasons
-              ? [
-                  {
-                    [`${lang === "en" ? "Total Seasons" : "Всего сезонов"}`]:
-                      data.number_of_seasons,
-                  },
-                ]
-              : []),
-            ...(data.number_of_episodes
-              ? [
-                  {
-                    [`${lang === "en" ? "Total episodes" : "Серий"}`]:
-                      data.number_of_episodes,
-                  },
-                ]
-              : []),
-            ...(data.vote_average
-              ? [
-                  {
-                    [`${lang === "en" ? "TMDB Rating" : "Рейтинг TMDB"}`]:
-                      data.vote_average,
-                  },
-                ]
-              : []),
-          ],
-          description: data.overview,
-        };
-
-        setData(() => output);
-      }
+      setData(() => new SingleMovieData(data, lang, imagesUrlBase, mediaType));
     } catch (err) {
       setDataError(() => {
         return {
@@ -245,9 +101,8 @@ export const useFetchSingleMovie = (mediaType, lang, id) => {
   }, []);
 
   useEffect(() => {
-    console.log('single movie effect fires!');
     fetchSingleMovie(mediaType, lang, id);
-  }, [mediaType, lang, id, fetchSingleMovie ]);
+  }, [mediaType, lang, id, fetchSingleMovie]);
 
   return {
     isLoading,

@@ -49,8 +49,9 @@ useEffect(() => {
         <h2>Новый Год список🎅</h2>
       </div>
         <CustomMoviesList 
-        data={tempData}  
-        listMode='userList' />
+        listMode='userList'
+        currentUserList={tempData}  
+         />
     </div>
 
   </section>

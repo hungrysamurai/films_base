@@ -12,6 +12,7 @@ import Modal from "../components/moviePage/Modal";
 import MoviePoster from "../components/moviePage/MoviePoster";
 import YoutubeEmbed from "../components/moviePage/Youtubeembed";
 import ErrorMessage from "../components/ErrorMessage";
+import CustomMoviesList from "../components/moviesList/CustomMoviesList";
 
 const MoviePage = () => {
   const { setCurrentTitle, lang, mediaType } = useGlobalContext();
@@ -185,6 +186,16 @@ const MoviePage = () => {
             <ImageGallery openModal={openModal} imagesArray={images} />
           )}
         </div>
+      </div>
+
+      <div className="similar-movies-container">
+        <h2>Similar</h2>
+        <CustomMoviesList
+          listMode="similar"
+          currentUserList={null}
+          movieId={id}
+          movieMediaType={requestedMediaType}
+        />
       </div>
     </section>
   );

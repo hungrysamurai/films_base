@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
+import MoviesListItem from "../utils/classes/moviesListItem";
 
 const apiBase = import.meta.env.VITE_TMDB_API_BASE;
 const apiKey = import.meta.env.VITE_TMDB_API_KEY;
@@ -8,74 +9,61 @@ const imagesUrlBase = `${import.meta.env.VITE_IMAGES_BASE_URL}w300`;
 export const useFetchCustomMoviesList = (
   lang,
   moviesListMode,
-  currentUserList,
+  { currentUserList, movieId, movieMediaType }
 ) => {
-
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState({ show: false, message: "" });
   const [data, setData] = useState([]);
 
   const fetchMoviesList = useCallback(
     async (lang) => {
-  
       setIsLoading(true);
+
       setError({
         show: false,
         message: "",
       });
-      
-      try {
-       let response;
 
-       if (moviesListMode === "userList") {    
-          response = {
-            data: {
-              results: [],
-              total_pages: 1,
-            },
-            total_results: currentUserList.length,
-          };
-    
+      try {
+        if (moviesListMode === "userList") {
+          const output = [];
+
           for (let { id, mediaType } of currentUserList) {
-            try{
-            const movie = await axios(
-              `${apiBase}/${mediaType}/${id}?${apiKey}&language=${lang}`
+            try {
+              const movie = await axios(
+                `${apiBase}/${mediaType}/${id}?${apiKey}&language=${lang}`
               );
-              movie.data.mediaType = mediaType;
-              response.data.results.push(movie.data);
-            } catch (err){
+              const { data } = movie;
+              output.push(new MoviesListItem(imagesUrlBase, data, mediaType));
+            } catch (err) {
               console.log(err);
             }
           }
-          
-        }
-
-        if (response.data.total_results === 0) {
-          throw new Error(
-            lang === "ru"
-              ? "Нет результатов, удовлетворяющих заданным условиям"
-              : "No matching results"
+          setData(() => output);
+        } else if (moviesListMode === "similar") {
+          const response = await axios(
+            `${apiBase}/${movieMediaType}/${movieId}/similar?${apiKey}&language=${lang}`
           );
+
+          const output = [];
+
+          response.data.results.forEach((item) => {
+            output.push(
+              new MoviesListItem(imagesUrlBase, item, movieMediaType)
+            );
+          });
+
+          setData(() => output);
         }
 
-        const output = [];
-
-        response.data.results.forEach((item) => {
-          const outputObj = {
-            posterUrl: item.poster_path
-              ? imagesUrlBase + item.poster_path
-              : "/assets/images/no-poster.jpg",
-            title: item.title ? item.title : item.name,
-            id: item.id,
-            mediaType: item.mediaType
-          };
-
-          output.push(outputObj);
-        });
-
-        setData(() => output);
+        // if (response.data.total_results === 0) {
+        //   throw new Error(
+        //     lang === "ru"
+        //       ? "Нет результатов, удовлетворяющих заданным условиям"
+        //       : "No matching results"
+        //   );
+        // }
         setIsLoading(false);
-
       } catch (err) {
         setError({
           show: true,
@@ -83,8 +71,9 @@ export const useFetchCustomMoviesList = (
         });
         setIsLoading(false);
       }
-    }, [moviesListMode, currentUserList]
-)
+    },
+    [moviesListMode, currentUserList, movieId, movieMediaType]
+  );
   useEffect(() => {
     fetchMoviesList(lang);
   }, [fetchMoviesList, lang]);
