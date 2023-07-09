@@ -2,7 +2,7 @@ import UserListItem from "./UserListItem";
 import UserListIcon from "../icons/UserListIcon";
 import AddNewListIcon from "../icons/AddNewListIcon";
 
-const UserLists = () => {
+const UserLists = ({ userLists, currentListIndex, setCurrentListIndex }) => {
   return (
     <div className="user-lists-container">
       <div className="user-lists-header">
@@ -10,9 +10,17 @@ const UserLists = () => {
         <h3>Мои списки</h3>
       </div>
       <div className="user-lists">
-        <UserListItem title="Боевики обязательно глянуть" active={false} />
-        <UserListItem title="Всякие фильмы" active={true} />
-        <UserListItem title="Подборочка на НГ" active={false} />
+        {userLists.map(({ title, id }) => {
+          return (
+            <UserListItem
+              key={id}
+              title={title}
+              active={currentListIndex === id ? true : false}
+              id={id}
+              setCurrentListIndex={setCurrentListIndex}
+            />
+          );
+        })}
       </div>
 
       <div className="add-user-list-button">

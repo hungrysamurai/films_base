@@ -54,7 +54,7 @@ const HeaderIconsContainer = () => {
           <button onClick={() => setShowModal(() => true)}>
             {currentUser.photoURL ? (
               <div className="profile-pic-container">
-                <img className="profile-pic" src={currentUser.photoURL} />
+                <img className="profile-pic" src={currentUser?.photoURL} />
               </div>
             ) : (
               <ProfilePicPlaceholder />

@@ -10,42 +10,44 @@ import SearchResults from "./pages/SearchResults";
 import AuthPage from "./pages/AuthPage";
 import ProfilePage from "./pages/ProfilePage";
 
-import TestPage from "./pages/TestPAge";
-
 function App() {
-
   const { baseName } = useGlobalContext();
   const { currentUser } = useUserContext();
 
   const ProtectedRoute = ({ children }) => {
-    return currentUser ? children : <Navigate to='/auth'/>
-  }
+    return currentUser ? children : <Navigate to="/auth" />;
+  };
 
   const PublicRoute = ({ children }) => {
-    return currentUser ? <Navigate to='/profile'/> : children
-  }
+    return currentUser ? <Navigate to="/profile" /> : children;
+  };
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path={baseName} element={<PageWrapper />}>
           <Route index element={<Home />} />
-          <Route path='test' element={<TestPage />} />
           <Route path="movie/:id" element={<MoviePage />} />
           <Route path="tv/:id" element={<MoviePage />} />
           <Route path="search/:query" element={<SearchResults />} />
 
-          <Route path="auth" element={
-            <PublicRoute>
-              <AuthPage/>
-            </PublicRoute>
-          } />
+          <Route
+            path="auth"
+            element={
+              <PublicRoute>
+                <AuthPage />
+              </PublicRoute>
+            }
+          />
 
-          <Route path="profile" element={
-            <ProtectedRoute>
-              <ProfilePage />
-            </ProtectedRoute>
-          } />
+          <Route
+            path="profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
 
           <Route path="*" element={<div>some error</div>} />
         </Route>

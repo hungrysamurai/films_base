@@ -43,7 +43,7 @@ const UserModal = ({ setShowModal }) => {
         <CloseModalIcon />
       </button>
       <div className="user-modal-inner">
-        {currentUser.photoURL ? (
+        {currentUser?.photoURL ? (
           <div className="profile-pic-container">
             <img className="profile-pic" src={currentUser?.photoURL} />
           </div>

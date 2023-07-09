@@ -62,8 +62,8 @@ export const createUserDocumentFromAuth = async (userAuth, displayName) => {
   // Check if user exist
   // If not exist - create
   if (!userSnapshot.exists()) {
-    const { email } = userAuth;
-    const createdAt = new Date();
+    // const { email } = userAuth;
+    // const createdAt = new Date();
 
     try {
       if (displayName) {
@@ -73,14 +73,28 @@ export const createUserDocumentFromAuth = async (userAuth, displayName) => {
       }
 
       await setDoc(userDocRef, {
-        email,
-        createdAt,
-        userLists: {
-          ["first List"]: [
-            { id: 238, mediaType: "movie" },
-            { id: 94605, mediaType: "tv" },
-          ],
-        },
+        // email,
+        // createdAt,
+        userLists: [
+          {
+            title: "Посмотреть позже...",
+            id: 1,
+            data: [
+              { id: 238, mediaType: "movie" },
+              { id: 129, mediaType: "movie" },
+              { id: 155, mediaType: "movie" },
+            ],
+          },
+          {
+            title: "Список НГ🧑‍🎄",
+            id: 2,
+            data: [
+              { id: 94605, mediaType: "tv" },
+              { id: 772071, mediaType: "movie" },
+              { id: 39102, mediaType: "movie" },
+            ],
+          },
+        ],
       });
     } catch (err) {
       console.log("createUserDocumentFromAuth error:");
@@ -89,6 +103,7 @@ export const createUserDocumentFromAuth = async (userAuth, displayName) => {
   }
   return userDocRef;
 };
+
 export const signOutUser = async () => await signOut(auth);
 
 export const updateUserPhoto = async (file) => {
@@ -125,6 +140,21 @@ export const updateUserPhoto = async (file) => {
     }
   );
 };
+
+// export const getUserLists = async () => {
+//   // const userDocRef = doc(db, "users", auth.currentUser.uid);
+//   // const userSnapshot = await getDoc(userDocRef);
+//   // return userSnapshot.data().userLists;
+//   let currentData;
+//   const unsub = await onSnapshot(
+//     doc(db, "users", auth.currentUser.uid),
+//     (doc) => {
+//       currentData = doc.data().userLists;
+//     }
+//   );
+
+//   return currentData;
+// };
 
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);

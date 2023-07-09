@@ -1,9 +1,12 @@
 import EditListIcon from "../icons/EditListIcon";
 import DeleteListIcon from "../icons/DeleteListIcon";
 
-const UserListItem = ({ title, active }) => {
+const UserListItem = ({ title, active, id, setCurrentListIndex }) => {
   return (
-    <div className={`user-list-container ${active && "active"}`}>
+    <div
+      className={`user-list-container ${active && "active"}`}
+      onClick={() => setCurrentListIndex(id)}
+    >
       <div className="user-list-title">
         <h3>{title}</h3>
       </div>
