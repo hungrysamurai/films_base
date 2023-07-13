@@ -1,7 +1,8 @@
-import CloseModalIcon from "./CloseModalIcon";
 import ProfilePicPlaceholder from "../ProfilePicPlaceholder";
 
-import { useEffect, useState } from "react";
+import useOutsideClick from '../../hooks/useOutsideClick';
+
+import { useRef } from "react";
 
 import {
   updateUserPhoto,
@@ -10,16 +11,15 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../contexts/UserContext";
 
-const UserModal = ({ setShowModal }) => {
+const UserModal = ({ hideModal }) => {
   const { currentUser } = useUserContext();
   const navigate = useNavigate();
 
-  const hideModal = () => {
-    setShowModal(() => false);
-  };
-
+  const modalInnerRef = useRef(null);
+  useOutsideClick(modalInnerRef, hideModal);
+  
   const navigateProfile = () => {
-    setShowModal(() => false);
+    hideModal();
     navigate("/profile");
   };
 
@@ -28,51 +28,46 @@ const UserModal = ({ setShowModal }) => {
   const changeUserPic = (file) => {
     updateUserPhoto(file);
     navigate("/profile");
-    setShowModal(() => false);
+    hideModal();
   };
 
   const logout = () => {
-    setShowModal(() => false);
+    hideModal();
     navigate("/");
     signOutUser();
   };
 
   return (
-    <div className="modal-wrapper-container">
-      <button className="close-modal" onClick={hideModal}>
-        <CloseModalIcon />
-      </button>
-      <div className="user-modal-inner">
-        {currentUser?.photoURL ? (
-          <div className="profile-pic-container">
-            <img className="profile-pic" src={currentUser?.photoURL} />
-          </div>
-        ) : (
-          <ProfilePicPlaceholder />
-        )}
+    <div className="user-modal-inner" ref={modalInnerRef}>
+      {currentUser?.photoURL ? (
+        <div className="profile-pic-container">
+          <img className="profile-pic" src={currentUser?.photoURL} />
+        </div>
+      ) : (
+        <ProfilePicPlaceholder />
+      )}
 
-        <h3>{currentUser?.displayName}</h3>
-        <input
-          type="file"
-          id="file"
-          onChange={(e) => changeUserPic(e.target.files[0])}
-          hidden
-        />
-        <ul className="profile-actions-container">
-          <li>
-            <button onClick={navigateProfile}>Профиль</button>
-          </li>
-          <li>
-            <button onClick={changeUserName}>Изменить логин</button>
-          </li>
-          <li>
-            <label htmlFor="file">Изменить фото</label>
-          </li>
-          <li>
-            <button onClick={logout}>Выйти</button>
-          </li>
-        </ul>
-      </div>
+      <h3>{currentUser?.displayName}</h3>
+      <input
+        type="file"
+        id="file"
+        onChange={(e) => changeUserPic(e.target.files[0])}
+        hidden
+      />
+      <ul className="profile-actions-container">
+        <li>
+          <button onClick={navigateProfile}>Профиль</button>
+        </li>
+        <li>
+          <button onClick={changeUserName}>Изменить логин</button>
+        </li>
+        <li>
+          <label htmlFor="file">Изменить фото</label>
+        </li>
+        <li>
+          <button onClick={logout}>Выйти</button>
+        </li>
+      </ul>
     </div>
   );
 };

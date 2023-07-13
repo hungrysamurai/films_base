@@ -62,9 +62,6 @@ export const createUserDocumentFromAuth = async (userAuth, displayName) => {
   // Check if user exist
   // If not exist - create
   if (!userSnapshot.exists()) {
-    // const { email } = userAuth;
-    // const createdAt = new Date();
-
     try {
       if (displayName) {
         await updateProfile(userAuth, {
@@ -73,26 +70,11 @@ export const createUserDocumentFromAuth = async (userAuth, displayName) => {
       }
 
       await setDoc(userDocRef, {
-        // email,
-        // createdAt,
+
         userLists: [
           {
             title: "Посмотреть позже...",
-            id: 1,
-            data: [
-              { id: 238, mediaType: "movie" },
-              { id: 129, mediaType: "movie" },
-              { id: 155, mediaType: "movie" },
-            ],
-          },
-          {
-            title: "Список НГ🧑‍🎄",
-            id: 2,
-            data: [
-              { id: 94605, mediaType: "tv" },
-              { id: 772071, mediaType: "movie" },
-              { id: 39102, mediaType: "movie" },
-            ],
+            data: [],
           },
         ],
       });

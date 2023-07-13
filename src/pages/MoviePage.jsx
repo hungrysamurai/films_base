@@ -11,13 +11,17 @@ import Loader from "../components/Loader";
 import MoviePoster from "../components/moviePage/MoviePoster";
 import YoutubeEmbed from "../components/moviePage/Youtubeembed";
 import ErrorMessage from "../components/ErrorMessage";
-import CustomMoviesList from "../components/moviesList/CustomMoviesList";
 
 import Modal from "../components/modal/Modal";
 import ImagesGalleryModal from "../components/modal/ImagesGalleryModal";
 
+import UserListsWidget from "../components/moviePage/UserListswidget/UserListsWidget";
+
+import { useUserContext } from "../contexts/UserContext";
+
 const MoviePage = () => {
   const { setCurrentTitle, lang, mediaType } = useGlobalContext();
+  const { currentUser } = useUserContext();
 
   const { id } = useParams();
   const location = useLocation();
@@ -125,7 +129,7 @@ const MoviePage = () => {
     <section className="section-single-movie">
       <AnimatePresence>
         {imagesGalleryModalState.show && (
-          <Modal>
+          <Modal mode="gallery">
             <ImagesGalleryModal
               hideModal={hideModal}
               changeModalImage={changeModalImage}
@@ -162,6 +166,14 @@ const MoviePage = () => {
         </div>
 
         <div className="right-col">
+          {currentUser && (
+            <UserListsWidget
+              id={id}
+              mediaType={requestedMediaType}
+              title={title}
+            />
+          )}
+
           <div className="data-container">
             {dataError.show ? (
               <ErrorMessage
@@ -197,7 +209,7 @@ const MoviePage = () => {
         </div>
       </div>
 
-      <div className="similar-movies-container">
+      {/* <div className="similar-movies-container">
         <h2>Similar</h2>
         <CustomMoviesList
           listMode="similar"
@@ -205,7 +217,7 @@ const MoviePage = () => {
           movieId={id}
           movieMediaType={requestedMediaType}
         />
-      </div>
+      </div> */}
     </section>
   );
 };

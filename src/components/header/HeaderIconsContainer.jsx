@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useUserContext } from "../../contexts/UserContext";
 import { getTheme } from "../../utils/getTheme";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState} from "react";
 
 import { AnimatePresence } from "framer-motion";
 
@@ -15,8 +15,12 @@ const HeaderIconsContainer = () => {
   const { baseName, lang, dispatch } = useGlobalContext();
   const { currentUser } = useUserContext();
 
-  const [theme, setTheme] = useState(() => getTheme());
   const [showModal, setShowModal] = useState(false);
+  const [theme, setTheme] = useState(() => getTheme());
+
+  const hideModal = () => {
+    setShowModal(() => false);
+  };
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -43,8 +47,8 @@ const HeaderIconsContainer = () => {
     <>
       <AnimatePresence>
         {showModal && (
-          <Modal>
-            <UserModal setShowModal={setShowModal} />
+          <Modal hideModal={hideModal} mode="box">
+            <UserModal hideModal={hideModal} />
           </Modal>
         )}
       </AnimatePresence>

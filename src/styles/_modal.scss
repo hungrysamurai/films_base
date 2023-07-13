@@ -11,6 +11,7 @@
   align-items: center;
   justify-content: center;
 
+  // Images gallery mode styles
   .modal-index-controls {
     position: absolute;
     width: 100%;
@@ -61,30 +62,43 @@
     }
   }
 
+  // Box mode styles
   .modal-wrapper-container {
     margin: 0 auto;
     background: var(--bg-gradient);
     box-shadow: var(--button-shadow);
     border-radius: 2rem;
-    height: 30rem;
-    max-height: 90%;
+    min-height: 20rem;
+    max-height: 95%;
     width: 40rem;
     max-width: 90%;
     position: relative;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+
+
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+      }
 
     .close-modal {
       position: absolute;
-      top: 5%;
-      right: 5%;
+      top: 1.5rem;
+      right: 1.5rem;
       background: none;
       border: none;
       cursor: pointer;
     }
 
+    // User modal styles
     .user-modal-inner {
       width: 100%;
       height: 100%;
-      padding: 1.5rem;
+      padding: 2.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -104,12 +118,13 @@
           object-fit: cover;
         }
       }
-
+      // Profile pic placeholder
       svg {
         width: 5rem;
         height: 5rem;
       }
 
+      // Profile title
       h3 {
         margin-top: 1rem;
       }
@@ -119,11 +134,28 @@
         padding: 0.75rem;
         list-style: none;
         text-align: center;
-        width: 90%;
+        width: 80%;
+        mask-image: linear-gradient(270deg,
+              rgba(0, 0, 0, 0) 0%,
+              #ffffff 39.58%,
+              #ffffff 50.52%,
+              #ffffff 62.5%,
+              rgba(0, 0, 0, 0) 100%);
+          -webkit-mask-image: linear-gradient(270deg,
+              rgba(0, 0, 0, 0) 0%,
+              #ffffff 39.58%,
+              #ffffff 50.52%,
+              #ffffff 62.5%,
+              rgba(0, 0, 0, 0) 100%);
+        
         li {
           margin-top: 1rem;
           padding-bottom: 0.25rem;
-          border-bottom: 2px solid var(--primary-color);
+          
+          &:not(:last-child) {
+              border-bottom: 2px solid var(--primary-color);
+            }
+
           button,
           label {
             background: none;
@@ -136,6 +168,89 @@
 
             &:hover {
               color: var(--accent-color);
+            }
+          }
+        }
+      }
+    }
+
+    // User lists widget modal styles
+    .user-lists-widget-inner{
+      width: 100%;
+      height: 100%;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+
+      // Title
+      h3 {
+        display: block;
+        margin: 3rem 0 2rem 0;
+        font-size: 1.5rem;
+        text-align: center;
+      }
+
+      // Lists container
+      .user-lists-container{
+        width: 100%;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 1rem;
+
+        ul.user-lists{
+          list-style: none;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          mask-image: linear-gradient(270deg,
+              rgba(0, 0, 0, 0) 0%,
+                #ffffff 10%,
+                #ffffff 50%,
+                #ffffff 90%,
+                rgba(0, 0, 0, 0) 100%);
+            -webkit-mask-image: linear-gradient(270deg,
+                rgba(0, 0, 0, 0) 0%,
+                #ffffff 10%,
+                #ffffff 50%,
+                #ffffff 90%,
+                rgba(0, 0, 0, 0) 100%);
+
+          li.user-list-item{
+            margin-top: 1rem;
+            padding-bottom: 0.25rem;
+            border-bottom: 2px solid var(--primary-color);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+            z-index: 1;
+
+            .user-list-title {
+              width:100%;
+              mask-image: linear-gradient(90deg, #ffffff 60%, rgba(0, 0, 0, 0) 85%);
+              -webkit-mask-image: linear-gradient(90deg,
+                    #ffffff 70%,
+                    rgba(0, 0, 0, 0) 85%);
+
+              span {
+                  font-weight: 700;
+                  font-size: 1.25rem;
+                  white-space: nowrap;
+                  margin-left: 2.5rem;
+                }
+            }
+            
+            button {
+              position: absolute;
+              right:10%;
+              background: none;
+              border: none;
+              cursor: pointer;
             }
           }
         }
@@ -155,5 +270,66 @@
         margin-right: 0.1rem;
       }
     }
+
+   .modal-wrapper-container {
+
+    .user-modal-inner{
+
+      ul.profile-actions-container{
+        width: 100%;
+      }
+    }
+
+    .user-lists-widget-inner {
+    
+    h3{
+      font-size: 1rem;
+      line-height: 1rem;
+      margin: 3rem 0 1rem 0;
+    }
+
+    // Lists container
+    .user-lists-container {
+
+      ul.user-lists {
+
+        li.user-list-item {
+          margin-top: 1.25rem;
+          padding-bottom: 0.25rem;
+          border-bottom: 2px solid var(--primary-color);
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          position: relative;
+          z-index: 1;
+
+          .user-list-title {
+            width: 100%;
+            mask-image: linear-gradient(90deg, #ffffff 60%, rgba(0, 0, 0, 0) 85%);
+            -webkit-mask-image: linear-gradient(90deg,
+                #ffffff 65%,
+                rgba(0, 0, 0, 0) 85%);
+
+            span {
+              font-weight: 700;
+              font-size: 1rem;
+              white-space: nowrap;
+              margin-left: 1.5rem;
+            }
+          }
+
+          button {
+            position: absolute;
+            right: 10%;
+            background: none;
+            border: none;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+    }
+   }
   }
 }

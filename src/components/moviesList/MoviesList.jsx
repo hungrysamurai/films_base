@@ -5,7 +5,7 @@ import ErrorMessage from "../ErrorMessage";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useGlobalContext } from "../../contexts/GlobalContext";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useCallback } from "react";
 
 const MoviesList = () => {
   const {
