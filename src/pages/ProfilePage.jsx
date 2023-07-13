@@ -2,6 +2,8 @@ import { useEffect, useReducer, useRef } from "react";
 import { useUserContext } from "../contexts/UserContext";
 import { useGlobalContext } from "../contexts/GlobalContext";
 
+import userListsReducer from "../reducers/userListsReducer";
+
 import Modal from "../components/modal/Modal";
 
 import { db } from "../utils/firebase/firebase.utils";
@@ -20,45 +22,6 @@ import UserMoviesList from "../components/moviesList/UserMoviesList";
 const usersListsInitialState = {
   userLists: [],
   currentListIndex: 0,
-};
-
-const userListsReducer = (state, action) => {
-  switch (action.type) {
-    case "LOAD_USER_LISTS":
-      return {
-        ...state,
-        userLists: action.payload,
-      };
-    case "UPDATE_USER_LISTS": {
-      const oldIndex = state.currentListIndex;
-      const oldLength = state.userLists.length;
-      let newIndex;
-
-      if (
-        action.payload.length > oldLength ||
-        action.payload.length === oldLength
-      ) {
-        newIndex = oldIndex;
-      } else {
-        if (oldIndex - 1 <= 0) {
-          newIndex = 0;
-        } else {
-          newIndex = oldIndex - 1;
-        }
-      }
-      return {
-        currentListIndex: newIndex,
-        userLists: action.payload,
-      };
-    }
-    case "SET_CURRENT_LIST_INDEX":
-      return {
-        ...state,
-        currentListIndex: action.payload,
-      };
-    default:
-      return state;
-  }
 };
 
 const ProfilePage = () => {
@@ -80,6 +43,8 @@ const ProfilePage = () => {
 
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, "users", currentUser.uid), (doc) => {
+      if(!doc.data()) return;
+
       if (!mounted.current) {
         dispatch({
           type: "LOAD_USER_LISTS",
@@ -96,49 +61,6 @@ const ProfilePage = () => {
     return unsubscribe;
   }, [currentUser]);
 
-  const createNewUserList = async (title) => {
-    const newList = {
-      title,
-      data: [],
-    };
-
-    const userListsRef = doc(db, "users", currentUser.uid);
-    const userListsSnap = (await getDoc(userListsRef)).data().userLists;
-
-    if (userListsSnap.find((list) => list.title === newList.title)) {
-      return;
-    }
-
-    await updateDoc(userListsRef, {
-      userLists: arrayUnion(newList),
-    });
-  };
-
-  const deleteUserList = async (listIndex) => {
-    const userListsRef = doc(db, "users", currentUser.uid);
-    const userListsSnap = (await getDoc(userListsRef)).data().userLists;
-
-    await setDoc(userListsRef, {
-      userLists: userListsSnap.toSpliced(listIndex, 1),
-    });
-  };
-
-  const editUserListTitle = async (listIndex, newTitle) => {
-    console.log(listIndex, newTitle);
-
-    const userListsRef = doc(db, "users", currentUser.uid);
-    const userListsSnap = (await getDoc(userListsRef)).data().userLists;
-
-    const replace = { ...userListsSnap[listIndex], title: newTitle };
-
-    await setDoc(userListsRef, {
-      userLists: userListsSnap.toSpliced(listIndex, 1, replace),
-    });
-  };
-
-  const deleteUserListItem = async () => {
-    console.log(currentListIndex);
-  };
 
   return (
     <section className="section-profile">
@@ -146,9 +68,6 @@ const ProfilePage = () => {
         userLists={userLists}
         currentListIndex={currentListIndex}
         dispatch={dispatch}
-        createNewUserList={createNewUserList}
-        deleteUserList={deleteUserList}
-        editUserListTitle={editUserListTitle}
       />
 
       <div className="user-movies-list-container">
@@ -158,11 +77,8 @@ const ProfilePage = () => {
           )}
         </div>
         {userLists[currentListIndex] && (
-          // <CustomMoviesList
-          //   listMode="userList"
-          //   currentUserList={userLists[currentListIndex].data}
-          // />
-          <UserMoviesList currentUserList={userLists[currentListIndex].data} />
+          <UserMoviesList 
+          currentUserList={userLists[currentListIndex].data} />
         )}
       </div>
     </section>

@@ -13,7 +13,7 @@ const AuthPage = () => {
 
   useEffect(() => {
     setCurrentTitle(() => {
-      return lang === 'en' ? 'Log In' : 'Авторизация'
+      return lang === 'en' ? 'Account' : 'Авторизация'
     })
   },[setCurrentTitle, lang]);
 

@@ -11,7 +11,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 
 import {
   getStorage,
@@ -123,20 +123,47 @@ export const updateUserPhoto = async (file) => {
   );
 };
 
-// export const getUserLists = async () => {
-//   // const userDocRef = doc(db, "users", auth.currentUser.uid);
-//   // const userSnapshot = await getDoc(userDocRef);
-//   // return userSnapshot.data().userLists;
-//   let currentData;
-//   const unsub = await onSnapshot(
-//     doc(db, "users", auth.currentUser.uid),
-//     (doc) => {
-//       currentData = doc.data().userLists;
-//     }
-//   );
-
-//   return currentData;
-// };
-
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);
+
+export const createNewUserList = async (title) => {
+  const newList = {
+    title,
+    data: [],
+  };
+
+  const userListsRef = doc(db, "users", auth.currentUser.uid);
+  const userListsSnap = (await getDoc(userListsRef)).data().userLists;
+
+  if (userListsSnap.find((list) => list.title === newList.title)) {
+    return;
+  }
+
+  await updateDoc(userListsRef, {
+    userLists: arrayUnion(newList),
+  });
+};
+
+export const removeUserList = async (listIndex) => {
+  const userListsRef = doc(db, "users", auth.currentUser.uid);
+  const userListsSnap = (await getDoc(userListsRef)).data().userLists;
+
+  await setDoc(userListsRef, {
+    userLists: userListsSnap.toSpliced(listIndex, 1),
+  });
+};
+
+export const editUserListTitle = async (listIndex, newTitle) => {
+  const userListsRef = doc(db, "users", auth.currentUser.uid);
+  const userListsSnap = (await getDoc(userListsRef)).data().userLists;
+
+  const replace = { ...userListsSnap[listIndex], title: newTitle };
+
+  await setDoc(userListsRef, {
+    userLists: userListsSnap.toSpliced(listIndex, 1, replace),
+  });
+};
+
+export const deleteUserListItem = async () => {
+  console.log(currentListIndex);
+};

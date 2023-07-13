@@ -1,4 +1,5 @@
 import FormInput from "./FormInput";
+import Button from "./Button";
 
 import { 
  signInWithGoogglePopup,
@@ -8,11 +9,8 @@ import {
 
 import { useState } from "react";
 import { motion } from 'framer-motion';
-import { useNavigate } from "react-router-dom";
 
-import { useUserContext } from "../../contexts/UserContext";
 import { useGlobalContext } from "../../contexts/GlobalContext";
-
 
 const defaultSignInFormFields = {
   email: "",
@@ -72,7 +70,7 @@ const SignInForm = () => {
             name='email'
             handleSignUpChanges={handleSignInChanges}
             value={email}
-            label='Почта'
+            label={lang === 'en' ? 'Email' : 'Почта'}
           />
 
           <FormInput
@@ -81,22 +79,20 @@ const SignInForm = () => {
             name='password'
             handleSignUpChanges={handleSignInChanges}
             value={password}
-            label='Пароль'
+            label={lang === 'en' ? 'Password' : 'Пароль'}
           />
 
        <div className="buttons-container">
 
-        <button type='submit'>
-          <span>Войти</span>
-        </button>
+        <Button
+        type='submit' 
+        text={lang === 'en' ? 'Sign-In' : 'Войти'}/>
 
-        <button
+        <Button
         onClick={logGoogleUser}
-        type="button"
-        >
-         <span><img src="/assets/images/icons/icon-google.svg" alt="google sign-in" /></span>
-        </button>
-        
+        type='button'
+        imgPath={`${baseName}assets/images/icons/icon-google.svg`}
+        />
        </div>
        
       </motion.form>

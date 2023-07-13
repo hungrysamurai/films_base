@@ -1,4 +1,5 @@
 import FormInput from "./FormInput";
+import Button from "./Button";
 
 import { useState } from "react";
 
@@ -19,7 +20,7 @@ const defaultSignUpFormFields = {
 };
 
 const SignUpForm = () => {
-  const { setCurrentTitle } = useGlobalContext();
+  const { setCurrentTitle, lang } = useGlobalContext();
 
   const [signUpFormFields, setSignUpFormFields] = useState(defaultSignUpFormFields);
 
@@ -80,7 +81,7 @@ const SignUpForm = () => {
             type='text'
             name='displayName'
             handleSignUpChanges={handleSignUpChanges}
-            label='Логин'
+            label={lang === 'en' ? 'Username' : 'Логин'}
             value={displayName}
             required
           />
@@ -91,7 +92,7 @@ const SignUpForm = () => {
             name='email'
             handleSignUpChanges={handleSignUpChanges}
             value={email}
-            label='Почта'
+            label={lang === 'en' ? 'Email' : 'Почта'}
           />
 
           <FormInput
@@ -100,7 +101,7 @@ const SignUpForm = () => {
             name='password'
             handleSignUpChanges={handleSignUpChanges}
             value={password}
-            label='Пароль'
+            label={lang === 'en' ? 'Password' : 'Пароль'}
           />
 
           <FormInput
@@ -109,11 +110,14 @@ const SignUpForm = () => {
             name='confirmPassword'
             handleSignUpChanges={handleSignUpChanges}
             value={confirmPassword}
-            label='Повторите пароль'
+            label={lang === 'en' ? 'Confirm Password' : 'Подтвердите пароль'}
           />
        
        <div className="buttons-container">
-        <button type='submit'>Зарегистрироваться</button>
+        <Button
+        type='submit'
+        text={lang === 'en' ? 'Sign-Up' : 'Зарегистрироваться'}
+        />
        </div>
       </motion.form>
  )

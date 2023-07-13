@@ -9,7 +9,9 @@ import useOutsideClick from "../../../hooks/useOutsideClick";
 import { useState, useRef } from "react";
 import EditListSubmit from "../icons/EditListSubmit";
 
-const UserLists = ({ userLists, currentListIndex, dispatch, createNewUserList, deleteUserList, editUserListTitle }) => {
+import { createNewUserList } from "../../../utils/firebase/firebase.utils";
+
+const UserLists = ({ userLists, currentListIndex, dispatch }) => {
 
   const [newListInput, setNewListInput] = useState({
     show: false,
@@ -80,8 +82,6 @@ const UserLists = ({ userLists, currentListIndex, dispatch, createNewUserList, d
               title={title}
               active={currentListIndex === i ? true : false}
               dispatch={dispatch}
-              editUserListTitle={editUserListTitle}
-              deleteUserList={deleteUserList}
               listIndex={i}
             />
           );
@@ -108,7 +108,8 @@ const UserLists = ({ userLists, currentListIndex, dispatch, createNewUserList, d
           placeholder="Название списка..." 
           ref={newListInputRef}
           value={newListInput.value}
-          onChange={e => setNewListInput((prev) => ({...prev, value: e.target.value}))}/>
+          onChange={e => setNewListInput((prev) => ({...prev, value: e.target.value}))}
+          autoFocus/>
           <button type='submit'>
             <EditListSubmit/>
           </button>

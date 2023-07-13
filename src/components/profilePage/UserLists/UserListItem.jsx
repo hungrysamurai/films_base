@@ -6,15 +6,14 @@ import EditListCancel from "../icons/EditListCancel";
 import useOutsideClick from "../../../hooks/useOutsideClick";
 
 import { useState, useRef, useEffect } from "react";
-
 import { AnimatePresence, motion } from 'framer-motion';
+
+import { removeUserList, editUserListTitle } from "../../../utils/firebase/firebase.utils";
 
 const UserListItem = ({
   title,
   active,
   dispatch,
-  editUserListTitle,
-  deleteUserList,
   listIndex,
 }) => {
 
@@ -143,7 +142,7 @@ const UserListItem = ({
           </button>
           <button
             className="delete-list-icon"
-            onClick={() => deleteUserList(listIndex)}
+            onClick={() => removeUserList(listIndex)}
           >
             <DeleteListIcon />
           </button>
