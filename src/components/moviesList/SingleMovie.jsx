@@ -17,7 +17,7 @@ const SingleMovie = ({ title, poster, id, mediaType }) => {
       initial={{ opacity: 0 }}
       exit={{ opacity: 0 }}
       whileHover={{
-        scale: 1.1,
+        scale: 1.05,
         zIndex: 999,
       }}
       className="movie-container"

@@ -10,6 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  
 
   // Images gallery mode styles
   .modal-index-controls {
@@ -63,7 +64,7 @@
   }
 
   // Box mode styles
-  .modal-wrapper-container {
+  .modal-box-container {
     margin: 0 auto;
     background: var(--bg-gradient);
     box-shadow: var(--button-shadow);
@@ -193,14 +194,14 @@
       }
 
       // Lists container
-      .user-lists-container{
+      .user-lists-widget-container{
         width: 100%;
         display: flex;
         align-items: flex-start;
         justify-content: center;
         padding: 1rem;
 
-        ul.user-lists{
+        ul.user-lists-widget{
           list-style: none;
           width: 100%;
           display: flex;
@@ -257,6 +258,42 @@
       }
     }
   }
+
+  .modal-overlay-container {
+    background: var(--bg-gradient);
+    opacity: 0.90;
+    height: 100%;
+    width:100%;
+    position: relative;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    scrollbar-width: none;
+    
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+        .close-modal {
+          position: fixed;
+          top: 1.5rem;
+          right: 1.5rem;
+          background: none;
+          border: none;
+          cursor: pointer;
+        }
+
+      .user-lists-modal-inner {
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          width: 100%;
+          height: 100%;
+          padding: 2rem;
+      }
+  }
 }
 
 @media only screen and (max-width: 768px) {
@@ -271,7 +308,7 @@
       }
     }
 
-   .modal-wrapper-container {
+   .modal-box-container {
 
     .user-modal-inner{
 
@@ -289,9 +326,9 @@
     }
 
     // Lists container
-    .user-lists-container {
+    .user-lists-widget-container {
 
-      ul.user-lists {
+      ul.user-lists-widget {
 
         li.user-list-item {
           margin-top: 1.25rem;
@@ -331,5 +368,16 @@
     }
     }
    }
+
+     .modal-overlay-container{
+      
+      .user-lists-modal-inner {
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          height: 100%;
+          padding: 0.5rem 2.5rem 0.5rem 0.5rem
+        }
+     }
   }
 }

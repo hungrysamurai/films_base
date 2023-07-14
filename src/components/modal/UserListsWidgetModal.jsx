@@ -14,8 +14,8 @@ const UserListsWidgetModal = ({hideModal, title, userLists, currentMovieData, ad
  return (
      <div className="user-lists-widget-inner" ref={modalInnerRef}>
        <h3>Добавить {`«${title}»`} в список...</h3>
-       <div className="user-lists-container">
-         <ul className="user-lists">
+       <div className="user-lists-widget-container">
+         <ul className="user-lists-widget">
 
           {userLists.map(({data: listItems, title: listTitle}, listIndex) => {
 

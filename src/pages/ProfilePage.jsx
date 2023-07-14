@@ -1,23 +1,24 @@
-import { useEffect, useReducer, useRef } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { useUserContext } from "../contexts/UserContext";
 import { useGlobalContext } from "../contexts/GlobalContext";
 
 import userListsReducer from "../reducers/userListsReducer";
 
-import Modal from "../components/modal/Modal";
-
 import { db } from "../utils/firebase/firebase.utils";
 import {
-  setDoc,
-  getDoc,
   onSnapshot,
-  doc,
-  updateDoc,
-  arrayUnion,
+  doc
 } from "firebase/firestore";
 
 import UserLists from "../components/profilePage/UserLists/UserLists";
 import UserMoviesList from "../components/moviesList/UserMoviesList";
+
+import Modal from "../components/modal/Modal";
+import UserListIcon from "../components/profilePage/icons/UserListIcon";
+
+import useListenWindowWidth from "../hooks/useListenWindowWidth";
+
+import { AnimatePresence } from "framer-motion";
 
 const usersListsInitialState = {
   userLists: [],
@@ -35,7 +36,11 @@ const ProfilePage = () => {
   const [userListsState, dispatch] = useReducer(
     userListsReducer,
     usersListsInitialState
-  );
+  ); 
+
+  const [showModal, setShowModal] = useState(false);
+
+  const currentWindowWidth = useListenWindowWidth();
 
   const { userLists, currentListIndex } = userListsState;
 
@@ -61,16 +66,51 @@ const ProfilePage = () => {
     return unsubscribe;
   }, [currentUser]);
 
+  const hideModal = () => {
+    setShowModal(() => false);
+  }
 
   return (
     <section className="section-profile">
-      <UserLists
-        userLists={userLists}
-        currentListIndex={currentListIndex}
-        dispatch={dispatch}
-      />
 
-      <div className="user-movies-list-container">
+      <div className="left-col" >
+
+        {currentWindowWidth === 'desktop' ? 
+        <>
+          <UserLists
+            userLists={userLists}
+            currentListIndex={currentListIndex}
+            dispatch={dispatch}
+          />
+        </> : 
+        <>
+          <div 
+          className="user-lists-modal-toggler"
+          onClick={() => setShowModal(() => true)}>
+            <UserListIcon />
+            <h3>Мои списки</h3>
+          </div>
+      
+          <AnimatePresence>
+          {showModal && 
+          <Modal hideModal={hideModal} mode="overlay">
+            <div className="user-lists-modal-inner">
+           <UserLists
+            userLists={userLists}
+            currentListIndex={currentListIndex}
+            dispatch={dispatch}
+            hideModal={hideModal}/>
+            </div>
+          </Modal>
+          }
+          </AnimatePresence>
+        </>
+      }
+     
+
+      </div>
+
+      <div className="right-col">
         <div className="user-movies-list-title">
           {userLists[currentListIndex] && (
             <h2>{userLists[currentListIndex]?.title}</h2>
@@ -86,3 +126,31 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
+
+
+
+
+
+
+
+   {/* <div className="user-lists-mobile-container">
+      <button onClick={() => setShowModal(() => true)}>
+        <UserListIcon />
+        <h3>Мои списки</h3>
+      </button>
+
+      <AnimatePresence>
+        {showModal && (
+          <Modal mode="box" hideModal={hideModal}>
+          <UserLists
+            userLists={userLists}
+            currentListIndex={currentListIndex}
+            dispatch={dispatch}
+            hideModal={hideModal}
+          />
+          </Modal>
+         
+        )}
+      </AnimatePresence>
+
+    </div> */}

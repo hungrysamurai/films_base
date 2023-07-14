@@ -11,14 +11,14 @@ import EditListSubmit from "../icons/EditListSubmit";
 
 import { createNewUserList } from "../../../utils/firebase/firebase.utils";
 
-const UserLists = ({ userLists, currentListIndex, dispatch }) => {
+const UserLists = ({ userLists, currentListIndex, dispatch}) => {
 
   const [newListInput, setNewListInput] = useState({
     show: false,
     value: ''
   });
 
-  const newListInputRef = useRef(null);
+  const newListFormRef = useRef(null);
   
   const animationControl = useAnimation();
 
@@ -35,19 +35,16 @@ const UserLists = ({ userLists, currentListIndex, dispatch }) => {
     }); 
   }
 
-  const hideNewUserListInput = (e) => {
-    if(e.target !== newListInputRef.current && newListInput.show){
+  const hideNewUserListInput = () => {
         setNewListInput((prev) => {
           return {
             ...prev,
             show: false
           }
         });
-        
       animationControl.start({
         y:0,
       });
-    }
   }
 
   const submitNewUserList = (e) => {
@@ -68,12 +65,18 @@ const UserLists = ({ userLists, currentListIndex, dispatch }) => {
 
     createNewUserList(newListTitle);
   }
+
+  useOutsideClick(newListFormRef, hideNewUserListInput);
+
+
   return (
-    <div className="user-lists-container" onClick={hideNewUserListInput}>
+    <div className="user-lists-container">
+
       <div className="user-lists-header">
         <UserListIcon />
         <h3>Мои списки</h3>
       </div>
+
       <div className="user-lists">
         {userLists.map(({ title},i) => {
           return (
@@ -102,14 +105,15 @@ const UserLists = ({ userLists, currentListIndex, dispatch }) => {
         y:0
       }}
       >
-        <form onSubmit={submitNewUserList}>
+        <form onSubmit={submitNewUserList} ref={newListFormRef}>
+
           <input 
           type="text" 
           placeholder="Название списка..." 
-          ref={newListInputRef}
           value={newListInput.value}
           onChange={e => setNewListInput((prev) => ({...prev, value: e.target.value}))}
           autoFocus/>
+
           <button type='submit'>
             <EditListSubmit/>
           </button>
@@ -130,7 +134,7 @@ const UserLists = ({ userLists, currentListIndex, dispatch }) => {
           <AddNewListIcon active={newListInput.show}/>
         </motion.button>
       </div>
-    </div>
+</div>
   );
 };
 

@@ -14,7 +14,7 @@ const UserListItem = ({
   title,
   active,
   dispatch,
-  listIndex,
+  listIndex
 }) => {
 
   const [editTitleInput, setEditTitleInput] = useState({
@@ -118,7 +118,7 @@ const UserListItem = ({
          dispatch({ type: "SET_CURRENT_LIST_INDEX", payload: listIndex });
       }}>
         
-      <div className="user-list-title">
+      <div className="user-list-title"> 
           <h3>{title}</h3>
       </div>
 
