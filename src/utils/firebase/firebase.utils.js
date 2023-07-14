@@ -123,6 +123,12 @@ export const updateUserPhoto = async (file) => {
   );
 };
 
+export const updateUserLogin = async (newLogin) => {
+  updateProfile(auth.currentUser, {
+    displayName: newLogin,
+  });
+}
+
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);
 
@@ -163,6 +169,28 @@ export const editUserListTitle = async (listIndex, newTitle) => {
     userLists: userListsSnap.toSpliced(listIndex, 1, replace),
   });
 };
+
+export const addToUserList = async (listIndex, id, mediaType) => {
+  const userListsRef = doc(db, "users", auth.currentUser.uid);
+  const userListsSnap = (await getDoc(userListsRef)).data().userLists;
+
+  userListsSnap[listIndex].data.push({ mediaType, id })
+
+  await setDoc(userListsRef, {
+    userLists: userListsSnap,
+  });
+}
+
+export const removeFromUserList = async (listIndex, id, mediaType) => {
+  const userListsRef = doc(db, "users", auth.currentUser.uid);
+  const userListsSnap = (await getDoc(userListsRef)).data().userLists;
+
+  userListsSnap[listIndex].data = userListsSnap[listIndex].data.filter(item => item.id !== id && item.mediaType !== mediaType);
+
+  await setDoc(userListsRef, {
+    userLists: userListsSnap,
+  });
+}
 
 export const deleteUserListItem = async () => {
   console.log(currentListIndex);

@@ -5,7 +5,10 @@ import { useRef } from "react";
 
 import useOutsideClick from "../../hooks/useOutsideClick";
 
-const UserListsWidgetModal = ({hideModal, title, userLists, currentMovieData, addToUserList, removeFromUserList}) => {
+import { addToUserList, removeFromUserList } from "../../utils/firebase/firebase.utils";
+
+const UserListsWidgetModal = ({hideModal, title, userLists, currentMovieData}) => {
+
   const {id: currentItemID, mediaType: currentItemMediaType} = currentMovieData;
 
   const modalInnerRef = useRef(null);
@@ -30,11 +33,11 @@ const UserListsWidgetModal = ({hideModal, title, userLists, currentMovieData, ad
              </div>
 
               {itemInCurrentList ? 
-               <button onClick={() => removeFromUserList(listIndex)}>
+               <button onClick={() => removeFromUserList(listIndex, currentItemID, currentItemMediaType)}>
                  <UserListIconRemove/>
                </button> :
 
-                 <button onClick={() => addToUserList(listIndex)}>
+                 <button onClick={() => addToUserList(listIndex, currentItemID, currentItemMediaType)}>
                  <UserListIconAdd/>
                 </button>
               }

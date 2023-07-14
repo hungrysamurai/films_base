@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
-const SingleMovie = ({ title, poster, id, mediaType }) => {
+const SingleMovie = ({ title, poster, id, mediaType, isDrag }) => {
   const [imageLoading, setImageLoading] = useState(true);
   const { baseName } = useGlobalContext();
   const imageLoaded = () => {
@@ -22,7 +22,11 @@ const SingleMovie = ({ title, poster, id, mediaType }) => {
       }}
       className="movie-container"
     >
-      <Link to={`${baseName}${mediaType}/${id}`}>
+      <Link
+        style={{ pointerEvents: isDrag ? "none" : "" }}
+        to={`${baseName}${mediaType}/${id}`}
+        draggable="false"
+      >
         <div className="movie-poster-container">
           <motion.img
             initial={{

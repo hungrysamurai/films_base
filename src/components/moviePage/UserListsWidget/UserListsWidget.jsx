@@ -3,14 +3,7 @@ import { useEffect, useState } from "react";
 import { useUserContext } from "../../../contexts/UserContext";
 
 import { db } from "../../../utils/firebase/firebase.utils";
-import {
-  setDoc,
-  getDoc,
-  onSnapshot,
-  doc,
-  updateDoc,
-  arrayUnion,
-} from "firebase/firestore";
+import { onSnapshot, doc } from "firebase/firestore";
 
 import Modal from "../../modal/Modal";
 import UserListsWidgetModal from "../../modal/UserListsWidgetModal";
@@ -30,34 +23,13 @@ const UserListsWidget = ({ id, mediaType, title }) => {
 
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, "users", currentUser.uid), (doc) => {
-      console.log('doc updated!',doc.data().userLists);
       setUserLists(doc.data().userLists);
     });
     return unsubscribe;
   }, [currentUser]);
 
 
-  const addToUserList = async (listIndex) => {
-    const userListsRef = doc(db, "users", currentUser.uid);
-    const userListsSnap = (await getDoc(userListsRef)).data().userLists;
 
-    userListsSnap[listIndex].data.push({mediaType, id})
-
-    await setDoc(userListsRef, {
-      userLists: userListsSnap,
-    });
-  } 
-
-  const removeFromUserList = async (listIndex) => {
-    const userListsRef = doc(db, "users", currentUser.uid);
-    const userListsSnap = (await getDoc(userListsRef)).data().userLists;
-
-    userListsSnap[listIndex].data = userListsSnap[listIndex].data.filter(item => item.id !== id);
-
-    await setDoc(userListsRef, {
-      userLists: userListsSnap,
-    });
-  }
 
   return (
     <>
@@ -69,8 +41,6 @@ const UserListsWidget = ({ id, mediaType, title }) => {
             title={title}
             userLists={userLists}
             currentMovieData={{id, mediaType}}
-            addToUserList={addToUserList}
-            removeFromUserList={removeFromUserList}
             />
           </Modal>
         )}

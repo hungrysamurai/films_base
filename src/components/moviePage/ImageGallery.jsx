@@ -5,6 +5,7 @@ const ImageGallery = ({ openModal, imagesArray }) => {
   const [galleryRow, setGalleryRow] = useState([]);
   const [totalImagesLoaded, setTotalImagesLoaded] = useState(0);
   const [galleryRowWidth, setGalleryRowWidth] = useState(0);
+  const [isDrag, setIsDrag] = useState(false);
   const [loading, setLoading] = useState(true);
   const animationControl = useAnimation();
 
@@ -55,6 +56,8 @@ const ImageGallery = ({ openModal, imagesArray }) => {
             (galleryRowWidth - (galleryRowWidth / galleryRow.length) * 2) * -1,
           right: 0,
         }}
+        onDrag={() => setIsDrag(() => true)}
+        onDragEnd={() => setIsDrag(() => false)}
         className="gallery-wrapper"
         animate={animationControl}
         initial={{ opacity: 0 }}
@@ -65,6 +68,7 @@ const ImageGallery = ({ openModal, imagesArray }) => {
               className="gallery-image-container"
               key={i}
               onClick={() => openImage(i)}
+              style={{ pointerEvents: isDrag ? "none" : "" }}
             >
               <img
                 src={image}

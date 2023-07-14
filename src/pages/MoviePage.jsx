@@ -18,16 +18,18 @@ import ImagesGalleryModal from "../components/modal/ImagesGalleryModal";
 import UserListsWidget from "../components/moviePage/UserListswidget/UserListsWidget";
 
 import { useUserContext } from "../contexts/UserContext";
+import SimilarMoviesList from "../components/moviesList/SimilarMoviesList";
 
 const MoviePage = () => {
-  const { setCurrentTitle, lang, mediaType } = useGlobalContext();
+  const { setCurrentTitle, lang } = useGlobalContext();
   const { currentUser } = useUserContext();
 
   const { id } = useParams();
   const location = useLocation();
-
-  const requestedMediaType =
+  
+  const currentMediaType =
     location.pathname.split("/")[import.meta.env.DEV ? 1 : 3];
+ 
 
   const [imagesGalleryModalState, setImagesGalleryModalState] = useState({
     show: false,
@@ -46,7 +48,7 @@ const MoviePage = () => {
     videosError,
     isLoading,
   } = useFetchSingleMovie(
-    mediaType === requestedMediaType ? mediaType : requestedMediaType,
+    currentMediaType,
     lang,
     id
   );
@@ -169,7 +171,7 @@ const MoviePage = () => {
           {currentUser && (
             <UserListsWidget
               id={id}
-              mediaType={requestedMediaType}
+              mediaType={currentMediaType}
               title={title}
             />
           )}
@@ -209,15 +211,11 @@ const MoviePage = () => {
         </div>
       </div>
 
-      {/* <div className="similar-movies-container">
-        <h2>Similar</h2>
-        <CustomMoviesList
-          listMode="similar"
-          currentUserList={null}
-          movieId={id}
-          movieMediaType={requestedMediaType}
+        <SimilarMoviesList
+          itemID={id}
+          itemMediaType={currentMediaType}
         />
-      </div> */}
+
     </section>
   );
 };
