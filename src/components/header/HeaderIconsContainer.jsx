@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useUserContext } from "../../contexts/UserContext";
 import { getTheme } from "../../utils/getTheme";
 
-import { useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 import { AnimatePresence } from "framer-motion";
 
@@ -38,8 +38,10 @@ const HeaderIconsContainer = () => {
   const toggleLang = () => {
     if (lang === "ru") {
       dispatch({ type: "SET_LANG", payload: "en" });
+      localStorage.setItem("FBlang", "en");
     } else {
       dispatch({ type: "SET_LANG", payload: "ru" });
+      localStorage.setItem("FBlang", "ru");
     }
   };
 

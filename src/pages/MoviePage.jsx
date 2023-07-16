@@ -26,10 +26,9 @@ const MoviePage = () => {
 
   const { id } = useParams();
   const location = useLocation();
-  
-  const currentMediaType =
-    location.pathname.split("/")[import.meta.env.DEV ? 1 : 3];
- 
+
+  const currentMediaType = location.pathname.split("/")[3];
+  console.log(location.pathname, currentMediaType);
 
   const [imagesGalleryModalState, setImagesGalleryModalState] = useState({
     show: false,
@@ -47,11 +46,7 @@ const MoviePage = () => {
     imagesError,
     videosError,
     isLoading,
-  } = useFetchSingleMovie(
-    currentMediaType,
-    lang,
-    id
-  );
+  } = useFetchSingleMovie(currentMediaType, lang, id);
 
   const { data: mediaData, description, title, poster } = data;
 
@@ -211,11 +206,7 @@ const MoviePage = () => {
         </div>
       </div>
 
-        <SimilarMoviesList
-          itemID={id}
-          itemMediaType={currentMediaType}
-        />
-
+      <SimilarMoviesList itemID={id} itemMediaType={currentMediaType} />
     </section>
   );
 };

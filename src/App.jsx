@@ -15,11 +15,11 @@ function App() {
   const { currentUser } = useUserContext();
 
   const ProtectedRoute = ({ children }) => {
-    return currentUser ? children : <Navigate to="/auth" />;
+    return currentUser ? children : <Navigate to={`${baseName}auth`} />;
   };
 
   const PublicRoute = ({ children }) => {
-    return currentUser ? <Navigate to="/profile" /> : children;
+    return currentUser ? <Navigate to={`${baseName}profile`} /> : children;
   };
 
   return (

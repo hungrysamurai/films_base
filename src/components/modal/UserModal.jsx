@@ -1,13 +1,13 @@
 import ProfilePicPlaceholder from "../ProfilePicPlaceholder";
 
-import useOutsideClick from '../../hooks/useOutsideClick';
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 import { useRef, useState } from "react";
 
 import {
   updateUserPhoto,
   signOutUser,
-  updateUserLogin
+  updateUserLogin,
 } from "../../utils/firebase/firebase.utils";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../contexts/UserContext";
@@ -15,31 +15,33 @@ import { useUserContext } from "../../contexts/UserContext";
 import { AnimatePresence, motion } from "framer-motion";
 import EditListSubmit from "../profilePage/icons/EditListSubmit";
 import EditListCancel from "../profilePage/icons/EditListCancel";
+import { useGlobalContext } from "../../contexts/GlobalContext";
 
 const UserModal = ({ hideModal }) => {
   const { currentUser } = useUserContext();
+  const { baseName } = useGlobalContext();
+
   const navigate = useNavigate();
 
   const [newUserNameInput, setNewUserNameInput] = useState({
     show: false,
-    value: currentUser?.displayName
+    value: currentUser?.displayName,
   });
 
   const newUserNameFormRef = useRef(null);
   const modalInnerRef = useRef(null);
- 
-  
+
   const navigateProfile = () => {
     hideModal();
-    navigate("/profile");
+    navigate(`${baseName}profile`);
   };
 
   const showUserNameInput = () => {
     setNewUserNameInput((prev) => {
       return {
         ...prev,
-        show: true
-      }
+        show: true,
+      };
     });
   };
 
@@ -47,33 +49,37 @@ const UserModal = ({ hideModal }) => {
     setNewUserNameInput(() => {
       return {
         value: currentUser.displayName,
-        show: false
-      }
+        show: false,
+      };
     });
-  }
+  };
 
   const submitNewUserName = (e) => {
     e.preventDefault();
 
-     const newUserName = newUserNameInput.value;
+    const newUserName = newUserNameInput.value;
 
-    if (newUserName === '' || newUserName.length < 3 || newUserName.length > 100){
+    if (
+      newUserName === "" ||
+      newUserName.length < 3 ||
+      newUserName.length > 100
+    ) {
       return;
     }
 
-    hideModal()
-    updateUserLogin(newUserName)
-  } 
+    hideModal();
+    updateUserLogin(newUserName);
+  };
 
   const changeUserPic = (file) => {
     updateUserPhoto(file);
-    navigate("/profile");
+    navigate(`${baseName}profile`);
     hideModal();
   };
 
   const logout = () => {
     hideModal();
-    navigate("/");
+    navigate(baseName);
     signOutUser();
   };
 
@@ -90,66 +96,71 @@ const UserModal = ({ hideModal }) => {
         <ProfilePicPlaceholder />
       )}
 
-    <AnimatePresence>
-      <div className="user-name-container">
-
-        {newUserNameInput.show ? 
-          <motion.div 
-          className="new-user-input-container"
-          initial={{
-            opacity:0,
-            y:-50
-          }}
-          animate={{
-            opacity:1,
-            y:0
-          }}
-          exit={{
-            opacity: 0,
-            y: 50
-          }}>
-            <form 
-            onSubmit={submitNewUserName}
-            ref={newUserNameFormRef}>
-              <input 
-                type='text' 
-                value={newUserNameInput.value} 
-                onChange={(e) => setNewUserNameInput((prev) => ({...prev, value: e.target.value}))} 
-                autoFocus/>
+      <AnimatePresence>
+        <div className="user-name-container">
+          {newUserNameInput.show ? (
+            <motion.div
+              className="new-user-input-container"
+              initial={{
+                opacity: 0,
+                y: -50,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              exit={{
+                opacity: 0,
+                y: 50,
+              }}
+            >
+              <form onSubmit={submitNewUserName} ref={newUserNameFormRef}>
+                <input
+                  type="text"
+                  value={newUserNameInput.value}
+                  onChange={(e) =>
+                    setNewUserNameInput((prev) => ({
+                      ...prev,
+                      value: e.target.value,
+                    }))
+                  }
+                  autoFocus
+                />
 
                 <div className="input-buttons-container">
-                  <button 
-                  className="submit-button" 
-                  type='submit'>
-                    <EditListSubmit/>
+                  <button className="submit-button" type="submit">
+                    <EditListSubmit />
                   </button>
-                  <button 
-                  className="cancel-button" 
-                  type='button'
-                  onClick={hideUserNameInput}>
-                    <EditListCancel/>
+                  <button
+                    className="cancel-button"
+                    type="button"
+                    onClick={hideUserNameInput}
+                  >
+                    <EditListCancel />
                   </button>
                 </div>
-            </form>
-          </motion.div> : 
-          <motion.h3
-          initial={{
-            opacity:0,
-            y:50
-          }}
-          animate={{
-            opacity:1,
-            y:0
-          }}
-          exit={{
-            opacity: 0,
-            y: -50
-          }}
-          >{currentUser?.displayName}
-          </motion.h3>}
-
-      </div>
-    </AnimatePresence>
+              </form>
+            </motion.div>
+          ) : (
+            <motion.h3
+              initial={{
+                opacity: 0,
+                y: 50,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              exit={{
+                opacity: 0,
+                y: -50,
+              }}
+            >
+              {currentUser?.displayName}
+            </motion.h3>
+          )}
+        </div>
+      </AnimatePresence>
 
       <input
         type="file"

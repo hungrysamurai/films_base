@@ -1,18 +1,13 @@
-import {
-  useState,
-  useContext,
-  createContext,
-  useReducer,
-} from "react";
+import { useState, useContext, createContext, useReducer } from "react";
 
 import moviesListReducer from "../reducers/moviesListReducer";
 
 import { useFetchMoviesList } from "../hooks/useFetchMoviesList";
 
-import { getBaseName } from "../utils/getBaseName";
+import { getLang } from "../utils/getLang";
 
 const initialState = {
-  lang: "en",
+  lang: getLang(),
   mediaType: "movie",
   filterList: "top_rated",
   filterGenre: "all",
@@ -21,13 +16,13 @@ const initialState = {
   moviesList: [],
   uniqueIds: [],
   moviesListMode: "home",
-  searchQuery: ""
+  searchQuery: "",
 };
 
 const AppContext = createContext();
 
 const AppProvider = ({ children }) => {
-  const baseName = getBaseName();
+  const baseName = import.meta.env.BASE_URL;
   const [currentTitle, setCurrentTitle] = useState("");
 
   const [moviesListState, dispatch] = useReducer(
@@ -46,7 +41,6 @@ const AppProvider = ({ children }) => {
       moviesListState.moviesListMode,
       dispatch
     );
-
 
   const {
     lang,

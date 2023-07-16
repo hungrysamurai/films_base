@@ -9,7 +9,7 @@ export default class SingleMovieData {
       : this.fetchedData.name;
     this.poster = fetchedData.poster_path
       ? `${imagesUrlBase}${fetchedData.poster_path}`
-      : "/assets/images/no-poster.jpg";
+      : `${import.meta.env.BASE_URL}assets/images/no-poster.jpg`;
     this.data =
       this.mediaType === "movie" ? this.getMovieData() : this.getTVSeriesData();
     this.description = this.fetchedData.overview;
