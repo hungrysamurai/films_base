@@ -8,8 +8,7 @@ import { useFetchUserMoviesList } from "../../hooks/useFetchUserMoviesList";
 
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
-const UserMoviesList = ({ currentUserList }) => {
-
+const UserMoviesList = ({ currentUserList, listIndex }) => {
   const { lang } = useGlobalContext();
 
   const {
@@ -47,6 +46,8 @@ const UserMoviesList = ({ currentUserList }) => {
                 title={title}
                 id={id}
                 mediaType={mediaType}
+                removeItemButton={true}
+                listIndex={listIndex}
               />
               ;
             </AnimatePresence>

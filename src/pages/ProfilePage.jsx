@@ -5,10 +5,7 @@ import { useGlobalContext } from "../contexts/GlobalContext";
 import userListsReducer from "../reducers/userListsReducer";
 
 import { db } from "../utils/firebase/firebase.utils";
-import {
-  onSnapshot,
-  doc
-} from "firebase/firestore";
+import { onSnapshot, doc } from "firebase/firestore";
 
 import UserLists from "../components/profilePage/UserLists/UserLists";
 import UserMoviesList from "../components/moviesList/UserMoviesList";
@@ -36,7 +33,7 @@ const ProfilePage = () => {
   const [userListsState, dispatch] = useReducer(
     userListsReducer,
     usersListsInitialState
-  ); 
+  );
 
   const [showModal, setShowModal] = useState(false);
 
@@ -48,7 +45,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, "users", currentUser.uid), (doc) => {
-      if(!doc.data()) return;
+      if (!doc.data()) return;
 
       if (!mounted.current) {
         dispatch({
@@ -68,46 +65,45 @@ const ProfilePage = () => {
 
   const hideModal = () => {
     setShowModal(() => false);
-  }
+  };
 
   return (
     <section className="section-profile">
-
-      <div className="left-col" >
-
-        {currentWindowWidth === 'desktop' ? 
-        <>
-          <UserLists
-            userLists={userLists}
-            currentListIndex={currentListIndex}
-            dispatch={dispatch}
-          />
-        </> : 
-        <>
-          <div 
-          className="user-lists-modal-toggler"
-          onClick={() => setShowModal(() => true)}>
-            <UserListIcon />
-            <h3>Мои списки</h3>
-          </div>
-      
-          <AnimatePresence>
-          {showModal && 
-          <Modal hideModal={hideModal} mode="overlay">
-            <div className="user-lists-modal-inner">
-           <UserLists
-            userLists={userLists}
-            currentListIndex={currentListIndex}
-            dispatch={dispatch}
-            hideModal={hideModal}/>
+      <div className="left-col">
+        {currentWindowWidth === "desktop" ? (
+          <>
+            <UserLists
+              userLists={userLists}
+              currentListIndex={currentListIndex}
+              dispatch={dispatch}
+            />
+          </>
+        ) : (
+          <>
+            <div
+              className="user-lists-modal-toggler"
+              onClick={() => setShowModal(() => true)}
+            >
+              <UserListIcon />
+              <h3>Мои списки</h3>
             </div>
-          </Modal>
-          }
-          </AnimatePresence>
-        </>
-      }
-     
 
+            <AnimatePresence>
+              {showModal && (
+                <Modal hideModal={hideModal} mode="overlay">
+                  <div className="user-lists-modal-inner">
+                    <UserLists
+                      userLists={userLists}
+                      currentListIndex={currentListIndex}
+                      dispatch={dispatch}
+                      hideModal={hideModal}
+                    />
+                  </div>
+                </Modal>
+              )}
+            </AnimatePresence>
+          </>
+        )}
       </div>
 
       <div className="right-col">
@@ -117,8 +113,10 @@ const ProfilePage = () => {
           )}
         </div>
         {userLists[currentListIndex] && (
-          <UserMoviesList 
-          currentUserList={userLists[currentListIndex].data} />
+          <UserMoviesList
+            currentUserList={userLists[currentListIndex].data}
+            listIndex={currentListIndex}
+          />
         )}
       </div>
     </section>
@@ -126,31 +124,3 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
-
-
-
-
-
-
-
-   {/* <div className="user-lists-mobile-container">
-      <button onClick={() => setShowModal(() => true)}>
-        <UserListIcon />
-        <h3>Мои списки</h3>
-      </button>
-
-      <AnimatePresence>
-        {showModal && (
-          <Modal mode="box" hideModal={hideModal}>
-          <UserLists
-            userLists={userLists}
-            currentListIndex={currentListIndex}
-            dispatch={dispatch}
-            hideModal={hideModal}
-          />
-          </Modal>
-         
-        )}
-      </AnimatePresence>
-
-    </div> */}

@@ -28,7 +28,6 @@ const MoviePage = () => {
   const location = useLocation();
 
   const currentMediaType = location.pathname.split("/")[3];
-  console.log(location.pathname, currentMediaType);
 
   const [imagesGalleryModalState, setImagesGalleryModalState] = useState({
     show: false,

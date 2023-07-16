@@ -45,9 +45,25 @@
     justify-content: flex-start;
     align-items: center;
     flex-wrap: wrap;
+    position: relative;
     min-width: 12.5rem;
     min-height: 23rem;
     cursor: pointer;
+
+    .remove-item-button {
+      position: absolute;
+      left: 0.75rem;
+      top: 0.75rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      filter: drop-shadow(0px 4px 4px #262626);
+      // mix-blend-mode: difference;
+      svg {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+    }
 
     a {
       display: block;

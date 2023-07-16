@@ -2,9 +2,24 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useGlobalContext } from "../../contexts/GlobalContext";
+import useListenWindowWidth from "../../hooks/useListenWindowWidth";
+import DeleteMovieIcon from "./DeleteMovieIcon";
+import { removeFromUserList } from "../../utils/firebase/firebase.utils";
 
-const SingleMovie = ({ title, poster, id, mediaType, isDrag }) => {
+const SingleMovie = ({
+  title,
+  poster,
+  id,
+  mediaType,
+  isDrag,
+  removeItemButton,
+  listIndex,
+}) => {
   const [imageLoading, setImageLoading] = useState(true);
+  const [showDeleteButton, setShowDeleteButton] = useState(false);
+
+  const currentWindowWidth = useListenWindowWidth();
+
   const { baseName } = useGlobalContext();
   const imageLoaded = () => {
     setImageLoading(false);
@@ -20,6 +35,12 @@ const SingleMovie = ({ title, poster, id, mediaType, isDrag }) => {
         scale: 1.05,
         zIndex: 999,
       }}
+      onHoverStart={() =>
+        removeItemButton ? setShowDeleteButton(() => true) : null
+      }
+      onHoverEnd={() =>
+        removeItemButton ? setShowDeleteButton(() => false) : null
+      }
       className="movie-container"
     >
       <Link
@@ -57,6 +78,19 @@ const SingleMovie = ({ title, poster, id, mediaType, isDrag }) => {
           <h3>{title}</h3>
         </div>
       </Link>
+
+      {removeItemButton &&
+        !imageLoading &&
+        (showDeleteButton || currentWindowWidth === "mobile") && (
+          <button
+            className="remove-item-button"
+            onClick={() => {
+              removeFromUserList(listIndex, id, mediaType);
+            }}
+          >
+            <DeleteMovieIcon />
+          </button>
+        )}
     </motion.div>
   );
 };

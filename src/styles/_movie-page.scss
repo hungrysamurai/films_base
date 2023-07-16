@@ -81,8 +81,8 @@
       display: flex;
       flex-direction: column;
 
-      .add-to-user-list-container{
-        width:100%;
+      .add-to-user-list-container {
+        width: 100%;
         padding: 0 1rem 1rem 1rem;
         display: flex;
         align-items: center;
@@ -211,6 +211,7 @@
       align-items: center;
 
       .left-col {
+        margin-top: 1rem;
         max-width: 95%;
         flex-direction: column;
 
@@ -240,18 +241,18 @@
       }
 
       .right-col {
-        max-width: 95%;
+        min-width: 95%;
         margin-top: 1rem;
 
         .add-to-user-list-container {
-            padding: 2rem;
-            justify-content: center;
-        
-            h3 {
-              font-size: 1.25rem;
-              margin-right: 0.75rem;
-            }
+          padding: 2rem 1rem;
+          justify-content: center;
+
+          h3 {
+            font-size: 1.25rem;
+            margin-right: 0.75rem;
           }
+        }
 
         .data-container {
           padding: 0.25rem;
@@ -259,15 +260,15 @@
           margin-bottom: 1rem;
 
           .data-item {
-            font-size: 0.65rem;
+            font-size: 0.75rem;
 
             .label {
-              width: 50%;
+              width: 60%;
               font-weight: 900;
             }
 
             .data-info {
-              width: 50%;
+              width: 40%;
               padding-left: 0;
             }
           }

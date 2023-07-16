@@ -52,8 +52,7 @@ const ImageGallery = ({ openModal, imagesArray }) => {
         ref={galleryRowContainerRef}
         drag="x"
         dragConstraints={{
-          left:
-            (galleryRowWidth - (galleryRowWidth / galleryRow.length) * 2) * -1,
+          left: (galleryRowWidth - galleryRowWidth / galleryRow.length) * -1,
           right: 0,
         }}
         onDrag={() => setIsDrag(() => true)}

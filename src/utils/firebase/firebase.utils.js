@@ -11,7 +11,14 @@ import {
   updateProfile,
 } from "firebase/auth";
 
-import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+} from "firebase/firestore";
 
 import {
   getStorage,
@@ -70,7 +77,6 @@ export const createUserDocumentFromAuth = async (userAuth, displayName) => {
       }
 
       await setDoc(userDocRef, {
-
         userLists: [
           {
             title: "Посмотреть позже...",
@@ -127,7 +133,7 @@ export const updateUserLogin = async (newLogin) => {
   updateProfile(auth.currentUser, {
     displayName: newLogin,
   });
-}
+};
 
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);
@@ -174,24 +180,47 @@ export const addToUserList = async (listIndex, id, mediaType) => {
   const userListsRef = doc(db, "users", auth.currentUser.uid);
   const userListsSnap = (await getDoc(userListsRef)).data().userLists;
 
-  userListsSnap[listIndex].data.push({ mediaType, id })
+  userListsSnap[listIndex].data.push({ mediaType, id });
 
   await setDoc(userListsRef, {
     userLists: userListsSnap,
   });
-}
+};
 
 export const removeFromUserList = async (listIndex, id, mediaType) => {
   const userListsRef = doc(db, "users", auth.currentUser.uid);
   const userListsSnap = (await getDoc(userListsRef)).data().userLists;
 
-  userListsSnap[listIndex].data = userListsSnap[listIndex].data.filter(item => item.id !== id && item.mediaType !== mediaType);
+  // userListsSnap[listIndex].data = userListsSnap[listIndex].data.filter(
+  //   (item) => item.id !== id && item.mediaType !== mediaType
+  // );
+
+  userListsSnap[listIndex].data = userListsSnap[listIndex].data.filter(
+    (item) => {
+      if (item.mediaType === mediaType && item.id === `${id}`) {
+        return false;
+      } else return true;
+    }
+  );
 
   await setDoc(userListsRef, {
     userLists: userListsSnap,
   });
-}
+};
 
-export const deleteUserListItem = async () => {
-  console.log(currentListIndex);
+export const deleteUserListItem = async (listIndex, id, mediaType) => {
+  const userListsRef = doc(db, "users", auth.currentUser.uid);
+  const userListsSnap = (await getDoc(userListsRef)).data().userLists;
+
+  userListsSnap[listIndex].data = userListsSnap[listIndex].data.filter(
+    (item) => {
+      if (item.mediaType === mediaType && item.id === `${id}`) {
+        return false;
+      } else return true;
+    }
+  );
+
+  await setDoc(userListsRef, {
+    userLists: userListsSnap,
+  });
 };
