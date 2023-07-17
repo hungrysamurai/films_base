@@ -9,9 +9,10 @@ import MoviePage from "./pages/MoviePage";
 import SearchResults from "./pages/SearchResults";
 import AuthPage from "./pages/AuthPage";
 import ProfilePage from "./pages/ProfilePage";
+import ErrorMessage from "./components/ErrorMessage";
 
 function App() {
-  const { baseName } = useGlobalContext();
+  const { baseName, lang } = useGlobalContext();
   const { currentUser } = useUserContext();
 
   const ProtectedRoute = ({ children }) => {
@@ -49,7 +50,23 @@ function App() {
             }
           />
 
-          <Route path="*" element={<div>some error</div>} />
+          <Route
+            path="*"
+            element={
+              <section>
+                <ErrorMessage
+                  componentMessage="404"
+                  errorMessage={
+                    lang === "en"
+                      ? "This page is not exist"
+                      : "Такой страницы не существует!"
+                  }
+                  showImage={true}
+                  fullHeight={true}
+                />
+              </section>
+            }
+          />
         </Route>
       </Routes>
     </BrowserRouter>

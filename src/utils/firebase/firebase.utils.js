@@ -188,12 +188,10 @@ export const addToUserList = async (listIndex, id, mediaType) => {
 };
 
 export const removeFromUserList = async (listIndex, id, mediaType) => {
+  console.log(listIndex, id, mediaType);
   const userListsRef = doc(db, "users", auth.currentUser.uid);
   const userListsSnap = (await getDoc(userListsRef)).data().userLists;
 
-  // userListsSnap[listIndex].data = userListsSnap[listIndex].data.filter(
-  //   (item) => item.id !== id && item.mediaType !== mediaType
-  // );
 
   userListsSnap[listIndex].data = userListsSnap[listIndex].data.filter(
     (item) => {
@@ -203,24 +201,10 @@ export const removeFromUserList = async (listIndex, id, mediaType) => {
     }
   );
 
-  await setDoc(userListsRef, {
-    userLists: userListsSnap,
-  });
-};
-
-export const deleteUserListItem = async (listIndex, id, mediaType) => {
-  const userListsRef = doc(db, "users", auth.currentUser.uid);
-  const userListsSnap = (await getDoc(userListsRef)).data().userLists;
-
-  userListsSnap[listIndex].data = userListsSnap[listIndex].data.filter(
-    (item) => {
-      if (item.mediaType === mediaType && item.id === `${id}`) {
-        return false;
-      } else return true;
-    }
-  );
+  console.log(userListsSnap);
 
   await setDoc(userListsRef, {
     userLists: userListsSnap,
   });
 };
+

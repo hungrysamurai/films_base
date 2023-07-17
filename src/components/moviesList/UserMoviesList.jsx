@@ -19,11 +19,7 @@ const UserMoviesList = ({ currentUserList, listIndex }) => {
 
   if (moviesFetchError.show) {
     return (
-      <ErrorMessage
-        errorMessage={moviesFetchError.message}
-        componentMessage="Ошибка при загрузке списка"
-        showImage={true}
-      />
+      <ErrorMessage errorMessage={moviesFetchError.message} showImage={true} />
     );
   }
 

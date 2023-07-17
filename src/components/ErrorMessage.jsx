@@ -1,10 +1,18 @@
 import { motion } from "framer-motion";
 import { useGlobalContext } from "../contexts/GlobalContext";
 
-const ErrorMessage = ({ errorMessage, componentMessage, showImage }) => {
+const ErrorMessage = ({
+  errorMessage,
+  componentMessage,
+  showImage,
+  fullHeight,
+}) => {
   const { baseName } = useGlobalContext();
+
   return (
-    <div className="error-message-container">
+    <div
+      className={`error-message-container ${fullHeight ? "full-height" : ""}`}
+    >
       {showImage && (
         <motion.img
           animate={{
@@ -20,7 +28,7 @@ const ErrorMessage = ({ errorMessage, componentMessage, showImage }) => {
       )}
 
       <h3>
-        {componentMessage}: <span>{errorMessage}</span>
+        {componentMessage && `${componentMessage}:`} <span>{errorMessage}</span>
       </h3>
     </div>
   );

@@ -19,7 +19,7 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 
 const UserModal = ({ hideModal }) => {
   const { currentUser } = useUserContext();
-  const { baseName } = useGlobalContext();
+  const { baseName, lang} = useGlobalContext();
 
   const navigate = useNavigate();
 
@@ -86,6 +86,7 @@ const UserModal = ({ hideModal }) => {
   useOutsideClick(newUserNameFormRef, hideUserNameInput);
   useOutsideClick(modalInnerRef, hideModal);
 
+  console.log(lang);
   return (
     <div className="user-modal-inner" ref={modalInnerRef}>
       {currentUser?.photoURL ? (
@@ -170,16 +171,23 @@ const UserModal = ({ hideModal }) => {
       />
       <ul className="profile-actions-container">
         <li>
-          <button onClick={navigateProfile}>Профиль</button>
+          <button onClick={navigateProfile}>
+            {lang === 'en' ? 'Profile page' : 'Профиль'}
+          </button>
         </li>
         <li>
-          <button onClick={showUserNameInput}>Изменить логин</button>
+          <button onClick={showUserNameInput}>
+             {lang === 'en' ? 'Change username' : 'Изменить логин'}
+            </button>
         </li>
         <li>
-          <label htmlFor="file">Изменить фото</label>
+          <label htmlFor="file">
+            {lang === 'en' ? 'Change profile pic' : 'Изменить фото'}</label>
         </li>
         <li>
-          <button onClick={logout}>Выйти</button>
+          <button onClick={logout}>
+            {lang === 'en' ? 'Sign-Out' : 'Выйти'}
+          </button>
         </li>
       </ul>
     </div>

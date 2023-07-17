@@ -6,17 +6,24 @@ import { useRef } from "react";
 import useOutsideClick from "../../hooks/useOutsideClick";
 
 import { addToUserList, removeFromUserList } from "../../utils/firebase/firebase.utils";
+import { useGlobalContext } from "../../contexts/GlobalContext";
 
 const UserListsWidgetModal = ({hideModal, title, userLists, currentMovieData}) => {
+
+  const {lang} = useGlobalContext();
 
   const {id: currentItemID, mediaType: currentItemMediaType} = currentMovieData;
 
   const modalInnerRef = useRef(null);
+
   useOutsideClick(modalInnerRef, hideModal);
 
  return (
      <div className="user-lists-widget-inner" ref={modalInnerRef}>
-       <h3>Добавить {`«${title}»`} в список...</h3>
+      {lang === 'en' ? 
+      (<h3>Add {`«${title}»`} to list...</h3>) : 
+      (<h3>Добавить {`«${title}»`} в список...</h3>)}
+       
        <div className="user-lists-widget-container">
          <ul className="user-lists-widget">
 

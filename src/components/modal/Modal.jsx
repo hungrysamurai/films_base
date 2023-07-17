@@ -1,8 +1,16 @@
 import { motion } from "framer-motion";
 
 import CloseModalIcon from "./CloseModalIcon";
+import { useEffect } from "react";
 
-const Modal = ({ children, mode, hideModal }) => {
+const Modal = ({ children, mode, hideModal, modalState }) => {
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [modalState]);
 
   if (mode === "gallery") {
     return (
@@ -35,8 +43,8 @@ const Modal = ({ children, mode, hideModal }) => {
     );
   }
 
-  if(mode === 'overlay'){
-        return (
+  if (mode === "overlay") {
+    return (
       <motion.div
         animate={{ opacity: 1 }}
         initial={{ opacity: 0 }}

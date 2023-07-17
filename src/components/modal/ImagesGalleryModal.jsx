@@ -6,6 +6,7 @@ const ImagesGalleryModal = ({
   control,
   modal,
 }) => {
+  
   return (
     <>
       <div

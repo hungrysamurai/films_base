@@ -7,7 +7,7 @@
 @import "./loader";
 @import "./error-message";
 @import "./modal";
-@import './user-lists';
+@import "./user-lists";
 
 @import "./home";
 @import "./movie-page";
@@ -20,6 +20,12 @@
   padding: 0;
   box-sizing: border-box;
   scroll-behavior: smooth;
+
+    scrollbar-width: none;
+    
+      &::-webkit-scrollbar {
+        display: none;
+      }
 }
 
 body {
@@ -29,6 +35,7 @@ body {
   background-size: 100%;
   background-attachment: fixed;
   transition: color 0.3s ease, background 0.2s ease;
+
 }
 
 h1 {
@@ -73,10 +80,6 @@ section {
   width: 95vw;
   margin: 0 auto;
 }
-
-// section {
-//   overflow-x: hidden;
-// }
 
 .page-wrapper {
   width: 100%;

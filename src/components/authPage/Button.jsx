@@ -1,4 +1,3 @@
-
 const Button = ({ type, onClick, imgPath, text}) => {
  return (
   <button 

@@ -32,7 +32,7 @@ const SingleMovie = ({
       initial={{ opacity: 0 }}
       exit={{ opacity: 0 }}
       whileHover={{
-        scale: 1.05,
+        scale: currentWindowWidth === 'desktop' ? 1.05 : 1,
         zIndex: 999,
       }}
       onHoverStart={() =>
@@ -79,12 +79,14 @@ const SingleMovie = ({
         </div>
       </Link>
 
+      {/* If it is user movies list  */}
       {removeItemButton &&
         !imageLoading &&
         (showDeleteButton || currentWindowWidth === "mobile") && (
           <button
             className="remove-item-button"
             onClick={() => {
+              console.log(1);
               removeFromUserList(listIndex, id, mediaType);
             }}
           >

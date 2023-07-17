@@ -11,7 +11,6 @@ import UserListsWidgetModal from "../../modal/UserListsWidgetModal";
 import UserListIcon from "../../profilePage/icons/UserListIcon";
 import { AnimatePresence } from "framer-motion";
 
-
 const UserListsWidget = ({ id, mediaType, title }) => {
   const { currentUser } = useUserContext();
   const [showModal, setShowModal] = useState(false);
@@ -28,19 +27,16 @@ const UserListsWidget = ({ id, mediaType, title }) => {
     return unsubscribe;
   }, [currentUser]);
 
-
-
-
   return (
     <>
       <AnimatePresence>
         {showModal && (
-          <Modal mode="box" hideModal={hideModal}>
-            <UserListsWidgetModal 
-            hideModal={hideModal} 
-            title={title}
-            userLists={userLists}
-            currentMovieData={{id, mediaType}}
+          <Modal mode="box" hideModal={hideModal} modalState={showModal}>
+            <UserListsWidgetModal
+              hideModal={hideModal}
+              title={title}
+              userLists={userLists}
+              currentMovieData={{ id, mediaType }}
             />
           </Modal>
         )}

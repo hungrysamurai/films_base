@@ -90,7 +90,11 @@ const ProfilePage = () => {
 
             <AnimatePresence>
               {showModal && (
-                <Modal hideModal={hideModal} mode="overlay">
+                <Modal
+                  hideModal={hideModal}
+                  mode="overlay"
+                  modalState={showModal}
+                >
                   <div className="user-lists-modal-inner">
                     <UserLists
                       userLists={userLists}

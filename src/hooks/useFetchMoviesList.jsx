@@ -4,7 +4,7 @@ import MoviesListItem from "../utils/classes/moviesListItem";
 
 const apiBase = import.meta.env.VITE_TMDB_API_BASE;
 const apiKey = import.meta.env.VITE_TMDB_API_KEY;
-const imagesUrlBase = `${import.meta.env.VITE_IMAGES_BASE_URL}w300`;
+const imagesUrlBase = `${import.meta.env.VITE_IMAGES_BASE_URL}w500`;
 
 export const useFetchMoviesList = (
   mediaType,

@@ -7,7 +7,7 @@ import ErrorMessage from "../ErrorMessage";
 
 
 const GenresList = () => {
-  const { filterGenre, dispatch, lang, mediaType } = useGlobalContext();
+  const { filterGenre, lang, mediaType, dispatch } = useGlobalContext();
 
   const {
     isLoading: genresFetchLoading,
@@ -16,6 +16,7 @@ const GenresList = () => {
   } = useFetchGenres(mediaType, lang);
 
   const [genresListWidth, setGenresListWidth] = useState(0);
+  
   const control = useAnimation();
   const genresListContainerRef = useRef(null);
 
@@ -52,7 +53,9 @@ const GenresList = () => {
       <div className="genres-list-container">
         <ErrorMessage
           errorMessage={genresFetchError.message}
-          componentMessage="Ошибка при загрузке списка жанров"
+          componentMessage={lang === 'en' 
+          ? 'Fail to load genres list' : 
+          'Ошибка при загрузке списка жанров'}
           showImage={false}
         />
       </div>

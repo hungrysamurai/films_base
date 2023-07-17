@@ -1,6 +1,8 @@
 import { useGlobalContext } from "../../contexts/GlobalContext";
-import { Link } from "react-router-dom";
 import { useUserContext } from "../../contexts/UserContext";
+
+import { Link } from "react-router-dom";
+
 import { getTheme } from "../../utils/getTheme";
 
 import { useEffect, useState } from "react";
@@ -47,17 +49,26 @@ const HeaderIconsContainer = () => {
 
   return (
     <>
+      {/* User modal */}
       <AnimatePresence>
         {showModal && (
-          <Modal hideModal={hideModal} mode="box">
-            <UserModal hideModal={hideModal} />
+          <Modal 
+          hideModal={hideModal} 
+          mode="box" 
+          modalState={showModal}>
+            <UserModal 
+            hideModal={hideModal} />
           </Modal>
         )}
       </AnimatePresence>
 
       <div className="header-icons-container">
+
+        {/* If current user logged in - set icon */}
         {currentUser ? (
           <button onClick={() => setShowModal(() => true)}>
+
+            {/* if user don't have custom icon - render placeholder, else - user photo */}
             {currentUser.photoURL ? (
               <div className="profile-pic-container">
                 <img className="profile-pic" src={currentUser?.photoURL} />

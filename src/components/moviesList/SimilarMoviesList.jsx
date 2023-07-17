@@ -29,8 +29,12 @@ const SimilarMoviesList = ({ itemID, itemMediaType }) => {
       setElementWidth(() => {
         return moviesListRef.current.scrollWidth;
       });
+
+      animationControl.start({
+        x: 0,
+      });
     }
-  }, [moviesFetchList]);
+  }, [moviesFetchList, animationControl, elementWidth]);
 
   if (moviesFetchError.show) {
     return (

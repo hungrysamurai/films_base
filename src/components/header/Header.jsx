@@ -9,12 +9,13 @@ import { useLocation } from "react-router-dom";
 
 
 const Header = () => {
-const {baseName} = useGlobalContext();
-const {pathname} = useLocation();
+const { baseName } = useGlobalContext();
+const { pathname } = useLocation();
 
   return (
     <header className="header-container">
       <Logo />
+      {/* If Homepage - display media type links */}
       {pathname === baseName ? <MediaTypeLinks/> : <Title />}
       <SearchBox/>
       <HeaderIconsContainer/>
