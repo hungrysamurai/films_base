@@ -15,6 +15,7 @@ import { useUserContext } from "../../contexts/UserContext";
 import { AnimatePresence, motion } from "framer-motion";
 import EditListSubmit from "../profilePage/icons/EditListSubmit";
 import EditListCancel from "../profilePage/icons/EditListCancel";
+import CustomInput from '../CustomInput'
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
 const UserModal = ({ hideModal }) => {
@@ -23,12 +24,8 @@ const UserModal = ({ hideModal }) => {
 
   const navigate = useNavigate();
 
-  const [newUserNameInput, setNewUserNameInput] = useState({
-    show: false,
-    value: currentUser?.displayName,
-  });
+  const [newUserNameInputShow, setNewUserNameInputShow] = useState(false);
 
-  const newUserNameFormRef = useRef(null);
   const modalInnerRef = useRef(null);
 
   const navigateProfile = () => {
@@ -36,39 +33,22 @@ const UserModal = ({ hideModal }) => {
     navigate(`${baseName}profile`);
   };
 
-  const showUserNameInput = () => {
-    setNewUserNameInput((prev) => {
-      return {
-        ...prev,
-        show: true,
-      };
-    });
-  };
 
   const hideUserNameInput = () => {
-    setNewUserNameInput(() => {
-      return {
-        value: currentUser.displayName,
-        show: false,
-      };
-    });
+    setNewUserNameInputShow(() => false);
   };
 
-  const submitNewUserName = (e) => {
-    e.preventDefault();
-
-    const newUserName = newUserNameInput.value;
-
+  const submitNewUserName = (inputValue) => {
     if (
-      newUserName === "" ||
-      newUserName.length < 3 ||
-      newUserName.length > 100
+      inputValue === "" ||
+      inputValue.length < 3 ||
+      inputValue.length > 100
     ) {
       return;
     }
 
     hideModal();
-    updateUserLogin(newUserName);
+    updateUserLogin(inputValue);
   };
 
   const changeUserPic = (file) => {
@@ -83,10 +63,8 @@ const UserModal = ({ hideModal }) => {
     signOutUser();
   };
 
-  useOutsideClick(newUserNameFormRef, hideUserNameInput);
   useOutsideClick(modalInnerRef, hideModal);
 
-  console.log(lang);
   return (
     <div className="user-modal-inner" ref={modalInnerRef}>
       {currentUser?.photoURL ? (
@@ -99,58 +77,21 @@ const UserModal = ({ hideModal }) => {
 
       <AnimatePresence>
         <div className="user-name-container">
-          {newUserNameInput.show ? (
-            <motion.div
-              className="new-user-input-container"
-              initial={{
-                opacity: 0,
-                y: -50,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-              exit={{
-                opacity: 0,
-                y: 50,
-              }}
-            >
-              <form onSubmit={submitNewUserName} ref={newUserNameFormRef}>
-                <input
-                  type="text"
-                  value={newUserNameInput.value}
-                  onChange={(e) =>
-                    setNewUserNameInput((prev) => ({
-                      ...prev,
-                      value: e.target.value,
-                    }))
-                  }
-                  autoFocus
-                />
-
-                <div className="input-buttons-container">
-                  <button className="submit-button" type="submit">
-                    <EditListSubmit />
-                  </button>
-                  <button
-                    className="cancel-button"
-                    type="button"
-                    onClick={hideUserNameInput}
-                  >
-                    <EditListCancel />
-                  </button>
-                </div>
-              </form>
-            </motion.div>
-          ) : (
+          {newUserNameInputShow
+          ? <CustomInput
+              initialValue={currentUser?.displayName}
+              submit={submitNewUserName}
+              hideCustomInput={hideUserNameInput}
+              customClass={'user-name-input'}
+          /> : (
             <motion.h3
-              initial={{
-                opacity: 0,
-                y: 50,
-              }}
               animate={{
                 opacity: 1,
                 y: 0,
+              }}
+              initial={{
+                opacity:0,
+                y: 50
               }}
               exit={{
                 opacity: 0,
@@ -176,7 +117,7 @@ const UserModal = ({ hideModal }) => {
           </button>
         </li>
         <li>
-          <button onClick={showUserNameInput}>
+          <button onClick={() => setNewUserNameInputShow(() => true)}>
              {lang === 'en' ? 'Change username' : 'Изменить логин'}
             </button>
         </li>

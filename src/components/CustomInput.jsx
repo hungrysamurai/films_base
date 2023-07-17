@@ -6,7 +6,13 @@ import EditListCancel from '../components/profilePage/icons/EditListCancel';
 
 import useOutsideClick from '../hooks/useOutsideClick';
 
-const CustomInput = ({inputVisibility, initialValue, submit, hideCustomInput}) => {
+const CustomInput = ({ 
+ initialValue, 
+ submit, 
+ hideCustomInput, 
+ customClass,
+ placeholder
+}) => {
 
   const [customInputValue, setCustomInputValue] = useState(initialValue);
 
@@ -14,11 +20,11 @@ const CustomInput = ({inputVisibility, initialValue, submit, hideCustomInput}) =
   useOutsideClick(formElementRef, hideCustomInput);
 
   return (
-   <motion.div
-    className="new-user-input-container"
+    <motion.div
+    className={`custom-input-container ${customClass}`}
     initial={{
       opacity: 0,
-      y: -50,
+      y: -20,
     }}
     animate={{
       opacity: 1,
@@ -26,16 +32,23 @@ const CustomInput = ({inputVisibility, initialValue, submit, hideCustomInput}) =
     }}
     exit={{
       opacity: 0,
-      y: 50,
+      y: 20,
     }}>
 
-     <form onSubmit={submit} ref={formElementRef}>
+     <form 
+     onSubmit={(e) => {
+      e.preventDefault();
+      submit(customInputValue)
+     }} 
+     ref={formElementRef}>
+
         <input
           type="text"
           value={customInputValue}
           onChange={(e) =>
             setCustomInputValue(() => e.target.value)
           }
+          placeholder={placeholder && placeholder}
           autoFocus
         />
 
@@ -51,8 +64,12 @@ const CustomInput = ({inputVisibility, initialValue, submit, hideCustomInput}) =
             <EditListCancel />
           </button>
         </div>
+
       </form>
 
    </motion.div>
+
  )
 }
+
+export default CustomInput;

@@ -46,7 +46,7 @@
 
       .user-list-icons-container {
         position: absolute;
-        top: 55%;
+        top: 50%;
         right: 0;
         transform: translateY(-50%);
         display: flex;
@@ -66,92 +66,6 @@
       &.active {
         color: var(--accent-color);
       }
-    }
-
-    .user-list-edit-container {
-      max-width: 100%;
-      height: 3.125rem;
-      overflow: hidden;
-      position: relative;
-      padding: 0.75rem 0;
-
-      .edit-title-input {
-        form {
-          input {
-            width: 80%;
-            height: 100%;
-            background: none;
-            border: none;
-            color: var(--primary-color);
-            font-size: 1.5rem;
-            font-weight: 700;
-            font-family: inherit;
-            border-bottom: 2px solid var(--primary-color);
-
-            &:focus {
-              outline: none;
-            }
-          }
-        }
-      }
-
-      .user-list-edit-icons-container {
-        position: absolute;
-        top: 55%;
-        right: 0;
-        transform: translateY(-50%);
-        display: flex;
-
-        button {
-          margin: 0 0.2rem;
-          cursor: pointer;
-          border: none;
-          background: none;
-        }
-      }
-
-      &.active {
-        color: var(--accent-color);
-
-        .user-list-edit-icons-container {
-          svg path {
-            fill: var(--accent-color);
-          }
-        }
-      }
-    }
-  }
-
-  .new-list-input-container {
-    width: 100%;
-    height: 3.125rem;
-    overflow: hidden;
-    position: relative;
-
-    input {
-      width: 100%;
-      height: 3.125rem;
-      background: none;
-      border: none;
-      color: var(--primary-color);
-      font-size: 1.5rem;
-      font-weight: 700;
-      font-family: inherit;
-      border-bottom: 2px solid var(--primary-color);
-
-      &:focus {
-        outline: none;
-      }
-    }
-
-    button {
-      background: none;
-      border: none;
-      position: absolute;
-      right: 3%;
-      top: 50%;
-      transform: translateY(-50%);
-      cursor: pointer;
     }
   }
 

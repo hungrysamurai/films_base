@@ -3,12 +3,12 @@ import UserListIcon from "../icons/UserListIcon";
 import AddNewListIcon from "../icons/AddNewListIcon";
 
 import ErrorMessage from "../../ErrorMessage";
-import { motion, useAnimation, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
-import useOutsideClick from "../../../hooks/useOutsideClick";
+import { useState } from "react";
 
-import { useState, useRef } from "react";
-import EditListSubmit from "../icons/EditListSubmit";
+
+import CustomInput from "../../CustomInput";
 
 import { createNewUserList } from "../../../utils/firebase/firebase.utils";
 import { useGlobalContext } from "../../../contexts/GlobalContext";
@@ -16,64 +16,31 @@ import { useGlobalContext } from "../../../contexts/GlobalContext";
 const UserLists = ({ userLists, currentListIndex, dispatch }) => {
   const { lang } = useGlobalContext();
 
-  const [newListInput, setNewListInput] = useState({
-    show: false,
-    value: "",
-  });
+  const [newListInputShow, setNewListInputShow] = useState(false);
 
-  const newListFormRef = useRef(null);
-
-  const animationControl = useAnimation();
 
   const showNewUserListInput = () => {
-    setNewListInput((prev) => {
-      return {
-        ...prev,
-        show: true,
-      };
-    });
-
-    animationControl.start({
-      y: "2rem",
-    });
+    setNewListInputShow(() => true);
   };
 
   const hideNewUserListInput = () => {
-    setNewListInput((prev) => {
-      return {
-        ...prev,
-        show: false,
-      };
-    });
-    animationControl.start({
-      y: 0,
-    });
+    setNewListInputShow(() => false);
   };
 
-  const submitNewUserList = (e) => {
-    e.preventDefault();
-
-    const newListTitle = newListInput.value;
+  const submitNewUserList = (inputValue) => {
 
     if (
-      newListTitle === "" ||
-      newListTitle.length < 3 ||
-      newListTitle.length > 100
+      inputValue === "" ||
+      inputValue.length < 3 ||
+      inputValue.length > 100
     ) {
       return;
     }
 
-    setNewListInput(() => {
-      return {
-        show: false,
-        value: "",
-      };
-    });
-
-    createNewUserList(newListTitle);
+    setNewListInputShow(() => false);
+    createNewUserList(inputValue);
   };
 
-  useOutsideClick(newListFormRef, hideNewUserListInput);
 
   return (
     <div className="user-lists-container">
@@ -108,51 +75,35 @@ const UserLists = ({ userLists, currentListIndex, dispatch }) => {
       </div>
 
       <AnimatePresence>
-        {newListInput.show && (
-          <motion.div
-            className="new-list-input-container"
-            initial={{
-              opacity: 0,
-              y: -50,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-          >
-            <form onSubmit={submitNewUserList} ref={newListFormRef}>
-              <input
-                type="text"
-                placeholder="Название списка..."
-                value={newListInput.value}
-                onChange={(e) =>
-                  setNewListInput((prev) => ({
-                    ...prev,
-                    value: e.target.value,
-                  }))
-                }
-                autoFocus
-              />
-
-              <button type="submit">
-                <EditListSubmit />
-              </button>
-            </form>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <div className="add-user-list-button">
+        {newListInputShow ? (
+          <CustomInput  
+          initialValue=''
+          submit={submitNewUserList}
+          hideCustomInput={hideNewUserListInput}
+          customClass={'user-list-item-input'}
+          placeholder={lang === 'en' ? 'New list title...' : 'Название списка...'}
+          />
+        )  : 
+        <div className="add-user-list-button">
         <motion.button
           onClick={showNewUserListInput}
-          animate={animationControl}
+          animate={{
+            opacity:1
+          }}
           initial={{
-            y: 0,
+            opacity:0
+          }}
+          exit={{
+            opacity: 0
           }}
         >
-          <AddNewListIcon active={newListInput.show} />
+          <AddNewListIcon active={newListInputShow} />
         </motion.button>
       </div>
+        }
+      </AnimatePresence>
+
+
     </div>
   );
 };
