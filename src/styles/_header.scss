@@ -123,16 +123,22 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.625rem;
+    gap: 1.25rem;
 
     a {
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     button {
       cursor: pointer;
       background: none;
       border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .profile-pic-container {
       width: 1.75rem;
@@ -146,6 +152,14 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
+      }
+    }
+
+    .theme-icons-container{
+      position: relative;
+
+      svg{
+        position: absolute;
       }
     }
   }
@@ -176,9 +190,7 @@
 
     .header-icons-container {
       order: 2;
-      flex: 7;
-      justify-content: center;
-      gap: 0.75rem;
+      flex: 7; 
       min-width: 50%;
     }
 

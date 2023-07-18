@@ -10,9 +10,12 @@ import UserListsWidgetModal from "../../modal/UserListsWidgetModal";
 
 import UserListIcon from "../../profilePage/icons/UserListIcon";
 import { AnimatePresence } from "framer-motion";
+import { useGlobalContext } from "../../../contexts/GlobalContext";
 
 const UserListsWidget = ({ id, mediaType, title }) => {
   const { currentUser } = useUserContext();
+  const { lang } = useGlobalContext();
+
   const [showModal, setShowModal] = useState(false);
   const [userLists, setUserLists] = useState([]);
 
@@ -46,7 +49,7 @@ const UserListsWidget = ({ id, mediaType, title }) => {
         className="add-to-user-list-container"
         onClick={() => setShowModal(() => true)}
       >
-        <h3>Добавить в список</h3>
+        <h3>{lang === "en" ? "Add to list" : "Добавить в список"}</h3>
         <UserListIcon />
       </div>
     </>

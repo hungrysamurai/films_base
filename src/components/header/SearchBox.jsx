@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { useNavigate } from "react-router-dom";
 
-import SearchIcon from "./SearchIcon";
+import SearchIcon from "./icons/SearchIcon";
 
 const SearchBox = () => {
   const { mediaType, lang, baseName } = useGlobalContext();

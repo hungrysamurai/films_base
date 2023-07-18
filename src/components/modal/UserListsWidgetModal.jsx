@@ -1,5 +1,5 @@
-import UserListIconAdd from "../moviePage/UserListsWidget/UserListIconAdd";
-import UserListIconRemove from "../moviePage/UserListsWidget/UserListIconRemove";
+import UserListIconAdd from "../moviePage/UserListsWidget/icons/UserListIconAdd";
+import UserListIconRemove from "../moviePage/UserListsWidget/icons/UserListIconRemove";
 
 import { useRef } from "react";
 

@@ -141,13 +141,12 @@
 @media only screen and (max-width: 500px) {
   .movies-list-container {
     row-gap: 0.25rem;
+    column-gap: 1.25rem;
 
     .movie-container {
-
       height: 100%;
 
       a {
-
         .movie-poster-container {
           img {
             border-radius: 1rem;

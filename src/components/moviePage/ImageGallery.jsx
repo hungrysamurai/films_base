@@ -7,6 +7,7 @@ const ImageGallery = ({ openModal, imagesArray }) => {
   const [galleryRowWidth, setGalleryRowWidth] = useState(0);
   const [isDrag, setIsDrag] = useState(false);
   const [loading, setLoading] = useState(true);
+
   const animationControl = useAnimation();
 
   const galleryRowContainerRef = useRef(null);

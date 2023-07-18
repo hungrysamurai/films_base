@@ -12,6 +12,11 @@ import { AnimatePresence } from "framer-motion";
 import ProfilePicPlaceholder from "../ProfilePicPlaceholder";
 import Modal from "../modal/Modal";
 import UserModal from "../modal/UserModal";
+import AuthIcon from "./icons/AuthIcon";
+import ThemeDarkIcon from "./icons/ThemeDarkIcon";
+import ThemeLightIcon from "./icons/ThemeLightIcon";
+import LangEnIcon from "./icons/LangEnIcon";
+import LangRuIcon from "./icons/LangRuIcon";
 
 const HeaderIconsContainer = () => {
   const { baseName, lang, dispatch } = useGlobalContext();
@@ -79,26 +84,29 @@ const HeaderIconsContainer = () => {
           </button>
         ) : (
           <Link to="auth">
-            <img
-              src={`${baseName}assets/images/icons/icon-user-${theme}.svg`}
-              alt="user-profile"
-            />
+            <AuthIcon/>
           </Link>
         )}
-
-        <a href="#" onClick={toggleTheme}>
-          <img
-            src={`${baseName}assets/images/icons/icon-theme-${theme}.svg`}
-            alt="switch-theme"
-          />
+  
+        <a href="#" onClick={toggleTheme} className="theme-icons-container">
+            <AnimatePresence>
+              {theme === 'dark' ? 
+              <ThemeDarkIcon key='dark-mode-icon' /> : 
+              <ThemeLightIcon key='light-mode-icon' />
+              }
+            </AnimatePresence>
         </a>
 
-        <a href="#" onClick={toggleLang}>
-          <img
+        <button href="#" onClick={toggleLang}>
+          {lang === 'en' ? 
+          <LangEnIcon/> : 
+          <LangRuIcon/>
+          }
+          {/* <img
             src={`${baseName}assets/images/icons/icon-lang-${lang}-${theme}.svg`}
             alt="language"
-          />
-        </a>
+          /> */}
+        </button>
       </div>
     </>
   );

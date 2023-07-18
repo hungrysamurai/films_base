@@ -2,6 +2,7 @@
 
 @import "./variables";
 
+// Components
 @import "./header";
 @import "./movies-list";
 @import "./loader";
@@ -10,10 +11,11 @@
 @import "./user-lists";
 @import './custom-input';
 
+// Pages
+@import "./auth-page";
 @import "./home";
 @import "./movie-page";
 @import "./search-result";
-@import "./auth-page";
 @import "./profile-page";
 
 * {
@@ -22,7 +24,8 @@
   box-sizing: border-box;
   scroll-behavior: smooth;
 
-    scrollbar-width: none;
+
+  scrollbar-width: none;
     
       &::-webkit-scrollbar {
         display: none;

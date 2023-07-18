@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-import CloseModalIcon from "./CloseModalIcon";
+import CloseModalIcon from "./icons/CloseModalIcon";
 import { useEffect } from "react";
 
 const Modal = ({ children, mode, hideModal, modalState }) => {

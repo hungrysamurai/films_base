@@ -31,7 +31,9 @@ const SignUpForm = () => {
     if (!email || !password) return;
 
     if (password !== confirmPassword) {
-      alert("Passwords don't match!");
+      alert(
+        lang === 'en' ? "Passwords don't match!" : "Пароли не совпадают!"
+        );
       return;
     }
 
@@ -49,11 +51,12 @@ const SignUpForm = () => {
       console.log(err);
 
       if (err.code === "auth/email-already-in-use") {
-        alert("Email already in use!");
+        alert(
+          lang === 'en' ? "Email already in use!" : 'Эта почта уже используется!'
+        );
       }
     }
   }
-
 
   const handleSignUpChanges = (e) => {
     const { name, value } = e.target;

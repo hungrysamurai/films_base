@@ -23,9 +23,11 @@ import {
 import {
   getStorage,
   ref,
-  uploadBytesResumable,
   getDownloadURL,
+  uploadString,
 } from "firebase/storage";
+
+import { imageSizeReducer } from "../imageSizeReducer";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -95,38 +97,30 @@ export const createUserDocumentFromAuth = async (userAuth, displayName) => {
 export const signOutUser = async () => await signOut(auth);
 
 export const updateUserPhoto = async (file) => {
-  console.log(file);
   const fileName = new Date().getTime() + file.name;
   const storageRef = ref(storage, fileName);
 
-  const uploadTask = uploadBytesResumable(storageRef, file);
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
 
-  uploadTask.on(
-    "state_changed",
-    (snapshot) => {
-      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      console.log("Upload is " + progress + "% done");
-      switch (snapshot.state) {
-        case "paused":
-          console.log("Upload is paused");
-          break;
-        case "running":
-          console.log("Upload is running");
-          break;
-      }
-    },
-    (error) => {
-      console.log(error);
-      // Handle unsuccessful uploads
-    },
-    () => {
-      getDownloadURL(uploadTask.snapshot.ref).then((photoURL) => {
-        updateProfile(auth.currentUser, {
-          photoURL,
+  reader.onload = (e) => {
+    const reduced = imageSizeReducer(e.target.result, 500, 500);
+    reduced.then((reducedImage) => {
+      const uploadTask = uploadString(
+        storageRef,
+        reducedImage.slice(23),
+        "base64"
+      );
+
+      uploadTask.then((prom) => {
+        getDownloadURL(prom.ref).then((photoURL) => {
+          updateProfile(auth.currentUser, {
+            photoURL,
+          });
         });
       });
-    }
-  );
+    });
+  };
 };
 
 export const updateUserLogin = async (newLogin) => {
@@ -192,7 +186,6 @@ export const removeFromUserList = async (listIndex, id, mediaType) => {
   const userListsRef = doc(db, "users", auth.currentUser.uid);
   const userListsSnap = (await getDoc(userListsRef)).data().userLists;
 
-
   userListsSnap[listIndex].data = userListsSnap[listIndex].data.filter(
     (item) => {
       if (item.mediaType === mediaType && item.id === `${id}`) {
@@ -207,4 +200,3 @@ export const removeFromUserList = async (listIndex, id, mediaType) => {
     userLists: userListsSnap,
   });
 };
-

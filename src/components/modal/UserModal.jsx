@@ -87,15 +87,12 @@ const UserModal = ({ hideModal }) => {
             <motion.h3
               animate={{
                 opacity: 1,
-                y: 0,
               }}
               initial={{
                 opacity:0,
-                y: 50
               }}
               exit={{
                 opacity: 0,
-                y: -50,
               }}
             >
               {currentUser?.displayName}

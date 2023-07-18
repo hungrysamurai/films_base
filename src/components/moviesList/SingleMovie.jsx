@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import useListenWindowWidth from "../../hooks/useListenWindowWidth";
-import DeleteMovieIcon from "./DeleteMovieIcon";
+import DeleteMovieIcon from "./icons/DeleteMovieIcon";
 import { removeFromUserList } from "../../utils/firebase/firebase.utils";
 
 const SingleMovie = ({
