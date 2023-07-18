@@ -1,11 +1,10 @@
+import { useGlobalContext } from "../../contexts/GlobalContext";
+import { useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
 import SingleMovie from "./SingleMovie";
 import Loader from "../Loader";
 import ErrorMessage from "../ErrorMessage";
-
-import { motion, AnimatePresence } from "framer-motion";
-
-import { useGlobalContext } from "../../contexts/GlobalContext";
-import { useEffect, useCallback } from "react";
 
 const MoviesList = () => {
   const {
@@ -61,7 +60,7 @@ const MoviesList = () => {
           
           return (
             <AnimatePresence key={id}>
-              <SingleMovie poster={posterUrl} title={title} id={id} mediaType={mediaType}/>;
+              <SingleMovie poster={posterUrl} title={title} id={`${id}`} mediaType={mediaType}/>;
             </AnimatePresence>
           );
         })}

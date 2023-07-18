@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
 const AuthModeToggler = ({activeMode, setActiveMode}) => {
@@ -22,5 +24,12 @@ const AuthModeToggler = ({activeMode, setActiveMode}) => {
      </div>
  )
 }
+
+
+AuthModeToggler.propTypes = {
+  activeMode: PropTypes.string,
+  setActiveMode: PropTypes.func
+}
+
 
 export default AuthModeToggler;

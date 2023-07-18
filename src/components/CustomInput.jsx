@@ -1,10 +1,11 @@
+import PropTypes from 'prop-types';
+
 import { useRef, useState } from "react";
+import useOutsideClick from '../hooks/useOutsideClick';
 import { motion } from 'framer-motion';
 
-import EditListSubmit from '../components/profilePage/icons/EditListSubmit'
-import EditListCancel from '../components/profilePage/icons/EditListCancel';
-
-import useOutsideClick from '../hooks/useOutsideClick';
+import EditListSubmitIcon from "./icons/EditSubmitIcon";
+import EditListCancelIcon from "./icons/EditCancelIcon";
 
 const CustomInput = ({ 
  initialValue, 
@@ -54,22 +55,29 @@ const CustomInput = ({
 
         <div className="input-buttons-container">
           <button className="submit-button" type="submit">
-            <EditListSubmit />
+            <EditListSubmitIcon  />
           </button>
           <button
             className="cancel-button"
             type="button"
             onClick={hideCustomInput}
           >
-            <EditListCancel />
+            <EditListCancelIcon />
           </button>
         </div>
 
       </form>
 
    </motion.div>
-
  )
+}
+
+CustomInput.propTypes = {
+  initialValue: PropTypes.string, 
+  submit: PropTypes.func, 
+  hideCustomInput: PropTypes.func, 
+  customClass: PropTypes.string,
+  placeholder: PropTypes.string
 }
 
 export default CustomInput;

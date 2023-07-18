@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import { useState } from "react";
 
 const FormInput = ({ label, handleSignUpChanges,...props }) => {
@@ -24,6 +26,11 @@ const FormInput = ({ label, handleSignUpChanges,...props }) => {
 
   </div>
  )
+}
+
+FormInput.propTypes = {
+  label: PropTypes.string,
+  handleSignUpChanges: PropTypes.func,
 }
 
 export default FormInput;

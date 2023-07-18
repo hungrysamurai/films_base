@@ -1,10 +1,14 @@
+import PropTypes from 'prop-types';
+
+import { removeFromUserList } from "../../utils/firebase/firebase.utils";
+
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import useListenWindowWidth from "../../hooks/useListenWindowWidth";
+
 import DeleteMovieIcon from "./icons/DeleteMovieIcon";
-import { removeFromUserList } from "../../utils/firebase/firebase.utils";
 
 const SingleMovie = ({
   title,
@@ -17,7 +21,6 @@ const SingleMovie = ({
 }) => {
   const [imageLoading, setImageLoading] = useState(true);
   const [showDeleteButton, setShowDeleteButton] = useState(false);
-
   const currentWindowWidth = useListenWindowWidth();
 
   const { baseName } = useGlobalContext();
@@ -86,7 +89,6 @@ const SingleMovie = ({
           <button
             className="remove-item-button"
             onClick={() => {
-              console.log(1);
               removeFromUserList(listIndex, id, mediaType);
             }}
           >
@@ -96,5 +98,15 @@ const SingleMovie = ({
     </motion.div>
   );
 };
+
+SingleMovie.propTypes = {
+  title: PropTypes.string,
+  poster: PropTypes.string,
+  id: PropTypes.string,
+  mediaType: PropTypes.string,
+  isDrag: PropTypes.bool,
+  removeItemButton: PropTypes.bool,
+  listIndex: PropTypes.number,
+}
 
 export default SingleMovie;

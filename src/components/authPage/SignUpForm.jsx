@@ -1,16 +1,15 @@
-import FormInput from "./FormInput";
-import Button from "./Button";
-
-import { useState } from "react";
-
 import {
   createAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
 } from '../../utils/firebase/firebase.utils';
 
+import { useState } from "react";
+import { useGlobalContext } from "../../contexts/GlobalContext";
+
 import { motion } from 'framer-motion';
 
-import { useGlobalContext } from "../../contexts/GlobalContext";
+import FormInput from "./FormInput";
+import Button from "./Button";
 
 const defaultSignUpFormFields = {
   displayName: "",

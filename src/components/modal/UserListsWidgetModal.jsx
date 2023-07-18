@@ -1,18 +1,22 @@
-import UserListIconAdd from "../moviePage/UserListsWidget/icons/UserListIconAdd";
-import UserListIconRemove from "../moviePage/UserListsWidget/icons/UserListIconRemove";
-
-import { useRef } from "react";
-
-import useOutsideClick from "../../hooks/useOutsideClick";
+import PropTypes from 'prop-types';
 
 import { addToUserList, removeFromUserList } from "../../utils/firebase/firebase.utils";
+
+import { useRef } from "react";
+import useOutsideClick from "../../hooks/useOutsideClick";
 import { useGlobalContext } from "../../contexts/GlobalContext";
+
+import UserListIconAdd from "../moviePage/UserListsWidget/icons/UserListIconAdd";
+import UserListIconRemove from "../moviePage/UserListsWidget/icons/UserListIconRemove";
 
 const UserListsWidgetModal = ({hideModal, title, userLists, currentMovieData}) => {
 
   const {lang} = useGlobalContext();
 
-  const {id: currentItemID, mediaType: currentItemMediaType} = currentMovieData;
+  const {
+    id: currentItemID,
+    mediaType: currentItemMediaType
+  } = currentMovieData;
 
   const modalInnerRef = useRef(null);
 
@@ -56,6 +60,13 @@ const UserListsWidgetModal = ({hideModal, title, userLists, currentMovieData}) =
        </div>
      </div>
 )
+}
+
+UserListsWidgetModal.propTypes = {
+  hideModal: PropTypes.func,
+  title:PropTypes.string,
+  userLists: PropTypes.array,
+  currentMovieData: PropTypes.object
 }
 
 export default UserListsWidgetModal;

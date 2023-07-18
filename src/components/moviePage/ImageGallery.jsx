@@ -1,4 +1,6 @@
-import { useState, useEffect, useRef, useLayoutEffect } from "react";
+import PropTypes from 'prop-types';
+
+import { useState, useEffect, useRef } from "react";
 import { motion, useAnimation } from "framer-motion";
 
 const ImageGallery = ({ openModal, imagesArray }) => {
@@ -93,5 +95,10 @@ const ImageGallery = ({ openModal, imagesArray }) => {
     </div>
   );
 };
+
+ImageGallery.propTypes = {
+  openModal: PropTypes.func, 
+  imagesArray: PropTypes.array
+}
 
 export default ImageGallery;

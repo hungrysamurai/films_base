@@ -1,10 +1,11 @@
-import { useState, useContext, createContext, useReducer } from "react";
+import PropTypes from 'prop-types'
 
 import moviesListReducer from "../reducers/moviesListReducer";
 
-import { useFetchMoviesList } from "../hooks/useFetchMoviesList";
-
 import { getLang } from "../utils/getLang";
+
+import { useState, useContext, createContext, useReducer } from "react";
+import { useFetchMoviesList } from "../hooks/useFetchMoviesList";
 
 const initialState = {
   lang: getLang(),
@@ -82,5 +83,9 @@ const AppProvider = ({ children }) => {
 export const useGlobalContext = () => {
   return useContext(AppContext);
 };
+
+AppProvider.propTypes = {
+  children: PropTypes.node
+}
 
 export { AppProvider };

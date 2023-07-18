@@ -1,16 +1,15 @@
+import PropTypes from 'prop-types';
+
+import { motion, AnimatePresence } from "framer-motion";
+import { useFetchUserMoviesList } from "../../hooks/useFetchUserMoviesList";
+import { useGlobalContext } from "../../contexts/GlobalContext";
+
 import SingleMovie from "./SingleMovie";
 import Loader from "../Loader";
 import ErrorMessage from "../ErrorMessage";
 
-import { motion, AnimatePresence } from "framer-motion";
-
-import { useFetchUserMoviesList } from "../../hooks/useFetchUserMoviesList";
-
-import { useGlobalContext } from "../../contexts/GlobalContext";
-
 const UserMoviesList = ({ currentUserList, listIndex }) => {
   const { lang } = useGlobalContext();
-
   const {
     data: moviesFetchList,
     isLoading: moviesFetchLoading,
@@ -40,7 +39,7 @@ const UserMoviesList = ({ currentUserList, listIndex }) => {
               <SingleMovie
                 poster={posterUrl}
                 title={title}
-                id={id}
+                id={`${id}`}
                 mediaType={mediaType}
                 removeItemButton={true}
                 listIndex={listIndex}
@@ -53,5 +52,10 @@ const UserMoviesList = ({ currentUserList, listIndex }) => {
     </>
   );
 };
+
+UserMoviesList.propTypes = {
+  currentUserList: PropTypes.array,
+  listIndex: PropTypes.number
+}
 
 export default UserMoviesList;

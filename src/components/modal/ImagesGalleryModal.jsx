@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import { motion } from "framer-motion";
 
 const ImagesGalleryModal = ({
@@ -6,7 +8,7 @@ const ImagesGalleryModal = ({
   control,
   modal,
 }) => {
-  
+  console.log(control, modal);
   return (
     <>
       <div
@@ -69,5 +71,12 @@ const ImagesGalleryModal = ({
     </>
   );
 };
+
+ImagesGalleryModal.propTypes = {
+  hideModal: PropTypes.func,
+  changeModalImage: PropTypes.func,
+  control: PropTypes.object,
+  modal: PropTypes.object
+}
 
 export default ImagesGalleryModal;

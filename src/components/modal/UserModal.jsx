@@ -1,22 +1,20 @@
-import ProfilePicPlaceholder from "../ProfilePicPlaceholder";
-
-import useOutsideClick from "../../hooks/useOutsideClick";
-
-import { useRef, useState } from "react";
+import PropTypes from 'prop-types';
 
 import {
   updateUserPhoto,
   signOutUser,
   updateUserLogin,
 } from "../../utils/firebase/firebase.utils";
+
+import useOutsideClick from "../../hooks/useOutsideClick";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../contexts/UserContext";
-
-import { AnimatePresence, motion } from "framer-motion";
-import EditListSubmit from "../profilePage/icons/EditListSubmit";
-import EditListCancel from "../profilePage/icons/EditListCancel";
-import CustomInput from '../CustomInput'
 import { useGlobalContext } from "../../contexts/GlobalContext";
+import { AnimatePresence, motion } from "framer-motion";
+
+import ProfilePicPlaceholder from "../header/icons/ProfilePicPlaceholderIcon";
+import CustomInput from '../CustomInput'
 
 const UserModal = ({ hideModal }) => {
   const { currentUser } = useUserContext();
@@ -53,7 +51,6 @@ const UserModal = ({ hideModal }) => {
 
   const changeUserPic = (file) => {
     updateUserPhoto(file);
-    navigate(`${baseName}profile`);
     hideModal();
   };
 
@@ -131,5 +128,9 @@ const UserModal = ({ hideModal }) => {
     </div>
   );
 };
+
+UserModal.propTypes = {
+  hideModal: PropTypes.func
+}
 
 export default UserModal;

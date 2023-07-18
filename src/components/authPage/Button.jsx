@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 const Button = ({ type, onClick, imgPath, text}) => {
  return (
   <button 
@@ -11,6 +13,13 @@ const Button = ({ type, onClick, imgPath, text}) => {
    </span>
   </button>
  )
+}
+
+Button.propTypes = {
+  type: PropTypes.string,
+  onClick: PropTypes.func,
+  imgPath: PropTypes.string,
+  text: PropTypes.string
 }
 
 export default Button

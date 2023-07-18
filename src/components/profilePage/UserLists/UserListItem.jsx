@@ -1,19 +1,17 @@
-import EditListIcon from "../icons/EditListIcon";
-import DeleteListIcon from "../icons/DeleteListIcon";
-import EditListSubmit from "../icons/EditListSubmit";
-import EditListCancel from "../icons/EditListCancel";
-
-import CustomInput from "../../CustomInput";
-
-import useOutsideClick from "../../../hooks/useOutsideClick";
-
-import { useState, useRef, useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import PropTypes from 'prop-types';
 
 import {
   removeUserList,
   editUserListTitle,
 } from "../../../utils/firebase/firebase.utils";
+
+import useOutsideClick from "../../../hooks/useOutsideClick";
+import { useState, useRef } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+
+import EditListIcon from "../icons/EditListIcon";
+import DeleteListIcon from "../icons/DeleteListIcon";
+import CustomInput from "../../CustomInput";
 
 const UserListItem = ({ title, active, dispatch, listIndex }) => {
   const [editTitleInputShow, setEditTitleInputShow] = useState(false);
@@ -91,5 +89,12 @@ const UserListItem = ({ title, active, dispatch, listIndex }) => {
     </>
   );
 };
+
+UserListItem.propTypes = {
+  title: PropTypes.string,
+  active: PropTypes.bool,
+  dispatch: PropTypes.func,
+  listIndex: PropTypes.number
+}
 
 export default UserListItem;

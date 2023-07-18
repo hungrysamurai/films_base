@@ -1,11 +1,11 @@
-import { createContext, useReducer, useContext, useEffect } from "react";
+import PropTypes from 'prop-types';
 
 import { 
   onAuthStateChangedListener,
   createUserDocumentFromAuth 
 } from "../utils/firebase/firebase.utils";
 
-import { updateProfile } from "firebase/auth";
+import { createContext, useReducer, useContext, useEffect } from "react";
 
 import userReducer from '../reducers/userReducer'
 
@@ -29,8 +29,7 @@ const UserProvider = ({ children }) => {
      })
      
      return unsubscribe;
-  },[])
-
+  },[]);
 
   return <UserContext.Provider value={{currentUser, dispatch}}>{children}</UserContext.Provider>;
   
@@ -39,5 +38,9 @@ const UserProvider = ({ children }) => {
 export const useUserContext = () => {
   return useContext(UserContext);
 };
+
+UserProvider.propTypes = {
+  children: PropTypes.node
+}
 
 export { UserProvider }

@@ -4,12 +4,11 @@ import { useUserContext } from "../../contexts/UserContext";
 import { Link } from "react-router-dom";
 
 import { getTheme } from "../../utils/getTheme";
-
 import { useEffect, useState } from "react";
-
 import { AnimatePresence } from "framer-motion";
 
-import ProfilePicPlaceholder from "../ProfilePicPlaceholder";
+import ProfilePicPlaceholder from "./icons/ProfilePicPlaceholderIcon";
+
 import Modal from "../modal/Modal";
 import UserModal from "../modal/UserModal";
 import AuthIcon from "./icons/AuthIcon";
@@ -19,7 +18,7 @@ import LangEnIcon from "./icons/LangEnIcon";
 import LangRuIcon from "./icons/LangRuIcon";
 
 const HeaderIconsContainer = () => {
-  const { baseName, lang, dispatch } = useGlobalContext();
+  const { lang, dispatch } = useGlobalContext();
   const { currentUser } = useUserContext();
 
   const [showModal, setShowModal] = useState(false);
@@ -59,8 +58,7 @@ const HeaderIconsContainer = () => {
         {showModal && (
           <Modal 
           hideModal={hideModal} 
-          mode="box" 
-          modalState={showModal}>
+          mode="box">
             <UserModal 
             hideModal={hideModal} />
           </Modal>

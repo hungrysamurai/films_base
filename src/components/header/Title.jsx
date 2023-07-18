@@ -1,4 +1,3 @@
-import { useLocation } from "react-router-dom";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
 const Title = () => {

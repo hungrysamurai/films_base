@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-
 import { motion, useAnimation } from "framer-motion";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { useFetchGenres } from "../../hooks/useFetchGenres";
-import ErrorMessage from "../ErrorMessage";
 
+import ErrorMessage from "../ErrorMessage";
 
 const GenresList = () => {
   const { filterGenre, lang, mediaType, dispatch } = useGlobalContext();

@@ -1,21 +1,18 @@
-import { useEffect, useReducer, useRef, useState } from "react";
-import { useUserContext } from "../contexts/UserContext";
-import { useGlobalContext } from "../contexts/GlobalContext";
-
-import userListsReducer from "../reducers/userListsReducer";
-
 import { db } from "../utils/firebase/firebase.utils";
 import { onSnapshot, doc } from "firebase/firestore";
 
+import userListsReducer from "../reducers/userListsReducer";
+
+import { useEffect, useReducer, useRef, useState } from "react";
+import { useUserContext } from "../contexts/UserContext";
+import { useGlobalContext } from "../contexts/GlobalContext";
+import useListenWindowWidth from "../hooks/useListenWindowWidth";
+import { AnimatePresence } from "framer-motion";
+
 import UserLists from "../components/profilePage/UserLists/UserLists";
 import UserMoviesList from "../components/moviesList/UserMoviesList";
-
 import Modal from "../components/modal/Modal";
 import UserListIcon from "../components/profilePage/icons/UserListIcon";
-
-import useListenWindowWidth from "../hooks/useListenWindowWidth";
-
-import { AnimatePresence } from "framer-motion";
 
 const usersListsInitialState = {
   userLists: [],
@@ -92,9 +89,7 @@ const ProfilePage = () => {
               {showModal && (
                 <Modal
                   hideModal={hideModal}
-                  mode="overlay"
-                  modalState={showModal}
-                >
+                  mode="overlay">
                   <div className="user-lists-modal-inner">
                     <UserLists
                       userLists={userLists}

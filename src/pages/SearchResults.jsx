@@ -1,7 +1,8 @@
 import { useGlobalContext } from "../contexts/GlobalContext";
 import { useParams } from "react-router-dom";
-import MoviesList from "../components/moviesList/MoviesList";
 import { useEffect } from "react";
+
+import MoviesList from "../components/moviesList/MoviesList";
 
 const SearchResults = () => {
   const { setCurrentTitle, dispatch, moviesListMode } = useGlobalContext();

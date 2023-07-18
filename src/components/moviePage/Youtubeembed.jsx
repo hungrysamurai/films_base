@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 
@@ -34,6 +36,10 @@ const iframeLoaded = () => {
       ></motion.div>
     </div>
  )
+}
+
+YoutubeEmbed.propTypes = {
+  videoKey: PropTypes.string
 }
 
 export default YoutubeEmbed

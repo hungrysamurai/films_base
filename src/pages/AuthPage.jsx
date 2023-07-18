@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
-
 import { useGlobalContext } from "../contexts/GlobalContext";
 
 import AuthModeToggler from "../components/authPage/AuthModeToggler";
-
 import SignUpForm from "../components/authPage/SignUpForm";
 import SignInForm from "../components/authPage/SignInForm";
 

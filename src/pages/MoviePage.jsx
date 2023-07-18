@@ -1,9 +1,8 @@
 import { useParams, useLocation } from "react-router-dom";
 import { useGlobalContext } from "../contexts/GlobalContext";
-import { useEffect, useState } from "react";
-
+import { useUserContext } from "../contexts/UserContext";
+import { useEffect, useState, Suspense } from "react";
 import { useAnimation, AnimatePresence } from "framer-motion";
-
 import { useFetchSingleMovie } from "../hooks/useFetchSingleMovie";
 
 import ImageGallery from "../components/moviePage/ImageGallery";
@@ -11,13 +10,9 @@ import Loader from "../components/Loader";
 import MoviePoster from "../components/moviePage/MoviePoster";
 import YoutubeEmbed from "../components/moviePage/Youtubeembed";
 import ErrorMessage from "../components/ErrorMessage";
-
 import Modal from "../components/modal/Modal";
 import ImagesGalleryModal from "../components/modal/ImagesGalleryModal";
-
 import UserListsWidget from "../components/moviePage/UserListswidget/UserListsWidget";
-
-import { useUserContext } from "../contexts/UserContext";
 import SimilarMoviesList from "../components/moviesList/SimilarMoviesList";
 
 const MoviePage = () => {
@@ -204,8 +199,11 @@ const MoviePage = () => {
           )}
         </div>
       </div>
+    
+    <Suspense fallback={<Loader />}>
+        <SimilarMoviesList itemID={id} itemMediaType={currentMediaType} />
+    </Suspense>
 
-      <SimilarMoviesList itemID={id} itemMediaType={currentMediaType} />
     </section>
   );
 };

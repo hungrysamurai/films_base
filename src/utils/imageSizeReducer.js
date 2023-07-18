@@ -7,7 +7,7 @@ export const imageSizeReducer = async (base64Str, maxWidth, maxHeight) => {
       let height = img.height;
       if (width <= maxWidth && height <= maxHeight) {
         // If resolution of image is less than actual placeholder size
-        resolve();
+        resolve(base64Str);
       }
 
       let canvas = document.createElement("canvas");

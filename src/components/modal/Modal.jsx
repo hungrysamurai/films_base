@@ -1,16 +1,10 @@
+import PropTypes from 'prop-types';
+
 import { motion } from "framer-motion";
 
 import CloseModalIcon from "./icons/CloseModalIcon";
-import { useEffect } from "react";
 
-const Modal = ({ children, mode, hideModal, modalState }) => {
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [modalState]);
+const Modal = ({ children, mode, hideModal }) => {
 
   if (mode === "gallery") {
     return (
@@ -61,5 +55,11 @@ const Modal = ({ children, mode, hideModal, modalState }) => {
     );
   }
 };
+
+Modal.propTypes = {
+  children: PropTypes.node,
+  mode: PropTypes.string,
+  hideModal: PropTypes.func
+}
 
 export default Modal;

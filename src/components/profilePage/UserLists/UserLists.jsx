@@ -1,17 +1,18 @@
+
+import PropTypes from 'prop-types';
+
+import { createNewUserList } from "../../../utils/firebase/firebase.utils";
+
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
+
+import { useGlobalContext } from "../../../contexts/GlobalContext";
+
+import CustomInput from "../../CustomInput";
+import ErrorMessage from "../../ErrorMessage";
 import UserListItem from "./UserListItem";
 import UserListIcon from "../icons/UserListIcon";
 import AddNewListIcon from "../icons/AddNewListIcon";
-
-import ErrorMessage from "../../ErrorMessage";
-import { motion, AnimatePresence } from "framer-motion";
-
-import { useState } from "react";
-
-
-import CustomInput from "../../CustomInput";
-
-import { createNewUserList } from "../../../utils/firebase/firebase.utils";
-import { useGlobalContext } from "../../../contexts/GlobalContext";
 
 const UserLists = ({ userLists, currentListIndex, dispatch }) => {
   const { lang } = useGlobalContext();
@@ -107,5 +108,11 @@ const UserLists = ({ userLists, currentListIndex, dispatch }) => {
     </div>
   );
 };
+
+UserLists.propTypes = {
+  userLists: PropTypes.array,
+  currentListIndex: PropTypes.number,
+  dispatch: PropTypes.func
+}
 
 export default UserLists;

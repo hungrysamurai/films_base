@@ -1,13 +1,13 @@
+import PropTypes from 'prop-types';
+
+import { useState, useEffect, useRef } from "react";
+import { motion, useAnimation } from "framer-motion";
+import { useFetchSimilarMoviesList } from "../../hooks/useFetchSimilarMoviesList";
+import { useGlobalContext } from "../../contexts/GlobalContext";
+
 import SingleMovie from "./SingleMovie";
 import Loader from "../Loader";
 import ErrorMessage from "../ErrorMessage";
-
-import { motion, AnimatePresence, useAnimation } from "framer-motion";
-
-import { useFetchSimilarMoviesList } from "../../hooks/useFetchSimilarMoviesList";
-
-import { useGlobalContext } from "../../contexts/GlobalContext";
-import { useState, useEffect, useRef } from "react";
 
 const SimilarMoviesList = ({ itemID, itemMediaType }) => {
   const { lang } = useGlobalContext();
@@ -78,21 +78,24 @@ const SimilarMoviesList = ({ itemID, itemMediaType }) => {
           }
 
           return (
-            <AnimatePresence key={id}>
               <SingleMovie
+                key={id}
                 poster={posterUrl}
                 title={title}
-                id={id}
+                id={`${id}`}
                 mediaType={mediaType}
                 isDrag={isDrag}
               />
-              ;
-            </AnimatePresence>
           );
         })}
       </motion.div>
     </div>
   );
 };
+
+SimilarMoviesList.propTypes = {
+  itemID: PropTypes.string,
+  itemMediaType: PropTypes.string
+}
 
 export default SimilarMoviesList;

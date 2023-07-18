@@ -1,16 +1,16 @@
-import { useEffect, useState } from "react";
-
-import { useUserContext } from "../../../contexts/UserContext";
+import PropTypes from 'prop-types';
 
 import { db } from "../../../utils/firebase/firebase.utils";
 import { onSnapshot, doc } from "firebase/firestore";
 
+import { useEffect, useState } from "react";
+import { useUserContext } from "../../../contexts/UserContext";
+import { useGlobalContext } from "../../../contexts/GlobalContext";
+import { AnimatePresence } from "framer-motion";
+
 import Modal from "../../modal/Modal";
 import UserListsWidgetModal from "../../modal/UserListsWidgetModal";
-
 import UserListIcon from "../../profilePage/icons/UserListIcon";
-import { AnimatePresence } from "framer-motion";
-import { useGlobalContext } from "../../../contexts/GlobalContext";
 
 const UserListsWidget = ({ id, mediaType, title }) => {
   const { currentUser } = useUserContext();
@@ -34,7 +34,7 @@ const UserListsWidget = ({ id, mediaType, title }) => {
     <>
       <AnimatePresence>
         {showModal && (
-          <Modal mode="box" hideModal={hideModal} modalState={showModal}>
+          <Modal mode="box" hideModal={hideModal}>
             <UserListsWidgetModal
               hideModal={hideModal}
               title={title}
@@ -55,5 +55,11 @@ const UserListsWidget = ({ id, mediaType, title }) => {
     </>
   );
 };
+
+UserListsWidget.propTypes = {
+  id: PropTypes.string, 
+  mediaType: PropTypes.string,
+  title: PropTypes.string
+}
 
 export default UserListsWidget;

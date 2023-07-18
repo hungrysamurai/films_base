@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import { motion } from "framer-motion";
 import { useGlobalContext } from "../contexts/GlobalContext";
 
@@ -33,5 +35,12 @@ const ErrorMessage = ({
     </div>
   );
 };
+
+ErrorMessage.propTypes = {
+  errorMessage: PropTypes.string,
+  componentMessage: PropTypes.string,
+  showImage: PropTypes.bool,
+  fullHeight: PropTypes.bool,
+}
 
 export default ErrorMessage;

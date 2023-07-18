@@ -1,6 +1,3 @@
-import FormInput from "./FormInput";
-import Button from "./Button";
-
 import { 
  signInWithGoogglePopup,
  signInAuthUserWithEmailAndPassword,
@@ -9,8 +6,10 @@ import {
 
 import { useState } from "react";
 import { motion } from 'framer-motion';
-
 import { useGlobalContext } from "../../contexts/GlobalContext";
+
+import FormInput from "./FormInput";
+import Button from "./Button";
 
 const defaultSignInFormFields = {
   email: "",
@@ -96,7 +95,6 @@ const SignInForm = () => {
        </div>
        
       </motion.form>
-
  )
 } 
 

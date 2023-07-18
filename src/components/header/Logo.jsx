@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
 import { useGlobalContext } from "../../contexts/GlobalContext";
+
+import { Link } from "react-router-dom";
 
 const Logo = () => {
   const { baseName } = useGlobalContext();
