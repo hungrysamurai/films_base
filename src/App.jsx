@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import { useGlobalContext } from "./contexts/GlobalContext";
@@ -19,9 +21,17 @@ function App() {
     return currentUser ? children : <Navigate to={`${baseName}auth`} />;
   };
 
+  ProtectedRoute.propTypes = {
+     children: PropTypes.node
+  }
+
   const PublicRoute = ({ children }) => {
     return currentUser ? <Navigate to={`${baseName}profile`} /> : children;
   };
+
+  PublicRoute.propTypes = {
+     children: PropTypes.node
+  }
 
   return (
     <BrowserRouter>
@@ -31,7 +41,6 @@ function App() {
           <Route path="movie/:id" element={<MoviePage />} />
           <Route path="tv/:id" element={<MoviePage />} />
           <Route path="search/:query" element={<SearchResults />} />
-
           <Route
             path="auth"
             element={
@@ -71,6 +80,8 @@ function App() {
       </Routes>
     </BrowserRouter>
   );
+
 }
 
 export default App;
+

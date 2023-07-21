@@ -31,5 +31,4 @@ AuthModeToggler.propTypes = {
   setActiveMode: PropTypes.func
 }
 
-
 export default AuthModeToggler;

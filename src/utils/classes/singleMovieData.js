@@ -1,136 +1,145 @@
 export default class SingleMovieData {
-  constructor(fetchedData, lang, imagesUrlBase, mediaType) {
-    this.fetchedData = fetchedData;
+  constructor(itemData, creditsData, lang, imagesUrlBase, mediaType) {
+
+    this.creditsData = creditsData;
+    this.itemData = itemData;
     this.lang = lang;
     this.mediaType = mediaType;
 
-    this.title = this.fetchedData.title
-      ? this.fetchedData.title
-      : this.fetchedData.name;
-    this.poster = fetchedData.poster_path
-      ? `${imagesUrlBase}${fetchedData.poster_path}`
+    this.title = this.itemData.title
+      ? this.itemData.title
+      : this.itemData.name;
+    this.poster = itemData.poster_path
+      ? `${imagesUrlBase}${itemData.poster_path}`
       : `${import.meta.env.BASE_URL}assets/images/no-poster.jpg`;
     this.data =
       this.mediaType === "movie" ? this.getMovieData() : this.getTVSeriesData();
-    this.description = this.fetchedData.overview;
+    this.description = this.itemData.overview;
   }
 
   getMovieData() {
     return [
-      ...(this.fetchedData.release_date
+      ...(this.itemData.release_date
         ? [
-            {
-              [`${this.lang === "en" ? "Release date" : "Дата выхода"}`]:
-                this.getReleaseDate(this.fetchedData.release_date, this.lang),
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Release date" : "Дата выхода"}`]:
+              this.getReleaseDate(this.itemData.release_date, this.lang),
+          },
+        ]
         : []),
-      ...(this.fetchedData.genres.length > 0
+      ...(this.itemData.genres.length > 0
         ? [
-            {
-              [`${this.lang === "en" ? "Genres" : "Жанр"}`]:
-                this.getGenresList(),
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Genres" : "Жанр"}`]:
+              this.getGenresList(),
+          },
+        ]
         : []),
-      ...(this.fetchedData.production_countries.length > 0
+      ...(this.itemData.production_countries.length > 0
         ? [
-            {
-              [`${this.lang === "en" ? "Country" : "Страна"}`]:
-                this.getCountriesList(),
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Country" : "Страна"}`]:
+              this.getCountriesList(),
+          },
+        ]
         : []),
-      ...(this.fetchedData.budget
+      ...(this.getDirector()
         ? [
-            {
-              [`${this.lang === "en" ? "Budget" : "Бюджет"}`]:
-                this.getBudgetString(this.fetchedData.budget),
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Director" : "Режиссёр"}`]: this.director
+          },
+        ]
         : []),
-      ...(this.fetchedData.revenue
+      ...(this.itemData.budget
         ? [
-            {
-              [`${this.lang === "en" ? "Revenue" : "Сборы"}`]:
-                this.getBudgetString(this.fetchedData.revenue),
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Budget" : "Бюджет"}`]:
+              this.getBudgetString(this.itemData.budget),
+          },
+        ]
         : []),
-      ...(this.fetchedData.runtime
+      ...(this.itemData.revenue
         ? [
-            {
-              [`${this.lang === "en" ? "Runtime" : "Продолжительность"}`]:
-                this.getRuntime(this.fetchedData.runtime),
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Revenue" : "Сборы"}`]:
+              this.getBudgetString(this.itemData.revenue),
+          },
+        ]
         : []),
-      ...(this.fetchedData.vote_average
+      ...(this.itemData.runtime
         ? [
-            {
-              [`${this.lang === "en" ? "TMDB Rating" : "Рейтинг TMDB"}`]:
-                this.fetchedData.vote_average,
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Runtime" : "Продолжительность"}`]:
+              this.getRuntime(this.itemData.runtime),
+          },
+        ]
+        : []),
+      ...(this.itemData.vote_average
+        ? [
+          {
+            [`${this.lang === "en" ? "TMDB Rating" : "Рейтинг TMDB"}`]:
+              this.itemData.vote_average,
+          },
+        ]
         : []),
     ];
   }
 
   getTVSeriesData() {
     return [
-      ...(this.fetchedData.first_air_date
+      ...(this.itemData.first_air_date
         ? [
-            {
-              [`${this.lang === "en" ? "Release date" : "Дата выхода"}`]:
-                this.getReleaseDate(this.fetchedData.first_air_date),
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Release date" : "Дата выхода"}`]:
+              this.getReleaseDate(this.itemData.first_air_date),
+          },
+        ]
         : []),
-      ...(this.fetchedData.genres.length > 0
+      ...(this.itemData.genres.length > 0
         ? [
-            {
-              [`${this.lang === "en" ? "Genres" : "Жанр"}`]:
-                this.getGenresList(),
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Genres" : "Жанр"}`]:
+              this.getGenresList(),
+          },
+        ]
         : []),
-      ...(this.fetchedData.production_countries.length > 0
+      ...(this.itemData.production_countries.length > 0
         ? [
-            {
-              [`${this.lang === "en" ? "Country" : "Страна"}`]:
-                this.getCountriesList(),
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Country" : "Страна"}`]:
+              this.getCountriesList(),
+          },
+        ]
         : []),
-      ...(this.fetchedData.number_of_seasons
+      ...(this.itemData.number_of_seasons
         ? [
-            {
-              [`${this.lang === "en" ? "Total Seasons" : "Всего сезонов"}`]:
-                this.fetchedData.number_of_seasons,
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Total Seasons" : "Всего сезонов"}`]:
+              this.itemData.number_of_seasons,
+          },
+        ]
         : []),
-      ...(this.fetchedData.number_of_episodes
+      ...(this.itemData.number_of_episodes
         ? [
-            {
-              [`${this.lang === "en" ? "Total episodes" : "Серий"}`]:
-                this.fetchedData.number_of_episodes,
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Total episodes" : "Серий"}`]:
+              this.itemData.number_of_episodes,
+          },
+        ]
         : []),
-      ...(this.fetchedData.vote_average
+      ...(this.itemData.vote_average
         ? [
-            {
-              [`${this.lang === "en" ? "TMDB Rating" : "Рейтинг TMDB"}`]:
-                this.fetchedData.vote_average,
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "TMDB Rating" : "Рейтинг TMDB"}`]:
+              this.itemData.vote_average,
+          },
+        ]
         : []),
     ];
   }
 
   getCountriesList() {
-    return this.fetchedData.production_countries.reduce(
+    return this.itemData.production_countries.reduce(
       (string, current, i) => {
         return i === 0
           ? this.getCountryName(current.iso_3166_1, this.lang)
@@ -156,8 +165,8 @@ export default class SingleMovieData {
         month[month.length - 1] === "ь"
           ? month.slice(0, -1) + "я"
           : month[month.length - 1] === "й"
-          ? month.slice(0, -1) + "я"
-          : month + "а";
+            ? month.slice(0, -1) + "я"
+            : month + "а";
     }
 
     const year = date.getFullYear();
@@ -178,7 +187,7 @@ export default class SingleMovieData {
   }
 
   getGenresList() {
-    return this.fetchedData.genres.reduce((string, current, i) => {
+    return this.itemData.genres.reduce((string, current, i) => {
       return i === 0
         ? current.name[0].toUpperCase() + current.name.slice(1)
         : `${string}, ${current.name}`;
@@ -265,5 +274,10 @@ export default class SingleMovieData {
 
       return `${totalHours} ${hoursEndString} ${appMins} ${minutesEndString}`;
     }
+  }
+
+  getDirector() {
+    this.director = this.creditsData.crew.find(person => person.job === 'Director').name;
+    return this.director;
   }
 }

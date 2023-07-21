@@ -1,7 +1,6 @@
 import { useGlobalContext } from "../../contexts/GlobalContext";
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
 import SingleMovie from "./SingleMovie";
 import Loader from "../Loader";
 import ErrorMessage from "../ErrorMessage";
@@ -16,7 +15,8 @@ const MoviesList = () => {
     totalPages,
   } = useGlobalContext();
 
-  const loadMore = useCallback(() => {
+  const scrollHandler = useCallback(() => {
+
     if (page < totalPages) {
       if (
         window.innerHeight + window.scrollY >=
@@ -34,11 +34,11 @@ const MoviesList = () => {
     }
 
     if (totalPages > 1) {
-      window.addEventListener("scroll", loadMore);
+      window.addEventListener("scroll", scrollHandler);
     }
 
-    return () => window.removeEventListener("scroll", loadMore);
-  }, [moviesFetchError, totalPages, loadMore]);
+    return () => window.removeEventListener("scroll", scrollHandler);
+  }, [moviesFetchError, totalPages, scrollHandler]);
 
   if (moviesFetchError.show) {
     return (

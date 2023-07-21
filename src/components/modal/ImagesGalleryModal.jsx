@@ -8,7 +8,6 @@ const ImagesGalleryModal = ({
   control,
   modal,
 }) => {
-  console.log(control, modal);
   return (
     <>
       <div

@@ -25,7 +25,6 @@ const AppContext = createContext();
 const AppProvider = ({ children }) => {
   const baseName = import.meta.env.BASE_URL;
   const [currentTitle, setCurrentTitle] = useState("");
-
   const [moviesListState, dispatch] = useReducer(
     moviesListReducer,
     initialState

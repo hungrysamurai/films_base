@@ -32,7 +32,23 @@ export const useFetchSingleMovie = (mediaType, lang, id) => {
         `${apiBase}/${mediaType}/${id}?${apiKey}&language=${lang}`
       );
 
-      setData(() => new SingleMovieData(data, lang, imagesUrlBase, mediaType));
+      let creditsData;
+
+      // Get director name
+      if(mediaType === 'movie'){
+        
+        try {
+        const { data } = await axios(
+         `${apiBase}/${mediaType}/${id}/credits?${apiKey}&language=${lang}`);
+
+          creditsData = Object.keys(data).length !== 0 ? data : null;
+
+        } catch (err){
+          console.log(err);
+        }
+      }
+  
+      setData(() => new SingleMovieData(data, creditsData, lang, imagesUrlBase, mediaType));
     } catch (err) {
       setDataError(() => {
         return {
