@@ -5,12 +5,14 @@ const moviesListReducer = (state, action) => {
         ...state,
         lang: action.payload,
         page: 1,
+        selectedMovie: ''
       };
     case "SET_MEDIA_TYPE":
       return {
         ...state,
         mediaType: action.payload,
         page: 1,
+        selectedMovie: '',
         filterGenre: "all",
         filterList: "top_rated",
       };
@@ -19,12 +21,14 @@ const moviesListReducer = (state, action) => {
         ...state,
         filterList: action.payload,
         page: 1,
+        selectedMovie: ''
       };
     case "SET_FILTER_GENRE":
       return {
         ...state,
         filterGenre: action.payload,
         page: 1,
+        selectedMovie: ''
       };
     case "INCREASE_PAGE":
       return {
@@ -58,6 +62,7 @@ const moviesListReducer = (state, action) => {
       return {
         ...state,
         page: 1,
+        selectedMovie: '',
         filterList: "top_rated",
         filterGenre: "all",
         moviesListMode: 'search',
@@ -67,9 +72,15 @@ const moviesListReducer = (state, action) => {
       return {
         ...state,
         page: 1,
+        selectedMovie: '',
         filterList: "top_rated",
         filterGenre: "all",
         moviesListMode: "home",
+      }
+    case 'SET_MOVIE_TO_SCROLL':
+      return {
+        ...state,
+        selectedMovie: action.payload
       }
     default:
       return state;

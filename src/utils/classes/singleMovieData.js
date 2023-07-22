@@ -46,7 +46,7 @@ export default class SingleMovieData {
       ...(this.getDirector()
         ? [
           {
-            [`${this.lang === "en" ? "Director" : "Режиссёр"}`]: this.director
+            [`${this.lang === "en" ? "Director" : "Режиссёр"}`]: this?.director
           },
         ]
         : []),
@@ -277,7 +277,7 @@ export default class SingleMovieData {
   }
 
   getDirector() {
-    this.director = this.creditsData.crew.find(person => person.job === 'Director').name;
+    this.director = this.creditsData.crew.find(person => person.job === 'Director')?.name;
     return this.director;
   }
 }

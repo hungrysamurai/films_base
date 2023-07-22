@@ -1,5 +1,5 @@
 import { useGlobalContext } from "../../contexts/GlobalContext";
-import { useEffect, useCallback, useRef } from "react";
+import { useEffect, useCallback, useRef, useLayoutEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SingleMovie from "./SingleMovie";
 import Loader from "../Loader";
@@ -13,10 +13,26 @@ const MoviesList = () => {
     moviesList,
     page,
     totalPages,
+    selectedMovie
   } = useGlobalContext();
 
-  const scrollHandler = useCallback(() => {
+  const scrollRef = useRef(null);
+  useLayoutEffect(() => {
+    scrollRef.current?.scrollIntoView({ 
+      behavior: "smooth",
+      block: "center",
+      inline: "start"
+    });
+  },[])
 
+  const setScrollTargetOnCurrent = (id) => {
+    dispatch({
+      type: 'SET_MOVIE_TO_SCROLL', 
+      payload: id
+    });
+  }
+
+  const scrollHandler = useCallback(() => {
     if (page < totalPages) {
       if (
         window.innerHeight + window.scrollY >=
@@ -60,7 +76,16 @@ const MoviesList = () => {
           
           return (
             <AnimatePresence key={id}>
-              <SingleMovie poster={posterUrl} title={title} id={`${id}`} mediaType={mediaType}/>;
+              {/* div for restore scroll */}
+              <div 
+              onClick={() => {
+                setScrollTargetOnCurrent(`${id}`)
+              }}
+              ref={`${id}` === selectedMovie ? scrollRef : null}
+              className="scroll-wrapper"
+              >
+                <SingleMovie poster={posterUrl} title={title} id={`${id}`} mediaType={mediaType}/>
+              </div>
             </AnimatePresence>
           );
         })}

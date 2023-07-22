@@ -18,6 +18,7 @@ const initialState = {
   uniqueIds: [],
   moviesListMode: "home",
   searchQuery: "",
+  selectedMovie: ''
 };
 
 const AppContext = createContext();
@@ -52,6 +53,7 @@ const AppProvider = ({ children }) => {
     totalPages,
     searchQuery,
     moviesListMode,
+    selectedMovie
   } = moviesListState;
 
   return (
@@ -72,6 +74,7 @@ const AppProvider = ({ children }) => {
         moviesList,
         currentTitle,
         setCurrentTitle,
+        selectedMovie
       }}
     >
       {children}
