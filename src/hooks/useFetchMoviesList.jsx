@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import MoviesListItem from "../utils/classes/moviesListItem";
+import { getFilterListQuery } from "../utils/getFilterListQuery";
 
 const apiBase = import.meta.env.VITE_TMDB_API_BASE;
 const apiKey = import.meta.env.VITE_TMDB_API_KEY;
@@ -39,7 +40,7 @@ export const useFetchMoviesList = (
 
         if (moviesListMode === "home") {
           response = await axios(
-            `${apiBase}/${mediaType}/${filterList}?${apiKey}&page=${currentPage}&language=${lang}&with_genres=${filterGenre}`
+            `${apiBase}/discover/${mediaType}?&page=${currentPage}&language=${lang}&with_genres=${filterGenre}&${getFilterListQuery(mediaType,filterList)}&${apiKey}`
           );
         } else if (moviesListMode === "search") {
           response = await axios(
