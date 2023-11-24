@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
-import MoviesListItem from "../utils/classes/moviesListItem";
+import {MovieListItem, TVListItem} from "../utils/classes/moviesListItem";
 
 const apiBase = import.meta.env.VITE_TMDB_API_BASE;
 const apiKey = import.meta.env.VITE_TMDB_API_KEY;
@@ -28,7 +28,7 @@ export const useFetchUserMoviesList = (lang, currentUserList) => {
               `${apiBase}/${mediaType}/${id}?${apiKey}&language=${lang}`
             );
             const { data } = movie;
-            output.push(new MoviesListItem(imagesUrlBase, data, mediaType));
+            output.push(new MovieListItem(imagesUrlBase, data, mediaType));
           } catch (err) {
             console.log(err);
           }

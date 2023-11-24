@@ -1,30 +1,37 @@
+import {
+  Lang,
+  MediaType,
+  MovieFilterListTerm,
+  TVFilterListTerm,
+} from "../types";
+
 import { useState, useCallback, useEffect } from "react";
-import axios from "axios";
-import MoviesListItem from "../utils/classes/moviesListItem";
+import axios, { AxiosResponse, AxiosError } from "axios";
+import { MovieListItem, TVListItem } from "../utils/classes/moviesListItem";
 import { filterListQueries } from "../utils/getFilterListQuery";
 
-const apiBase = import.meta.env.VITE_TMDB_API_BASE;
-const apiKey = import.meta.env.VITE_TMDB_API_KEY;
-const imagesUrlBase = `${import.meta.env.VITE_IMAGES_BASE_URL}w300`;
+const apiBase: string = import.meta.env.VITE_TMDB_API_BASE;
+const apiKey: string = import.meta.env.VITE_TMDB_API_KEY;
+const imagesUrlBase: string = `${import.meta.env.VITE_IMAGES_BASE_URL}w300`;
 
 export const useFetchMoviesList = (
-  mediaType,
-  lang,
-  filterList,
+  mediaType: MediaType,
+  lang: Lang,
+  filterList: MovieFilterListTerm | TVFilterListTerm,
   filterGenre,
-  page,
+  page: number,
   searchQuery,
   moviesListMode,
-  dispatch
+  dispatch: React.Dispatch<any>
 ) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState({ show: false, message: "" });
 
   const fetchMoviesList = useCallback(
     async (
-      mediaType,
-      lang,
-      filterList,
+      mediaType: MediaType,
+      lang: Lang,
+      filterList: MovieFilterListTerm | TVFilterListTerm,
       filterGenre,
       currentPage,
       searchQuery
@@ -36,19 +43,21 @@ export const useFetchMoviesList = (
       });
 
       try {
-        let response;
+        let response: AxiosResponse<FetchedListData>;
 
         if (moviesListMode === "home") {
           response = await axios(
             `${apiBase}/discover/${mediaType}?&page=${currentPage}&language=${lang}&with_genres=${filterGenre}&${filterListQueries[mediaType][filterList]}&${apiKey}`
           );
-        } else if (moviesListMode === "search") {
+        } else {
           response = await axios(
             `${apiBase}/search/${mediaType}?${apiKey}&query=${searchQuery}&page=${currentPage}&language=${lang}`
           );
         }
 
-        if (response.data.total_results === 0) {
+        const { data: fetchedData } = response;
+
+        if (fetchedData.total_results === 0) {
           throw new Error(
             lang === "ru"
               ? "Нет результатов, удовлетворяющих заданным условиям"
@@ -56,21 +65,26 @@ export const useFetchMoviesList = (
           );
         }
 
-        const output = [];
-        const ids = [];
-        
-        response.data.results.forEach((item) => {
-          console.log(item);
-          output.push(new MoviesListItem(imagesUrlBase, item, mediaType));
-          if (currentPage === 1) {
-            ids.push(item.id);
+        const output: FetchedListItemMovie[] | FetchedListItemTV[] = [];
+        const ids: number[] = [];
+
+        fetchedData.results.forEach(
+          (item: FetchedListItemMovie | FetchedListItemTV) => {
+            if (mediaType === MediaType.Movie) {
+              output.push(new MovieListItem(imagesUrlBase, item, mediaType));
+            } else if (mediaType === MediaType.TV) {
+              output.push(new TVListItem(imagesUrlBase, item, mediaType));
+            }
+            if (currentPage === 1) {
+              ids.push(item.id as number);
+            }
           }
-        });
+        );
 
         if (currentPage === 1) {
           // If amount of pages is more than 500 - set to 500 (API restrictions)
           const pagesNum =
-            response.data.total_pages > 500 ? 500 : response.data.total_pages;
+            fetchedData.total_pages > 500 ? 500 : fetchedData.total_pages;
 
           const initialData = [output, ids, pagesNum];
           dispatch({ type: "INITIAL_LOAD_MOVIES", payload: initialData });
@@ -83,7 +97,7 @@ export const useFetchMoviesList = (
       } catch (err) {
         setError({
           show: true,
-          message: err.message,
+          message: (err as AxiosError).message,
         });
         setIsLoading(false);
       }
