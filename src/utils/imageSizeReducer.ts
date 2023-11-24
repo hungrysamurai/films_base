@@ -1,5 +1,5 @@
-export const imageSizeReducer = async (base64Str, maxWidth, maxHeight) => {
-  let resized_base64 = await new Promise((resolve) => {
+export const imageSizeReducer = async (base64Str: string, maxWidth: number, maxHeight: number): Promise<string> => {
+  return new Promise((resolve) => {
     let img = new Image();
     img.src = base64Str;
     img.onload = () => {
@@ -24,11 +24,11 @@ export const imageSizeReducer = async (base64Str, maxWidth, maxHeight) => {
       }
       canvas.width = width;
       canvas.height = height;
-      let ctx = canvas.getContext("2d");
+      let ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
       ctx.drawImage(img, 0, 0, width, height);
+
       // Return reduced image
       resolve(canvas.toDataURL("image/jpeg"));
     };
   });
-  return resized_base64;
 };
