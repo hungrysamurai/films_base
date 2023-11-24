@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import MoviesListItem from "../utils/classes/moviesListItem";
-import { getFilterListQuery } from "../utils/getFilterListQuery";
+import { filterListQueries } from "../utils/getFilterListQuery";
 
 const apiBase = import.meta.env.VITE_TMDB_API_BASE;
 const apiKey = import.meta.env.VITE_TMDB_API_KEY;
@@ -40,7 +40,7 @@ export const useFetchMoviesList = (
 
         if (moviesListMode === "home") {
           response = await axios(
-            `${apiBase}/discover/${mediaType}?&page=${currentPage}&language=${lang}&with_genres=${filterGenre}&${getFilterListQuery(mediaType,filterList)}&${apiKey}`
+            `${apiBase}/discover/${mediaType}?&page=${currentPage}&language=${lang}&with_genres=${filterGenre}&${filterListQueries[mediaType][filterList]}&${apiKey}`
           );
         } else if (moviesListMode === "search") {
           response = await axios(
@@ -58,8 +58,9 @@ export const useFetchMoviesList = (
 
         const output = [];
         const ids = [];
-
+        
         response.data.results.forEach((item) => {
+          console.log(item);
           output.push(new MoviesListItem(imagesUrlBase, item, mediaType));
           if (currentPage === 1) {
             ids.push(item.id);

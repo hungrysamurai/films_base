@@ -1,4 +1,4 @@
-export const getFormattedDay = (daysShift) => {
+export const getFormattedDay = (daysShift?: number): string => {
  if (daysShift) {
   const now = new Date();
   now.setDate(now.getDate() + daysShift);

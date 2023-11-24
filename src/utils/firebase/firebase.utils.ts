@@ -9,6 +9,8 @@ import {
   onAuthStateChanged,
   signOut,
   updateProfile,
+  UserCredential,
+  Auth,
 } from "firebase/auth";
 
 import {
@@ -50,16 +52,16 @@ googleProvider.setCustomParameters({
   prompt: "select_account",
 });
 
-export const auth = getAuth();
+export const auth: Auth = getAuth();
 
-export const signInWithGoogglePopup = () =>
+export const signInWithGoogglePopup = (): Promise<UserCredential> =>
   signInWithPopup(auth, googleProvider);
 
-export const signInAuthUserWithEmailAndPassword = async (email, password) => {
+export const signInAuthUserWithEmailAndPassword = async (email: string, password: string): Promise<UserCredential> => {
   return await signInWithEmailAndPassword(auth, email, password);
 };
 
-export const createAuthUserWithEmailAndPassword = async (email, password) => {
+export const createAuthUserWithEmailAndPassword = async (email: string, password: string): Promise<UserCredential> => {
   return await createUserWithEmailAndPassword(auth, email, password);
 };
 
@@ -184,7 +186,7 @@ export const addToUserList = async (listIndex, id, mediaType) => {
 export const removeFromUserList = async (listIndex, id, mediaType) => {
   console.log(listIndex, id, mediaType);
   const userListsRef = doc(db, "users", auth.currentUser.uid);
-  const userListsSnap = (await getDoc(userListsRef)).data().userLists;
+  const userListsSnap = (await getDoc(userListsRef)).data()?.userLists;
 
   userListsSnap[listIndex].data = userListsSnap[listIndex].data.filter(
     (item) => {
