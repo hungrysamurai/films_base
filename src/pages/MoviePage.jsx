@@ -42,7 +42,7 @@ const MoviePage = () => {
     isLoading,
   } = useFetchSingleMovie(currentMediaType, lang, id);
 
-  const { data: mediaData, description, title, poster } = data;
+  const { data: mediaData, description, title, poster } = data || {};
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -199,11 +199,10 @@ const MoviePage = () => {
           )}
         </div>
       </div>
-    
-    <Suspense fallback={<Loader />}>
-        <SimilarMoviesList itemID={id} itemMediaType={currentMediaType} />
-    </Suspense>
 
+      <Suspense fallback={<Loader />}>
+        <SimilarMoviesList itemID={id} itemMediaType={currentMediaType} />
+      </Suspense>
     </section>
   );
 };

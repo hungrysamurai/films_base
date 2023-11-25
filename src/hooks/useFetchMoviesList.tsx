@@ -3,12 +3,17 @@ import {
   MediaType,
   MovieFilterListTerm,
   TVFilterListTerm,
+  MoviesListMode,
 } from "../types";
 
 import { useState, useCallback, useEffect } from "react";
 import axios, { AxiosResponse, AxiosError } from "axios";
 import { MovieListItem, TVListItem } from "../utils/classes/moviesListItem";
 import { filterListQueries } from "../utils/getFilterListQuery";
+import {
+  MoviesListReducerAction,
+  MoviesListReducerActionTypes,
+} from "../reducers/moviesListReducer";
 
 const apiBase: string = import.meta.env.VITE_TMDB_API_BASE;
 const apiKey: string = import.meta.env.VITE_TMDB_API_KEY;
@@ -18,23 +23,26 @@ export const useFetchMoviesList = (
   mediaType: MediaType,
   lang: Lang,
   filterList: MovieFilterListTerm | TVFilterListTerm,
-  filterGenre,
+  filterGenre: string,
   page: number,
-  searchQuery,
-  moviesListMode,
-  dispatch: React.Dispatch<any>
+  searchQuery: string,
+  moviesListMode: MoviesListMode,
+  dispatch: React.Dispatch<MoviesListReducerAction>
 ) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState({ show: false, message: "" });
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<FetchDataError>({
+    show: false,
+    message: "",
+  });
 
   const fetchMoviesList = useCallback(
     async (
       mediaType: MediaType,
       lang: Lang,
       filterList: MovieFilterListTerm | TVFilterListTerm,
-      filterGenre,
-      currentPage,
-      searchQuery
+      filterGenre: string,
+      currentPage: number,
+      searchQuery: string
     ) => {
       setIsLoading(true);
       setError({
@@ -65,7 +73,7 @@ export const useFetchMoviesList = (
           );
         }
 
-        const output: FetchedListItemMovie[] | FetchedListItemTV[] = [];
+        const output: MovieListItem[] | TVListItem[] = [];
         const ids: number[] = [];
 
         fetchedData.results.forEach(
@@ -86,11 +94,17 @@ export const useFetchMoviesList = (
           const pagesNum =
             fetchedData.total_pages > 500 ? 500 : fetchedData.total_pages;
 
-          const initialData = [output, ids, pagesNum];
-          dispatch({ type: "INITIAL_LOAD_MOVIES", payload: initialData });
+          const initialData: FetchedListInitialData = [output, ids, pagesNum];
+          dispatch({
+            type: MoviesListReducerActionTypes.INITIAL_LOAD_MOVIES,
+            payload: initialData,
+          });
         } else {
-          const initialData = [output, ids];
-          dispatch({ type: "APPEND_MOVIES", payload: initialData });
+          const initialData: FetchedListInitialData = [output, ids];
+          dispatch({
+            type: MoviesListReducerActionTypes.APPEND_MOVIES,
+            payload: initialData,
+          });
         }
 
         setIsLoading(false);

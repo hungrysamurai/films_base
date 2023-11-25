@@ -1,4 +1,6 @@
-import PropTypes from 'prop-types'
+import { MediaType, MovieFilterListTerm, Lang, MoviesListMode } from "../types";
+
+import PropTypes from "prop-types";
 
 import moviesListReducer from "../reducers/moviesListReducer";
 
@@ -7,25 +9,45 @@ import { getLang } from "../utils/getLang";
 import { useState, useContext, createContext, useReducer } from "react";
 import { useFetchMoviesList } from "../hooks/useFetchMoviesList";
 
-const initialState = {
+const initialState: MoviesListState = {
   lang: getLang(),
-  mediaType: "movie",
-  filterList: "top_rated",
+  mediaType: MediaType.Movie,
+  filterList: MovieFilterListTerm.TopRated,
   filterGenre: "all",
   page: 1,
   totalPages: 0,
   moviesList: [],
   uniqueIds: [],
-  moviesListMode: "home",
+  moviesListMode: MoviesListMode.Home,
   searchQuery: "",
-  selectedMovie: ''
+  selectedMovie: "",
 };
 
-const AppContext = createContext();
+const AppContext = createContext<IGlobalContext>({
+  baseName: "",
+  currentTitle: "",
+  dispatch: () => {},
+  filterGenre: "",
+  filterList: MovieFilterListTerm.Upcoming,
+  lang: Lang.Ru,
+  mediaType: MediaType.Movie,
+  moviesFetchError: {
+    message: "",
+    show: false,
+  },
+  moviesFetchLoading: false,
+  moviesList: [],
+  moviesListMode: MoviesListMode.Home,
+  page: 0,
+  searchQuery: "",
+  selectedMovie: "",
+  setCurrentTitle: () => {},
+  totalPages: 0,
+});
 
-const AppProvider = ({ children }) => {
+const AppProvider = ({ children }: ReactChildrenType) => {
   const baseName = import.meta.env.BASE_URL;
-  const [currentTitle, setCurrentTitle] = useState("");
+  const [currentTitle, setCurrentTitle] = useState<string>("");
   const [moviesListState, dispatch] = useReducer(
     moviesListReducer,
     initialState
@@ -53,7 +75,7 @@ const AppProvider = ({ children }) => {
     totalPages,
     searchQuery,
     moviesListMode,
-    selectedMovie
+    selectedMovie,
   } = moviesListState;
 
   return (
@@ -74,7 +96,7 @@ const AppProvider = ({ children }) => {
         moviesList,
         currentTitle,
         setCurrentTitle,
-        selectedMovie
+        selectedMovie,
       }}
     >
       {children}
@@ -87,7 +109,7 @@ export const useGlobalContext = () => {
 };
 
 AppProvider.propTypes = {
-  children: PropTypes.node
-}
+  children: PropTypes.node,
+};
 
 export { AppProvider };

@@ -11,6 +11,8 @@ import {
   updateProfile,
   UserCredential,
   Auth,
+  User,
+  NextOrObserver,
 } from "firebase/auth";
 
 import {
@@ -30,6 +32,7 @@ import {
 } from "firebase/storage";
 
 import { imageSizeReducer } from "../imageSizeReducer";
+import { MediaType } from "../../types";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -57,15 +60,24 @@ export const auth: Auth = getAuth();
 export const signInWithGoogglePopup = (): Promise<UserCredential> =>
   signInWithPopup(auth, googleProvider);
 
-export const signInAuthUserWithEmailAndPassword = async (email: string, password: string): Promise<UserCredential> => {
+export const signInAuthUserWithEmailAndPassword = async (
+  email: string,
+  password: string
+): Promise<UserCredential> => {
   return await signInWithEmailAndPassword(auth, email, password);
 };
 
-export const createAuthUserWithEmailAndPassword = async (email: string, password: string): Promise<UserCredential> => {
+export const createAuthUserWithEmailAndPassword = async (
+  email: string,
+  password: string
+): Promise<UserCredential> => {
   return await createUserWithEmailAndPassword(auth, email, password);
 };
 
-export const createUserDocumentFromAuth = async (userAuth, displayName) => {
+export const createUserDocumentFromAuth = async (
+  userAuth: User,
+  displayName: string
+) => {
   if (!userAuth) return;
   const userDocRef = doc(db, "users", userAuth.uid);
   const userSnapshot = await getDoc(userDocRef);
@@ -98,15 +110,15 @@ export const createUserDocumentFromAuth = async (userAuth, displayName) => {
 
 export const signOutUser = async () => await signOut(auth);
 
-export const updateUserPhoto = async (file) => {
+export const updateUserPhoto = async (file: File) => {
   const fileName = new Date().getTime() + file.name;
   const storageRef = ref(storage, fileName);
 
   const reader = new FileReader();
   reader.readAsDataURL(file);
 
-  reader.onload = (e) => {
-    const reduced = imageSizeReducer(e.target.result, 500, 500);
+  reader.onload = () => {
+    const reduced = imageSizeReducer(reader.result as string, 500, 500);
     reduced.then((reducedImage) => {
       const uploadTask = uploadString(
         storageRef,
@@ -116,7 +128,7 @@ export const updateUserPhoto = async (file) => {
 
       uploadTask.then((prom) => {
         getDownloadURL(prom.ref).then((photoURL) => {
-          updateProfile(auth.currentUser, {
+          updateProfile(auth.currentUser as User, {
             photoURL,
           });
         });
@@ -125,23 +137,24 @@ export const updateUserPhoto = async (file) => {
   };
 };
 
-export const updateUserLogin = async (newLogin) => {
-  updateProfile(auth.currentUser, {
+export const updateUserLogin = async (newLogin: string) => {
+  updateProfile(auth.currentUser as User, {
     displayName: newLogin,
   });
 };
 
-export const onAuthStateChangedListener = (callback) =>
+export const onAuthStateChangedListener = (callback: NextOrObserver<User>) =>
   onAuthStateChanged(auth, callback);
 
-export const createNewUserList = async (title) => {
-  const newList = {
+export const createNewUserList = async (title: string) => {
+  const newList: UserList = {
     title,
     data: [],
   };
 
-  const userListsRef = doc(db, "users", auth.currentUser.uid);
-  const userListsSnap = (await getDoc(userListsRef)).data().userLists;
+  const userListsRef = doc(db, "users", (auth.currentUser as User).uid);
+  const userListsSnap: UserList[] = (await getDoc(userListsRef)).data()
+    ?.userLists;
 
   if (userListsSnap.find((list) => list.title === newList.title)) {
     return;
@@ -152,18 +165,23 @@ export const createNewUserList = async (title) => {
   });
 };
 
-export const removeUserList = async (listIndex) => {
-  const userListsRef = doc(db, "users", auth.currentUser.uid);
-  const userListsSnap = (await getDoc(userListsRef)).data().userLists;
+export const removeUserList = async (listIndex: number) => {
+  const userListsRef = doc(db, "users", (auth.currentUser as User).uid);
+  const userListsSnap: UserList[] = (await getDoc(userListsRef)).data()
+    ?.userLists;
 
   await setDoc(userListsRef, {
     userLists: userListsSnap.toSpliced(listIndex, 1),
   });
 };
 
-export const editUserListTitle = async (listIndex, newTitle) => {
-  const userListsRef = doc(db, "users", auth.currentUser.uid);
-  const userListsSnap = (await getDoc(userListsRef)).data().userLists;
+export const editUserListTitle = async (
+  listIndex: number,
+  newTitle: string
+) => {
+  const userListsRef = doc(db, "users", (auth.currentUser as User).uid);
+  const userListsSnap: UserList[] = (await getDoc(userListsRef)).data()
+    ?.userLists;
 
   const replace = { ...userListsSnap[listIndex], title: newTitle };
 
@@ -172,9 +190,14 @@ export const editUserListTitle = async (listIndex, newTitle) => {
   });
 };
 
-export const addToUserList = async (listIndex, id, mediaType) => {
-  const userListsRef = doc(db, "users", auth.currentUser.uid);
-  const userListsSnap = (await getDoc(userListsRef)).data().userLists;
+export const addToUserList = async (
+  listIndex: number,
+  id: string,
+  mediaType: MediaType
+) => {
+  const userListsRef = doc(db, "users", (auth.currentUser as User).uid);
+  const userListsSnap: UserList[] = (await getDoc(userListsRef)).data()
+    ?.userLists;
 
   userListsSnap[listIndex].data.push({ mediaType, id });
 
@@ -183,10 +206,15 @@ export const addToUserList = async (listIndex, id, mediaType) => {
   });
 };
 
-export const removeFromUserList = async (listIndex, id, mediaType) => {
+export const removeFromUserList = async (
+  listIndex: number,
+  id: string,
+  mediaType: MediaType
+) => {
   console.log(listIndex, id, mediaType);
-  const userListsRef = doc(db, "users", auth.currentUser.uid);
-  const userListsSnap = (await getDoc(userListsRef)).data()?.userLists;
+  const userListsRef = doc(db, "users", (auth.currentUser as User).uid);
+  const userListsSnap: UserList[] = (await getDoc(userListsRef)).data()
+    ?.userLists;
 
   userListsSnap[listIndex].data = userListsSnap[listIndex].data.filter(
     (item) => {
