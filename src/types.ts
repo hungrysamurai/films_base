@@ -2,6 +2,8 @@ import { operations } from "./tmdb_types";
 import { MoviesListReducerAction } from "./reducers/moviesListReducer";
 import { MovieListItem, TVListItem } from "./utils/classes/moviesListItem";
 import { ReactElement } from "react";
+import { User } from "firebase/auth";
+import { UserReducerAction } from "./reducers/userReducer";
 
 export enum ColorTheme {
   Dark = "dark",
@@ -78,9 +80,20 @@ declare global {
   type FetchedItemVideosData =
     operations["movie-videos"]["responses"][200]["content"]["application/json"];
 
+  type FetchedGenresMovieList =
+    operations["genre-movie-list"]["responses"][200]["content"]["application/json"];
+
+  type FetchedGenresTVList =
+    operations["genre-tv-list"]["responses"][200]["content"]["application/json"];
+
   type FetchDataError = {
     message: string;
     show: boolean;
+  };
+
+  type GenreData = {
+    id: string | number;
+    name: string;
   };
 
   type SingleItemDetailsDataItem = {
@@ -120,6 +133,15 @@ declare global {
     selectedMovie: string;
     setCurrentTitle: React.Dispatch<React.SetStateAction<string>>;
     totalPages: number;
+  }
+
+  type UserState = {
+    currentUser: User | null;
+  };
+
+  interface IUserContext {
+    currentUser: User | null;
+    dispatch: React.Dispatch<UserReducerAction>;
   }
 
   type UserListItem = {

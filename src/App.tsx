@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import { useGlobalContext } from "./contexts/GlobalContext";
@@ -21,16 +19,8 @@ function App() {
     return currentUser ? children : <Navigate to={`${baseName}auth`} />;
   };
 
-  ProtectedRoute.propTypes = {
-    children: PropTypes.node,
-  };
-
   const PublicRoute = ({ children }: ReactChildrenType) => {
     return currentUser ? <Navigate to={`${baseName}profile`} /> : children;
-  };
-
-  PublicRoute.propTypes = {
-    children: PropTypes.node,
   };
 
   return (

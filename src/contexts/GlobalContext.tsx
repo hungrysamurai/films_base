@@ -1,7 +1,5 @@
 import { MediaType, MovieFilterListTerm, Lang, MoviesListMode } from "../types";
 
-import PropTypes from "prop-types";
-
 import moviesListReducer from "../reducers/moviesListReducer";
 
 import { getLang } from "../utils/getLang";
@@ -106,10 +104,6 @@ const AppProvider = ({ children }: ReactChildrenType) => {
 
 export const useGlobalContext = () => {
   return useContext(AppContext);
-};
-
-AppProvider.propTypes = {
-  children: PropTypes.node,
 };
 
 export { AppProvider };

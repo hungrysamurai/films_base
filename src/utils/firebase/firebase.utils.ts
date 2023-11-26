@@ -76,7 +76,7 @@ export const createAuthUserWithEmailAndPassword = async (
 
 export const createUserDocumentFromAuth = async (
   userAuth: User,
-  displayName: string
+  displayName?: string
 ) => {
   if (!userAuth) return;
   const userDocRef = doc(db, "users", userAuth.uid);
