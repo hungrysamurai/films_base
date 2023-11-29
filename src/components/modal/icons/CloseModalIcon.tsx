@@ -1,4 +1,4 @@
-const CloseModalIcon = () => {
+const CloseModalIcon: React.FC = () => {
   return (
     <svg
       width="27"

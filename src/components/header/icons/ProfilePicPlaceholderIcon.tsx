@@ -1,4 +1,4 @@
-const ProfilePicPlaceholder = () => {
+const ProfilePicPlaceholder: React.FC = () => {
   return (
     <svg
       width="27"

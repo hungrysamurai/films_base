@@ -1,3 +1,5 @@
+import { ColorTheme, Lang, ModalMode } from "../../types";
+
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { useUserContext } from "../../contexts/UserContext";
 
@@ -9,13 +11,14 @@ import { AnimatePresence } from "framer-motion";
 
 import ProfilePicPlaceholder from "./icons/ProfilePicPlaceholderIcon";
 
-import Modal from "../modal/Modal";
+import Modal from "../modal/Modal.tsx";
 import UserModal from "../modal/UserModal";
 import AuthIcon from "./icons/AuthIcon";
 import ThemeDarkIcon from "./icons/ThemeDarkIcon";
 import ThemeLightIcon from "./icons/ThemeLightIcon";
 import LangEnIcon from "./icons/LangEnIcon";
 import LangRuIcon from "./icons/LangRuIcon";
+import { MoviesListReducerActionTypes } from "../../reducers/moviesListReducer";
 
 const HeaderIconsContainer = () => {
   const { lang, dispatch } = useGlobalContext();
@@ -35,18 +38,24 @@ const HeaderIconsContainer = () => {
 
   const toggleTheme = () => {
     if (theme === "dark") {
-      setTheme(() => "light");
+      setTheme(() => ColorTheme.Light);
     } else {
-      setTheme("dark");
+      setTheme(ColorTheme.Dark);
     }
   };
 
   const toggleLang = () => {
     if (lang === "ru") {
-      dispatch({ type: "SET_LANG", payload: "en" });
+      dispatch({
+        type: MoviesListReducerActionTypes.SET_LANG,
+        payload: Lang.En,
+      });
       localStorage.setItem("FBlang", "en");
     } else {
-      dispatch({ type: "SET_LANG", payload: "ru" });
+      dispatch({
+        type: MoviesListReducerActionTypes.SET_LANG,
+        payload: Lang.Ru,
+      });
       localStorage.setItem("FBlang", "ru");
     }
   };
@@ -56,21 +65,16 @@ const HeaderIconsContainer = () => {
       {/* User modal */}
       <AnimatePresence>
         {showModal && (
-          <Modal 
-          hideModal={hideModal} 
-          mode="box">
-            <UserModal 
-            hideModal={hideModal} />
+          <Modal hideModal={hideModal} mode={ModalMode.Box}>
+            <UserModal hideModal={hideModal} />
           </Modal>
         )}
       </AnimatePresence>
 
       <div className="header-icons-container">
-
         {/* If current user logged in - set icon */}
         {currentUser ? (
           <button onClick={() => setShowModal(() => true)}>
-
             {/* if user don't have custom icon - render placeholder, else - user photo */}
             {currentUser.photoURL ? (
               <div className="profile-pic-container">
@@ -82,28 +86,22 @@ const HeaderIconsContainer = () => {
           </button>
         ) : (
           <Link to="auth">
-            <AuthIcon/>
+            <AuthIcon />
           </Link>
         )}
-  
+
         <a href="#" onClick={toggleTheme} className="theme-icons-container">
-            <AnimatePresence>
-              {theme === 'dark' ? 
-              <ThemeDarkIcon key='dark-mode-icon' /> : 
-              <ThemeLightIcon key='light-mode-icon' />
-              }
-            </AnimatePresence>
+          <AnimatePresence>
+            {theme === ColorTheme.Dark ? (
+              <ThemeDarkIcon key="dark-mode-icon" />
+            ) : (
+              <ThemeLightIcon key="light-mode-icon" />
+            )}
+          </AnimatePresence>
         </a>
 
-        <button href="#" onClick={toggleLang}>
-          {lang === 'en' ? 
-          <LangEnIcon/> : 
-          <LangRuIcon/>
-          }
-          {/* <img
-            src={`${baseName}assets/images/icons/icon-lang-${lang}-${theme}.svg`}
-            alt="language"
-          /> */}
+        <button onClick={toggleLang}>
+          {lang === "en" ? <LangEnIcon /> : <LangRuIcon />}
         </button>
       </div>
     </>

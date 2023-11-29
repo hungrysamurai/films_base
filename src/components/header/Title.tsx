@@ -1,6 +1,6 @@
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
-const Title = () => {
+const Title: React.FC = () => {
   const { currentTitle } = useGlobalContext();
 
   return (

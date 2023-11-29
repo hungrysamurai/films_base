@@ -38,6 +38,12 @@ export enum MoviesListMode {
   Search = "search",
 }
 
+export enum ModalMode {
+  Gallery = "gallery",
+  Box = 'box',
+  Overlay = 'overlay'
+}
+
 type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
 
 declare global {
@@ -154,6 +160,11 @@ declare global {
   type UserList = {
     title: string;
     data: UserItemsLists;
+  };
+
+  type UsersListsState = {
+    userLists: UserList[];
+    currentListIndex: number;
   };
 
   type ReactChildrenType = { children?: ReactElement | ReactElement[] };

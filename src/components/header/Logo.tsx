@@ -2,7 +2,7 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 
 import { Link } from "react-router-dom";
 
-const Logo = () => {
+const Logo: React.FC = () => {
   const { baseName } = useGlobalContext();
 
   return (

@@ -11,10 +11,10 @@ import { AnimatePresence } from "framer-motion";
 
 import UserLists from "../components/profilePage/UserLists/UserLists";
 import UserMoviesList from "../components/moviesList/UserMoviesList";
-import Modal from "../components/modal/Modal";
+import Modal from "../components/modal/Modal.tsx";
 import UserListIcon from "../components/profilePage/icons/UserListIcon";
 
-const usersListsInitialState = {
+const usersListsInitialState: UsersListsState = {
   userLists: [],
   currentListIndex: 0,
 };
@@ -45,6 +45,7 @@ const ProfilePage = () => {
       if (!doc.data()) return;
 
       if (!mounted.current) {
+        console.log(doc.data().userLists);
         dispatch({
           type: "LOAD_USER_LISTS",
           payload: doc.data().userLists,
@@ -87,9 +88,7 @@ const ProfilePage = () => {
 
             <AnimatePresence>
               {showModal && (
-                <Modal
-                  hideModal={hideModal}
-                  mode="overlay">
+                <Modal hideModal={hideModal} mode="overlay">
                   <div className="user-lists-modal-inner">
                     <UserLists
                       userLists={userLists}

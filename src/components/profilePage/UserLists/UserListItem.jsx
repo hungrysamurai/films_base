@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 import {
   removeUserList,
@@ -15,7 +15,6 @@ import CustomInput from "../../CustomInput";
 
 const UserListItem = ({ title, active, dispatch, listIndex }) => {
   const [editTitleInputShow, setEditTitleInputShow] = useState(false);
-
   const editTitleInputContainerRef = useRef(null);
 
   const hideEditTitleInput = () => {
@@ -40,52 +39,54 @@ const UserListItem = ({ title, active, dispatch, listIndex }) => {
 
   return (
     <>
-    {editTitleInputShow ? 
+      {editTitleInputShow ? (
+        <CustomInput
+          initialValue={title}
+          submit={submitEditListTitle}
+          hideCustomInput={hideEditTitleInput}
+          customClass={"user-list-item-input"}
+        />
+      ) : (
+        <div
+          className={`user-list-container ${active && "active"}`}
+          onClick={() => {
+            dispatch({ type: "SET_CURRENT_LIST_INDEX", payload: listIndex });
+          }}
+        >
+          <div className="user-list-title">
+            <h3>{title}</h3>
+          </div>
 
-    <CustomInput  
-      initialValue={title}
-      submit={submitEditListTitle}
-      hideCustomInput={hideEditTitleInput}
-      customClass={'user-list-item-input'}
-    /> : 
-    
-    <div
-      className={`user-list-container ${active && "active"}`}
-      onClick={() => {
-        dispatch({ type: "SET_CURRENT_LIST_INDEX", payload: listIndex });
-      }}
-    >
-      <div className="user-list-title">
-        <h3>{title}</h3>
-      </div>
-
-      <AnimatePresence>
-        {active && (
-          <motion.div
-            initial={{
-              y: "2rem",
-              opacity: 0,
-            }}
-            animate={{
-              y: "-50%",
-              opacity: 1,
-            }}
-            className="user-list-icons-container"
-          >
-            <button className="edit-list-icon" onClick={() => setEditTitleInputShow(() => true)}>
-              <EditListIcon />
-            </button>
-            <button
-              className="delete-list-icon"
-              onClick={() => removeUserList(listIndex)}
-            >
-              <DeleteListIcon />
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-    }
+          <AnimatePresence>
+            {active && (
+              <motion.div
+                initial={{
+                  y: "2rem",
+                  opacity: 0,
+                }}
+                animate={{
+                  y: "-50%",
+                  opacity: 1,
+                }}
+                className="user-list-icons-container"
+              >
+                <button
+                  className="edit-list-icon"
+                  onClick={() => setEditTitleInputShow(() => true)}
+                >
+                  <EditListIcon />
+                </button>
+                <button
+                  className="delete-list-icon"
+                  onClick={() => removeUserList(listIndex)}
+                >
+                  <DeleteListIcon />
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      )}
     </>
   );
 };
@@ -94,7 +95,7 @@ UserListItem.propTypes = {
   title: PropTypes.string,
   active: PropTypes.bool,
   dispatch: PropTypes.func,
-  listIndex: PropTypes.number
-}
+  listIndex: PropTypes.number,
+};
 
 export default UserListItem;

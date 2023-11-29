@@ -7,17 +7,17 @@ import SearchBox from "./SearchBox";
 import HeaderIconsContainer from "./HeaderIconsContainer";
 import Title from "./Title";
 
-const Header = () => {
-const { baseName } = useGlobalContext();
-const { pathname } = useLocation();
+const Header: React.FC = () => {
+  const { baseName } = useGlobalContext();
+  const { pathname } = useLocation();
 
   return (
     <header className="header-container">
       <Logo />
       {/* If Homepage - display media type links */}
-      {pathname === baseName ? <MediaTypeLinks/> : <Title />}
-      <SearchBox/>
-      <HeaderIconsContainer/>
+      {pathname === baseName ? <MediaTypeLinks /> : <Title />}
+      <SearchBox />
+      <HeaderIconsContainer />
     </header>
   );
 };

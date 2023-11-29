@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import SearchIcon from "./icons/SearchIcon";
 
-const SearchBox = () => {
+const SearchBox: React.FC = () => {
   const { mediaType, lang, baseName } = useGlobalContext();
 
   const text =
@@ -33,7 +33,7 @@ const SearchBox = () => {
         }}
       >
         <button className="search-button">
-          <SearchIcon/>
+          <SearchIcon />
         </button>
         <input
           type="text"
