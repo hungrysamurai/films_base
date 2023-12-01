@@ -1,4 +1,5 @@
 import { ChangeEvent, MutableRefObject } from "react";
+import { Lang } from "../../types";
 
 import {
   updateUserPhoto,
@@ -15,7 +16,6 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import ProfilePicPlaceholder from "../header/icons/ProfilePicPlaceholderIcon";
 import CustomInput from "../CustomInput";
-import { Lang } from "../../types";
 
 type UserModalProps = {
   hideModal: () => void;
@@ -76,7 +76,7 @@ const UserModal: React.FC<UserModalProps> = ({ hideModal }) => {
         <div className="user-name-container">
           {newUserNameInputShow ? (
             <CustomInput
-              initialValue={currentUser?.displayName}
+              initialValue={currentUser?.displayName as string}
               submit={submitNewUserName}
               hideCustomInput={hideUserNameInput}
               customClass={"user-name-input"}

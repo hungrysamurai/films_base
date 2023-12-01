@@ -10,6 +10,7 @@ import SearchResults from "./pages/SearchResults";
 import AuthPage from "./pages/AuthPage";
 import ProfilePage from "./pages/ProfilePage";
 import ErrorMessage from "./components/ErrorMessage";
+import { Lang } from "./types";
 
 function App() {
   const { baseName, lang } = useGlobalContext();
@@ -56,7 +57,7 @@ function App() {
                 <ErrorMessage
                   componentMessage="404"
                   errorMessage={
-                    lang === "en"
+                    lang === Lang.En
                       ? "This page is not exist"
                       : "Такой страницы не существует!"
                   }

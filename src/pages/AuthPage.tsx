@@ -4,32 +4,32 @@ import { useGlobalContext } from "../contexts/GlobalContext";
 import AuthModeToggler from "../components/authPage/AuthModeToggler";
 import SignUpForm from "../components/authPage/SignUpForm";
 import SignInForm from "../components/authPage/SignInForm";
+import { Lang } from "../types";
 
-const AuthPage = () => {
+export enum FormMode {
+  SignIn = "sign-in",
+  SignUp = "sign-up",
+}
+
+const AuthPage: React.FC = () => {
   const { setCurrentTitle, lang } = useGlobalContext();
-  const [formMode, setFormMode] = useState('sign-in');
+  const [formMode, setFormMode] = useState<FormMode>(FormMode.SignIn);
 
   useEffect(() => {
     setCurrentTitle(() => {
-      return lang === 'en' ? 'Account' : 'Авторизация'
-    })
-  },[setCurrentTitle, lang]);
+      return lang === Lang.En ? "Account" : "Авторизация";
+    });
+  }, [setCurrentTitle, lang]);
 
- return (
+  return (
     <section className="section-auth">
-      <AuthModeToggler activeMode={formMode} setActiveMode={setFormMode}/>
-     
-     <div className="form-container">
+      <AuthModeToggler activeMode={formMode} setActiveMode={setFormMode} />
 
-      {formMode === 'sign-up' ?
-          <SignUpForm/> :
-          <SignInForm/>
-      }
-
-     </div>
+      <div className="form-container">
+        {formMode === FormMode.SignUp ? <SignUpForm /> : <SignInForm />}
+      </div>
     </section>
   );
-  
 };
 
 export default AuthPage;

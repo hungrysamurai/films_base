@@ -3,12 +3,13 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 import { useNavigate } from "react-router-dom";
 
 import SearchIcon from "./icons/SearchIcon";
+import { Lang } from "../../types";
 
 const SearchBox: React.FC = () => {
   const { mediaType, lang, baseName } = useGlobalContext();
 
   const text =
-    lang === "en"
+    lang === Lang.En
       ? ["Find", "movie...", "tv show..."]
       : ["Найти", "фильм...", "сериал..."];
 

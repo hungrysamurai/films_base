@@ -9,6 +9,7 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 
 import UserListIconAdd from "../moviePage/UserListsWidget/icons/UserListIconAdd";
 import UserListIconRemove from "../moviePage/UserListsWidget/icons/UserListIconRemove";
+import { Lang } from "../../types";
 
 type UserListsWidgetModalProps = {
   hideModal: () => void;
@@ -34,7 +35,7 @@ const UserListsWidgetModal: React.FC<UserListsWidgetModalProps> = ({
 
   return (
     <div className="user-lists-widget-inner" ref={modalInnerRef}>
-      {lang === "en" ? (
+      {lang === Lang.En ? (
         <h3>Add {`«${title}»`} to list...</h3>
       ) : (
         <h3>Добавить {`«${title}»`} в список...</h3>
