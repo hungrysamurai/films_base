@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-
 import { db } from "../../../utils/firebase/firebase.utils";
 import { onSnapshot, doc } from "firebase/firestore";
 
@@ -11,22 +9,37 @@ import { AnimatePresence } from "framer-motion";
 import Modal from "../../modal/Modal";
 import UserListsWidgetModal from "../../modal/UserListsWidgetModal";
 import UserListIcon from "../../profilePage/icons/UserListIcon";
+import { User } from "firebase/auth";
+import { Lang, MediaType, ModalMode } from "../../../types";
 
-const UserListsWidget = ({ id, mediaType, title }) => {
+type UserListsWidgetProps = {
+  id: string;
+  mediaType: MediaType;
+  title: string;
+};
+
+const UserListsWidget: React.FC<UserListsWidgetProps> = ({
+  id,
+  mediaType,
+  title,
+}) => {
   const { currentUser } = useUserContext();
   const { lang } = useGlobalContext();
 
   const [showModal, setShowModal] = useState(false);
-  const [userLists, setUserLists] = useState([]);
+  const [userLists, setUserLists] = useState<UserList[]>([]);
 
   const hideModal = () => {
     setShowModal(() => false);
   };
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(doc(db, "users", currentUser.uid), (doc) => {
-      setUserLists(doc.data().userLists);
-    });
+    const unsubscribe = onSnapshot(
+      doc(db, "users", (currentUser as User).uid),
+      (doc) => {
+        setUserLists(doc.data()?.userLists);
+      }
+    );
     return unsubscribe;
   }, [currentUser]);
 
@@ -34,7 +47,7 @@ const UserListsWidget = ({ id, mediaType, title }) => {
     <>
       <AnimatePresence>
         {showModal && (
-          <Modal mode="box" hideModal={hideModal}>
+          <Modal mode={ModalMode.Box} hideModal={hideModal}>
             <UserListsWidgetModal
               hideModal={hideModal}
               title={title}
@@ -49,17 +62,11 @@ const UserListsWidget = ({ id, mediaType, title }) => {
         className="add-to-user-list-container"
         onClick={() => setShowModal(() => true)}
       >
-        <h3>{lang === "en" ? "Add to list" : "Добавить в список"}</h3>
+        <h3>{lang === Lang.En ? "Add to list" : "Добавить в список"}</h3>
         <UserListIcon />
       </div>
     </>
   );
 };
-
-UserListsWidget.propTypes = {
-  id: PropTypes.string, 
-  mediaType: PropTypes.string,
-  title: PropTypes.string
-}
 
 export default UserListsWidget;

@@ -4,8 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import SingleMovie from "./SingleMovie";
 import Loader from "../Loader";
 import ErrorMessage from "../ErrorMessage";
+import { MoviesListReducerActionTypes } from "../../reducers/moviesListReducer";
 
-const MoviesList = () => {
+const MoviesList: React.FC = () => {
   const {
     moviesFetchLoading,
     moviesFetchError,
@@ -13,24 +14,25 @@ const MoviesList = () => {
     moviesList,
     page,
     totalPages,
-    selectedMovie
+    selectedMovie,
   } = useGlobalContext();
 
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   useLayoutEffect(() => {
-    scrollRef.current?.scrollIntoView({ 
+    scrollRef.current?.scrollIntoView({
       behavior: "smooth",
       block: "center",
-      inline: "start"
+      inline: "start",
     });
-  },[])
+  }, []);
 
-  const setScrollTargetOnCurrent = (id) => {
+  const setScrollTargetOnCurrent = (id: string) => {
     dispatch({
-      type: 'SET_MOVIE_TO_SCROLL', 
-      payload: id
+      type: MoviesListReducerActionTypes.SET_MOVIE_TO_SCROLL,
+      payload: id,
     });
-  }
+  };
 
   const scrollHandler = useCallback(() => {
     if (page < totalPages) {
@@ -39,7 +41,10 @@ const MoviesList = () => {
         document.body.scrollHeight - 100
       ) {
         const nextPage = page + 1;
-        dispatch({ type: "INCREASE_PAGE", payload: nextPage });
+        dispatch({
+          type: MoviesListReducerActionTypes.INCREASE_PAGE,
+          payload: nextPage,
+        });
       }
     }
   }, [dispatch, page, totalPages]);
@@ -73,18 +78,23 @@ const MoviesList = () => {
           if (title.length > 35) {
             title = title.slice(0, 35) + "...";
           }
-          
+
           return (
             <AnimatePresence key={id}>
               {/* div for restore scroll */}
-              <div 
-              onClick={() => {
-                setScrollTargetOnCurrent(`${id}`)
-              }}
-              ref={`${id}` === selectedMovie ? scrollRef : null}
-              className="scroll-wrapper"
+              <div
+                onClick={() => {
+                  setScrollTargetOnCurrent(`${id}`);
+                }}
+                ref={`${id}` === selectedMovie ? scrollRef : null}
+                className="scroll-wrapper"
               >
-                <SingleMovie poster={posterUrl} title={title} id={`${id}`} mediaType={mediaType}/>
+                <SingleMovie
+                  poster={posterUrl}
+                  title={title}
+                  id={`${id}`}
+                  mediaType={mediaType}
+                />
               </div>
             </AnimatePresence>
           );

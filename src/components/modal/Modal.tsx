@@ -1,12 +1,18 @@
-import PropTypes from 'prop-types';
+import { ReactElement } from "react";
 
 import { motion } from "framer-motion";
 
 import CloseModalIcon from "./icons/CloseModalIcon";
+import { ModalMode } from "../../types";
 
-const Modal = ({ children, mode, hideModal }) => {
+type ModalProps = {
+  children: ReactElement;
+  mode: ModalMode;
+  hideModal?: () => void;
+};
 
-  if (mode === "gallery") {
+const Modal: React.FC<ModalProps> = ({ children, mode, hideModal }) => {
+  if (mode === ModalMode.Gallery) {
     return (
       <motion.div
         animate={{ opacity: 1 }}
@@ -19,7 +25,7 @@ const Modal = ({ children, mode, hideModal }) => {
     );
   }
 
-  if (mode === "box") {
+  if (mode === ModalMode.Box) {
     return (
       <motion.div
         animate={{ opacity: 1 }}
@@ -37,7 +43,7 @@ const Modal = ({ children, mode, hideModal }) => {
     );
   }
 
-  if (mode === "overlay") {
+  if (mode === ModalMode.Overlay) {
     return (
       <motion.div
         animate={{ opacity: 1 }}
@@ -55,11 +61,5 @@ const Modal = ({ children, mode, hideModal }) => {
     );
   }
 };
-
-Modal.propTypes = {
-  children: PropTypes.node,
-  mode: PropTypes.string,
-  hideModal: PropTypes.func
-}
 
 export default Modal;

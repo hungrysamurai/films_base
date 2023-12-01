@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-
 import { motion, AnimatePresence } from "framer-motion";
 import { useFetchUserMoviesList } from "../../hooks/useFetchUserMoviesList";
 import { useGlobalContext } from "../../contexts/GlobalContext";
@@ -8,7 +6,15 @@ import SingleMovie from "./SingleMovie";
 import Loader from "../Loader";
 import ErrorMessage from "../ErrorMessage";
 
-const UserMoviesList = ({ currentUserList, listIndex }) => {
+type UserMoviesListProps = {
+  currentUserList: UserListItem[];
+  listIndex: number;
+};
+
+const UserMoviesList: React.FC<UserMoviesListProps> = ({
+  currentUserList,
+  listIndex,
+}) => {
   const { lang } = useGlobalContext();
   const {
     data: moviesFetchList,
@@ -25,6 +31,7 @@ const UserMoviesList = ({ currentUserList, listIndex }) => {
   if (moviesFetchLoading) {
     return <Loader />;
   }
+  console.log(moviesFetchList);
 
   return (
     <>
@@ -52,10 +59,5 @@ const UserMoviesList = ({ currentUserList, listIndex }) => {
     </>
   );
 };
-
-UserMoviesList.propTypes = {
-  currentUserList: PropTypes.array,
-  listIndex: PropTypes.number
-}
 
 export default UserMoviesList;

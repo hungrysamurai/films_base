@@ -1,4 +1,7 @@
-import PropTypes from "prop-types";
+import {
+  UserListReducerAction,
+  UserListReducerActionTypes,
+} from "../../../reducers/userListsReducer";
 
 import {
   removeUserList,
@@ -13,17 +16,30 @@ import EditListIcon from "../icons/EditListIcon";
 import DeleteListIcon from "../icons/DeleteListIcon";
 import CustomInput from "../../CustomInput";
 
-const UserListItem = ({ title, active, dispatch, listIndex }) => {
+type UserListItemProps = {
+  title: string;
+  active: boolean;
+  listIndex: number;
+  dispatch: React.Dispatch<UserListReducerAction>;
+};
+
+const UserListItem: React.FC<UserListItemProps> = ({
+  title,
+  active,
+  dispatch,
+  listIndex,
+}) => {
   const [editTitleInputShow, setEditTitleInputShow] = useState(false);
-  const editTitleInputContainerRef = useRef(null);
+  // const editTitleInputContainerRef = useRef(null);
 
   const hideEditTitleInput = () => {
     setEditTitleInputShow(() => false);
   };
 
-  useOutsideClick(editTitleInputContainerRef, hideEditTitleInput);
+  // console.log(editTitleInputContainerRef);
+  // useOutsideClick(editTitleInputContainerRef, hideEditTitleInput);
 
-  const submitEditListTitle = (inputValue) => {
+  const submitEditListTitle = (inputValue: string) => {
     if (
       inputValue === "" ||
       inputValue.length < 3 ||
@@ -50,7 +66,10 @@ const UserListItem = ({ title, active, dispatch, listIndex }) => {
         <div
           className={`user-list-container ${active && "active"}`}
           onClick={() => {
-            dispatch({ type: "SET_CURRENT_LIST_INDEX", payload: listIndex });
+            dispatch({
+              type: UserListReducerActionTypes.SET_CURRENT_LIST_INDEX,
+              payload: listIndex,
+            });
           }}
         >
           <div className="user-list-title">
@@ -89,13 +108,6 @@ const UserListItem = ({ title, active, dispatch, listIndex }) => {
       )}
     </>
   );
-};
-
-UserListItem.propTypes = {
-  title: PropTypes.string,
-  active: PropTypes.bool,
-  dispatch: PropTypes.func,
-  listIndex: PropTypes.number,
 };
 
 export default UserListItem;

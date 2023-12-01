@@ -1,5 +1,4 @@
-
-import PropTypes from 'prop-types';
+import { UserListReducerAction } from "../../../reducers/userListsReducer";
 
 import { createNewUserList } from "../../../utils/firebase/firebase.utils";
 
@@ -13,12 +12,22 @@ import ErrorMessage from "../../ErrorMessage";
 import UserListItem from "./UserListItem";
 import UserListIcon from "../icons/UserListIcon";
 import AddNewListIcon from "../icons/AddNewListIcon";
+import { Lang } from "../../../types";
 
-const UserLists = ({ userLists, currentListIndex, dispatch }) => {
+type UserListsProps = {
+  userLists: UserList[];
+  currentListIndex: number;
+  dispatch: React.Dispatch<UserListReducerAction>;
+};
+
+const UserLists: React.FC<UserListsProps> = ({
+  userLists,
+  currentListIndex,
+  dispatch,
+}) => {
   const { lang } = useGlobalContext();
 
   const [newListInputShow, setNewListInputShow] = useState(false);
-
 
   const showNewUserListInput = () => {
     setNewListInputShow(() => true);
@@ -28,20 +37,14 @@ const UserLists = ({ userLists, currentListIndex, dispatch }) => {
     setNewListInputShow(() => false);
   };
 
-  const submitNewUserList = (inputValue) => {
-
-    if (
-      inputValue === "" ||
-      inputValue.length < 3 ||
-      inputValue.length > 100
-    ) {
+  const submitNewUserList = (inputValue: string) => {
+    if (inputValue === "" || inputValue.length < 3 || inputValue.length > 100) {
       return;
     }
 
     setNewListInputShow(() => false);
     createNewUserList(inputValue);
   };
-
 
   return (
     <div className="user-lists-container">
@@ -53,7 +56,7 @@ const UserLists = ({ userLists, currentListIndex, dispatch }) => {
       {!userLists.length && (
         <ErrorMessage
           errorMessage={
-            lang === "en"
+            lang === Lang.En
               ? "No list found. Add new list 👇"
               : "Не найдено ни одного списка. Добавить список 👇"
           }
@@ -77,42 +80,36 @@ const UserLists = ({ userLists, currentListIndex, dispatch }) => {
 
       <AnimatePresence>
         {newListInputShow ? (
-          <CustomInput  
-          initialValue=''
-          submit={submitNewUserList}
-          hideCustomInput={hideNewUserListInput}
-          customClass={'user-list-item-input'}
-          placeholder={lang === 'en' ? 'New list title...' : 'Название списка...'}
+          <CustomInput
+            initialValue=""
+            submit={submitNewUserList}
+            hideCustomInput={hideNewUserListInput}
+            customClass={"user-list-item-input"}
+            placeholder={
+              lang === "en" ? "New list title..." : "Название списка..."
+            }
           />
-        )  : 
-        <div className="add-user-list-button">
-        <motion.button
-          onClick={showNewUserListInput}
-          animate={{
-            opacity:1
-          }}
-          initial={{
-            opacity:0
-          }}
-          exit={{
-            opacity: 0
-          }}
-        >
-          <AddNewListIcon active={newListInputShow} />
-        </motion.button>
-      </div>
-        }
+        ) : (
+          <div className="add-user-list-button">
+            <motion.button
+              onClick={showNewUserListInput}
+              animate={{
+                opacity: 1,
+              }}
+              initial={{
+                opacity: 0,
+              }}
+              exit={{
+                opacity: 0,
+              }}
+            >
+              <AddNewListIcon />
+            </motion.button>
+          </div>
+        )}
       </AnimatePresence>
-
-
     </div>
   );
 };
-
-UserLists.propTypes = {
-  userLists: PropTypes.array,
-  currentListIndex: PropTypes.number,
-  dispatch: PropTypes.func
-}
 
 export default UserLists;

@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-
 import { removeFromUserList } from "../../utils/firebase/firebase.utils";
 
 import { motion } from "framer-motion";
@@ -9,8 +7,19 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 import useListenWindowWidth from "../../hooks/useListenWindowWidth";
 
 import DeleteMovieIcon from "./icons/DeleteMovieIcon";
+import { MediaType } from "../../types";
 
-const SingleMovie = ({
+type SingleMovieProps = {
+  title: string;
+  poster: string;
+  id: string;
+  mediaType: MediaType;
+  isDrag?: boolean;
+  removeItemButton?: boolean;
+  listIndex?: number;
+};
+
+const SingleMovie: React.FC<SingleMovieProps> = ({
   title,
   poster,
   id,
@@ -35,7 +44,7 @@ const SingleMovie = ({
       initial={{ opacity: 0 }}
       exit={{ opacity: 0 }}
       whileHover={{
-        scale: currentWindowWidth === 'desktop' ? 1.05 : 1,
+        scale: currentWindowWidth === "desktop" ? 1.05 : 1,
         zIndex: 999,
       }}
       onHoverStart={() =>
@@ -47,7 +56,11 @@ const SingleMovie = ({
       className="movie-container"
     >
       <Link
-        style={{ pointerEvents: isDrag ? "none" : "" }}
+        style={{
+          pointerEvents: isDrag
+            ? ("none" as React.CSSProperties["pointerEvents"])
+            : ("" as React.CSSProperties["pointerEvents"]),
+        }}
         to={`${baseName}${mediaType}/${id}`}
         draggable="false"
       >
@@ -89,7 +102,7 @@ const SingleMovie = ({
           <button
             className="remove-item-button"
             onClick={() => {
-              removeFromUserList(listIndex, id, mediaType);
+              removeFromUserList(listIndex as number, id, mediaType);
             }}
           >
             <DeleteMovieIcon />
@@ -98,15 +111,5 @@ const SingleMovie = ({
     </motion.div>
   );
 };
-
-SingleMovie.propTypes = {
-  title: PropTypes.string,
-  poster: PropTypes.string,
-  id: PropTypes.string,
-  mediaType: PropTypes.string,
-  isDrag: PropTypes.bool,
-  removeItemButton: PropTypes.bool,
-  listIndex: PropTypes.number,
-}
 
 export default SingleMovie;

@@ -1,3 +1,10 @@
+import { MediaType, ModalMode } from "../types";
+import {
+  SingleMovieData,
+  SingleTVData,
+} from "../utils/classes/singleMovieData";
+import { ReactElement } from "react";
+
 import { useParams, useLocation } from "react-router-dom";
 import { useGlobalContext } from "../contexts/GlobalContext";
 import { useUserContext } from "../contexts/UserContext";
@@ -12,23 +19,35 @@ import YoutubeEmbed from "../components/moviePage/Youtubeembed";
 import ErrorMessage from "../components/ErrorMessage";
 import Modal from "../components/modal/Modal";
 import ImagesGalleryModal from "../components/modal/ImagesGalleryModal";
-import UserListsWidget from "../components/moviePage/UserListswidget/UserListsWidget";
+import UserListsWidget from "../components/moviePage/UserListsWidget/UserListsWidget";
 import SimilarMoviesList from "../components/moviesList/SimilarMoviesList";
 
-const MoviePage = () => {
+export enum ModalDirection {
+  Next = "next",
+  Prev = "prev",
+}
+
+export type ImagesGalleryModalState = {
+  show: boolean;
+  imagesArray: ReactElement[];
+  imageIndex: number;
+};
+
+const MoviePage: React.FC = () => {
   const { setCurrentTitle, lang } = useGlobalContext();
   const { currentUser } = useUserContext();
 
   const { id } = useParams();
   const location = useLocation();
 
-  const currentMediaType = location.pathname.split("/")[3];
+  const currentMediaType = location.pathname.split("/")[3] as MediaType;
 
-  const [imagesGalleryModalState, setImagesGalleryModalState] = useState({
-    show: false,
-    imagesArray: [],
-    imageIndex: 0,
-  });
+  const [imagesGalleryModalState, setImagesGalleryModalState] =
+    useState<ImagesGalleryModalState>({
+      show: false,
+      imagesArray: [],
+      imageIndex: 0,
+    });
 
   const control = useAnimation();
 
@@ -40,9 +59,14 @@ const MoviePage = () => {
     imagesError,
     videosError,
     isLoading,
-  } = useFetchSingleMovie(currentMediaType, lang, id);
+  } = useFetchSingleMovie(currentMediaType, lang, id as string);
 
-  const { data: mediaData, description, title, poster } = data || {};
+  const {
+    data: mediaData,
+    description,
+    title,
+    poster,
+  } = (data as SingleMovieData | SingleTVData) || {};
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -54,7 +78,7 @@ const MoviePage = () => {
     } else if (dataError.show) {
       setCurrentTitle(dataError.message);
     } else {
-      setCurrentTitle(title);
+      setCurrentTitle(title as string);
     }
   }, [title, setCurrentTitle, isLoading, lang, dataError]);
 
@@ -64,20 +88,21 @@ const MoviePage = () => {
     });
   }, [imagesGalleryModalState.imageIndex, control]);
 
-  const openModal = (data, imageIndex) => {
+  const openModal = (data: string[], imageIndex: number) => {
     setImagesGalleryModalState(() => {
-      const images = data.map((item, i) => {
+      const images = data.map((item: string, i: number) => {
         return (
           <div className="modal-image-container" key={i}>
             <img src={item} alt="gallery-image" />
           </div>
         );
       });
+
       return { show: true, imagesArray: images, imageIndex };
     });
   };
 
-  const hideModal = (target) => {
+  const hideModal = (target: HTMLDivElement) => {
     if (target.classList.contains("modal-index-controls")) {
       setImagesGalleryModalState((prev) => {
         return {
@@ -88,16 +113,16 @@ const MoviePage = () => {
     }
   };
 
-  const changeModalImage = (direction) => {
-    let nextIndex;
+  const changeModalImage = (direction: ModalDirection) => {
+    let nextIndex: number;
 
-    if (direction === "next") {
+    if (direction === ModalDirection.Next) {
       nextIndex =
         imagesGalleryModalState.imageIndex ===
         imagesGalleryModalState.imagesArray.length - 1
           ? 0
           : imagesGalleryModalState.imageIndex + 1;
-    } else {
+    } else if (direction === ModalDirection.Prev) {
       nextIndex =
         imagesGalleryModalState.imageIndex === 0
           ? imagesGalleryModalState.imagesArray.length - 1
@@ -120,7 +145,7 @@ const MoviePage = () => {
     <section className="section-single-movie">
       <AnimatePresence>
         {imagesGalleryModalState.show && (
-          <Modal mode="gallery">
+          <Modal mode={ModalMode.Gallery}>
             <ImagesGalleryModal
               hideModal={hideModal}
               changeModalImage={changeModalImage}
@@ -159,9 +184,9 @@ const MoviePage = () => {
         <div className="right-col">
           {currentUser && (
             <UserListsWidget
-              id={id}
+              id={id as string}
               mediaType={currentMediaType}
-              title={title}
+              title={title as string}
             />
           )}
 
@@ -201,7 +226,10 @@ const MoviePage = () => {
       </div>
 
       <Suspense fallback={<Loader />}>
-        <SimilarMoviesList itemID={id} itemMediaType={currentMediaType} />
+        <SimilarMoviesList
+          itemID={id as string}
+          itemMediaType={currentMediaType}
+        />
       </Suspense>
     </section>
   );

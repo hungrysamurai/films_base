@@ -16,7 +16,7 @@ export const useFetchUserMoviesList = (
     show: false,
     message: "",
   });
-  const [data, setData] = useState<FetchedMovieData[] | FetchedTVData[]>([]);
+  const [data, setData] = useState<MovieListItem[] | TVListItem[]>([]);
 
   const fetchMoviesList = useCallback(
     async (lang: Lang) => {
@@ -28,7 +28,8 @@ export const useFetchUserMoviesList = (
       });
 
       try {
-        const output: FetchedMovieData[] | FetchedTVData[] = [];
+        const output: MovieListItem[] | TVListItem[] = [];
+
         for (let { id, mediaType } of currentUserList) {
           try {
             const movie: AxiosResponse<FetchedMovieData | FetchedTVData> =

@@ -1,7 +1,9 @@
 import { db } from "../utils/firebase/firebase.utils";
 import { onSnapshot, doc } from "firebase/firestore";
 
-import userListsReducer from "../reducers/userListsReducer";
+import userListsReducer, {
+  UserListReducerActionTypes,
+} from "../reducers/userListsReducer";
 
 import { useEffect, useReducer, useRef, useState } from "react";
 import { useUserContext } from "../contexts/UserContext";
@@ -13,18 +15,20 @@ import UserLists from "../components/profilePage/UserLists/UserLists";
 import UserMoviesList from "../components/moviesList/UserMoviesList";
 import Modal from "../components/modal/Modal.tsx";
 import UserListIcon from "../components/profilePage/icons/UserListIcon";
+import { User } from "firebase/auth";
+import { ModalMode } from "../types.ts";
 
 const usersListsInitialState: UsersListsState = {
   userLists: [],
   currentListIndex: 0,
 };
 
-const ProfilePage = () => {
+const ProfilePage: React.FC = () => {
   const { currentUser } = useUserContext();
   const { setCurrentTitle } = useGlobalContext();
 
   useEffect(() => {
-    setCurrentTitle(currentUser.displayName);
+    setCurrentTitle((currentUser as User).displayName as string);
   }, [currentUser, setCurrentTitle]);
 
   const [userListsState, dispatch] = useReducer(
@@ -41,23 +45,25 @@ const ProfilePage = () => {
   const mounted = useRef(false);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(doc(db, "users", currentUser.uid), (doc) => {
-      if (!doc.data()) return;
+    const unsubscribe = onSnapshot(
+      doc(db, "users", (currentUser as User).uid),
+      (doc) => {
+        if (!doc.data()) return;
 
-      if (!mounted.current) {
-        console.log(doc.data().userLists);
-        dispatch({
-          type: "LOAD_USER_LISTS",
-          payload: doc.data().userLists,
-        });
-        mounted.current = true;
-      } else {
-        dispatch({
-          type: "UPDATE_USER_LISTS",
-          payload: doc.data().userLists,
-        });
+        if (!mounted.current) {
+          dispatch({
+            type: UserListReducerActionTypes.LOAD_USER_LISTS,
+            payload: doc.data()?.userLists,
+          });
+          mounted.current = true;
+        } else {
+          dispatch({
+            type: UserListReducerActionTypes.UPDATE_USER_LISTS,
+            payload: doc.data()?.userLists,
+          });
+        }
       }
-    });
+    );
     return unsubscribe;
   }, [currentUser]);
 
@@ -88,13 +94,13 @@ const ProfilePage = () => {
 
             <AnimatePresence>
               {showModal && (
-                <Modal hideModal={hideModal} mode="overlay">
+                <Modal hideModal={hideModal} mode={ModalMode.Overlay}>
                   <div className="user-lists-modal-inner">
                     <UserLists
                       userLists={userLists}
                       currentListIndex={currentListIndex}
                       dispatch={dispatch}
-                      hideModal={hideModal}
+                      // hideModal={hideModal}
                     />
                   </div>
                 </Modal>

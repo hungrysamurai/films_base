@@ -7,7 +7,7 @@ import MoviesList from "../components/moviesList/MoviesList";
 import { MoviesListMode } from "../types";
 import { MoviesListReducerActionTypes } from "../reducers/moviesListReducer";
 
-const Home = () => {
+const Home: React.FC = () => {
   const { moviesListMode, searchQuery, dispatch, setCurrentTitle } =
     useGlobalContext();
 

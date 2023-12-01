@@ -8,9 +8,9 @@ export type UserListReducerAction =
   | { type: UserListReducerActionTypes.LOAD_USER_LISTS; payload: UserList[] }
   | { type: UserListReducerActionTypes.UPDATE_USER_LISTS; payload: UserList[] }
   | {
-      type: UserListReducerActionTypes.SET_CURRENT_LIST_INDEX;
-      payload: number;
-    };
+    type: UserListReducerActionTypes.SET_CURRENT_LIST_INDEX;
+    payload: number;
+  };
 
 const userListsReducer: React.Reducer<
   UsersListsState,

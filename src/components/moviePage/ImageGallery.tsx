@@ -1,10 +1,16 @@
-import PropTypes from 'prop-types';
-
 import { useState, useEffect, useRef } from "react";
 import { motion, useAnimation } from "framer-motion";
 
-const ImageGallery = ({ openModal, imagesArray }) => {
-  const [galleryRow, setGalleryRow] = useState([]);
+type ImageGalleryProp = {
+  openModal: (data: string[], imageIndex: number) => void;
+  imagesArray: string[];
+};
+
+const ImageGallery: React.FC<ImageGalleryProp> = ({
+  openModal,
+  imagesArray,
+}) => {
+  const [galleryRow, setGalleryRow] = useState<string[]>([]);
   const [totalImagesLoaded, setTotalImagesLoaded] = useState(0);
   const [galleryRowWidth, setGalleryRowWidth] = useState(0);
   const [isDrag, setIsDrag] = useState(false);
@@ -12,7 +18,7 @@ const ImageGallery = ({ openModal, imagesArray }) => {
 
   const animationControl = useAnimation();
 
-  const galleryRowContainerRef = useRef(null);
+  const galleryRowContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setGalleryRow(() => imagesArray);
@@ -25,7 +31,7 @@ const ImageGallery = ({ openModal, imagesArray }) => {
   useEffect(() => {
     if (totalImagesLoaded === galleryRow.length) {
       setGalleryRowWidth(() => {
-        return galleryRowContainerRef.current.scrollWidth;
+        return (galleryRowContainerRef.current as HTMLDivElement).scrollWidth;
       });
 
       if (galleryRowWidth !== 0) {
@@ -43,7 +49,7 @@ const ImageGallery = ({ openModal, imagesArray }) => {
     }
   }, [totalImagesLoaded, galleryRow.length, animationControl, galleryRowWidth]);
 
-  const openImage = (index) => {
+  const openImage = (index: number) => {
     if (totalImagesLoaded === galleryRow.length) {
       openModal(galleryRow, index);
     }
@@ -70,7 +76,11 @@ const ImageGallery = ({ openModal, imagesArray }) => {
               className="gallery-image-container"
               key={i}
               onClick={() => openImage(i)}
-              style={{ pointerEvents: isDrag ? "none" : "" }}
+              style={{
+                pointerEvents: isDrag
+                  ? ("none" as React.CSSProperties["pointerEvents"])
+                  : ("" as React.CSSProperties["pointerEvents"]),
+              }}
             >
               <img
                 src={image}
@@ -95,10 +105,5 @@ const ImageGallery = ({ openModal, imagesArray }) => {
     </div>
   );
 };
-
-ImageGallery.propTypes = {
-  openModal: PropTypes.func, 
-  imagesArray: PropTypes.array
-}
 
 export default ImageGallery;

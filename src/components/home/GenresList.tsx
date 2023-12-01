@@ -4,8 +4,9 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 import { useFetchGenres } from "../../hooks/useFetchGenres";
 
 import ErrorMessage from "../ErrorMessage";
+import { MoviesListReducerActionTypes } from "../../reducers/moviesListReducer";
 
-const GenresList = () => {
+const GenresList: React.FC = () => {
   const { filterGenre, lang, mediaType, dispatch } = useGlobalContext();
 
   const {
@@ -15,20 +16,23 @@ const GenresList = () => {
   } = useFetchGenres(mediaType, lang);
 
   const [genresListWidth, setGenresListWidth] = useState(0);
-  
+
   const control = useAnimation();
-  const genresListContainerRef = useRef(null);
+  const genresListContainerRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
     if (genresListContainerRef.current) {
       setGenresListWidth(() => {
-        return genresListContainerRef.current.scrollWidth;
+        return (genresListContainerRef.current as HTMLUListElement).scrollWidth;
       });
     }
   }, [genresFetchedList, genresListWidth, control]);
 
-  const setAndAnimateActiveGenre = (el, id) => {
-    dispatch({ type: "SET_FILTER_GENRE", payload: `${id}` });
+  const setAndAnimateActiveGenre = (el: HTMLLIElement, id: string) => {
+    dispatch({
+      type: MoviesListReducerActionTypes.SET_FILTER_GENRE,
+      payload: `${id}`,
+    });
 
     control.start({
       x: genresListWidth / 2 - el.offsetLeft - el.scrollWidth,
@@ -52,9 +56,11 @@ const GenresList = () => {
       <div className="genres-list-container">
         <ErrorMessage
           errorMessage={genresFetchError.message}
-          componentMessage={lang === 'en' 
-          ? 'Fail to load genres list' : 
-          'Ошибка при загрузке списка жанров'}
+          componentMessage={
+            lang === "en"
+              ? "Fail to load genres list"
+              : "Ошибка при загрузке списка жанров"
+          }
           showImage={false}
         />
       </div>
@@ -83,7 +89,12 @@ const GenresList = () => {
           return (
             <li
               key={genre.id}
-              onClick={(e) => setAndAnimateActiveGenre(e.target, genre.id)}
+              onClick={(e) =>
+                setAndAnimateActiveGenre(
+                  e.target as HTMLLIElement,
+                  genre.id.toString()
+                )
+              }
               className={filterGenre === `${genre.id}` ? "active" : ""}
             >
               {`${genre.name[0].toUpperCase()}${genre.name.slice(1)}`}

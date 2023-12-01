@@ -141,14 +141,15 @@ declare global {
     totalPages: number;
   }
 
-  type UserState = {
-    currentUser: User | null;
-  };
-
   interface IUserContext {
     currentUser: User | null;
     dispatch: React.Dispatch<UserReducerAction>;
   }
+
+
+  type UserState = {
+    currentUser: User | null;
+  };
 
   type UserListItem = {
     id: string;
@@ -168,4 +169,19 @@ declare global {
   };
 
   type ReactChildrenType = { children?: ReactElement | ReactElement[] };
+
+  type FilterList =
+    { [MovieFilterListTerm.NowPlaying]: string } |
+    { [MovieFilterListTerm.Upcoming]: string } |
+    { [MovieFilterListTerm.Popular]: string } |
+    { [MovieFilterListTerm.TopRated]: string } |
+    { [TVFilterListTerm.OnTheAir]: string } |
+    { [TVFilterListTerm.OnTheAir]: string } |
+    { [TVFilterListTerm.Popular]: string } |
+    { [TVFilterListTerm.TopRated]: string }
+
+
+  type FilterLists = {
+    [key in Lang]: FilterList[]
+  }
 }

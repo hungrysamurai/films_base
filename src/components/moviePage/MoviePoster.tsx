@@ -1,9 +1,11 @@
-import PropTypes from 'prop-types';
-
 import { motion } from "framer-motion";
 import { useState } from "react";
 
-const MoviePoster = ({ image }) => {
+type MoviePosterProps = {
+  image: string;
+};
+
+const MoviePoster: React.FC<MoviePosterProps> = ({ image }) => {
   const [imageLoading, setImageLoading] = useState(true);
 
   const imageLoaded = () => {
@@ -38,9 +40,5 @@ const MoviePoster = ({ image }) => {
     </div>
   );
 };
-
-MoviePoster.propTypes = {
-  image: PropTypes.string
-}
 
 export default MoviePoster;

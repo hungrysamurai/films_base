@@ -1,8 +1,16 @@
-import PropTypes from 'prop-types';
+import { AnimationControls } from "framer-motion";
+import { ImagesGalleryModalState, ModalDirection } from "../../pages/MoviePage";
 
 import { motion } from "framer-motion";
 
-const ImagesGalleryModal = ({
+type ImagesGalleryModalProps = {
+  hideModal: (target: HTMLDivElement) => void;
+  changeModalImage: (direction: ModalDirection) => void;
+  control: AnimationControls;
+  modal: ImagesGalleryModalState;
+};
+
+const ImagesGalleryModal: React.FC<ImagesGalleryModalProps> = ({
   hideModal,
   changeModalImage,
   control,
@@ -12,12 +20,12 @@ const ImagesGalleryModal = ({
     <>
       <div
         className="modal-index-controls"
-        onClick={(e) => hideModal(e.target)}
+        onClick={(e) => hideModal(e.target as HTMLDivElement)}
       >
         <div
           className="prev-btn"
           onClick={() => {
-            changeModalImage("prev");
+            changeModalImage(ModalDirection.Prev);
           }}
         >
           <svg
@@ -36,7 +44,7 @@ const ImagesGalleryModal = ({
         <div
           className="next-btn"
           onClick={() => {
-            changeModalImage("next");
+            changeModalImage(ModalDirection.Next);
           }}
         >
           <svg
@@ -70,12 +78,5 @@ const ImagesGalleryModal = ({
     </>
   );
 };
-
-ImagesGalleryModal.propTypes = {
-  hideModal: PropTypes.func,
-  changeModalImage: PropTypes.func,
-  control: PropTypes.object,
-  modal: PropTypes.object
-}
 
 export default ImagesGalleryModal;

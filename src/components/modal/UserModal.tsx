@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import { ChangeEvent, MutableRefObject } from "react";
 
 import {
   updateUserPhoto,
@@ -14,34 +14,34 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 import { AnimatePresence, motion } from "framer-motion";
 
 import ProfilePicPlaceholder from "../header/icons/ProfilePicPlaceholderIcon";
-import CustomInput from '../CustomInput'
+import CustomInput from "../CustomInput";
+import { Lang } from "../../types";
 
-const UserModal = ({ hideModal }) => {
+type UserModalProps = {
+  hideModal: () => void;
+};
+
+const UserModal: React.FC<UserModalProps> = ({ hideModal }) => {
   const { currentUser } = useUserContext();
-  const { baseName, lang} = useGlobalContext();
+  const { baseName, lang } = useGlobalContext();
 
   const navigate = useNavigate();
 
   const [newUserNameInputShow, setNewUserNameInputShow] = useState(false);
 
-  const modalInnerRef = useRef(null);
+  const modalInnerRef = useRef<HTMLDivElement>(null);
 
   const navigateProfile = () => {
     hideModal();
     navigate(`${baseName}profile`);
   };
 
-
   const hideUserNameInput = () => {
     setNewUserNameInputShow(() => false);
   };
 
-  const submitNewUserName = (inputValue) => {
-    if (
-      inputValue === "" ||
-      inputValue.length < 3 ||
-      inputValue.length > 100
-    ) {
+  const submitNewUserName = (inputValue: string) => {
+    if (inputValue === "" || inputValue.length < 3 || inputValue.length > 100) {
       return;
     }
 
@@ -49,7 +49,7 @@ const UserModal = ({ hideModal }) => {
     updateUserLogin(inputValue);
   };
 
-  const changeUserPic = (file) => {
+  const changeUserPic = (file: File) => {
     updateUserPhoto(file);
     hideModal();
   };
@@ -60,7 +60,7 @@ const UserModal = ({ hideModal }) => {
     signOutUser();
   };
 
-  useOutsideClick(modalInnerRef, hideModal);
+  useOutsideClick(modalInnerRef as MutableRefObject<HTMLDivElement>, hideModal);
 
   return (
     <div className="user-modal-inner" ref={modalInnerRef}>
@@ -74,19 +74,20 @@ const UserModal = ({ hideModal }) => {
 
       <AnimatePresence>
         <div className="user-name-container">
-          {newUserNameInputShow
-          ? <CustomInput
+          {newUserNameInputShow ? (
+            <CustomInput
               initialValue={currentUser?.displayName}
               submit={submitNewUserName}
               hideCustomInput={hideUserNameInput}
-              customClass={'user-name-input'}
-          /> : (
+              customClass={"user-name-input"}
+            />
+          ) : (
             <motion.h3
               animate={{
                 opacity: 1,
               }}
               initial={{
-                opacity:0,
+                opacity: 0,
               }}
               exit={{
                 opacity: 0,
@@ -101,36 +102,37 @@ const UserModal = ({ hideModal }) => {
       <input
         type="file"
         id="file"
-        onChange={(e) => changeUserPic(e.target.files[0])}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+          if (e.target.files) {
+            changeUserPic(e.target.files[0]);
+          }
+        }}
         hidden
       />
       <ul className="profile-actions-container">
         <li>
           <button onClick={navigateProfile}>
-            {lang === 'en' ? 'Profile page' : 'Профиль'}
+            {lang === Lang.En ? "Profile page" : "Профиль"}
           </button>
         </li>
         <li>
           <button onClick={() => setNewUserNameInputShow(() => true)}>
-             {lang === 'en' ? 'Change username' : 'Изменить логин'}
-            </button>
+            {lang === Lang.En ? "Change username" : "Изменить логин"}
+          </button>
         </li>
         <li>
           <label htmlFor="file">
-            {lang === 'en' ? 'Change profile pic' : 'Изменить фото'}</label>
+            {lang === Lang.En ? "Change profile pic" : "Изменить фото"}
+          </label>
         </li>
         <li>
           <button onClick={logout}>
-            {lang === 'en' ? 'Sign-Out' : 'Выйти'}
+            {lang === Lang.En ? "Sign-Out" : "Выйти"}
           </button>
         </li>
       </ul>
     </div>
   );
 };
-
-UserModal.propTypes = {
-  hideModal: PropTypes.func
-}
 
 export default UserModal;

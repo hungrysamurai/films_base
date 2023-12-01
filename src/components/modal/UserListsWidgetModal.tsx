@@ -1,72 +1,90 @@
-import PropTypes from 'prop-types';
+import {
+  addToUserList,
+  removeFromUserList,
+} from "../../utils/firebase/firebase.utils";
 
-import { addToUserList, removeFromUserList } from "../../utils/firebase/firebase.utils";
-
-import { useRef } from "react";
+import { useRef, MutableRefObject } from "react";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
 import UserListIconAdd from "../moviePage/UserListsWidget/icons/UserListIconAdd";
 import UserListIconRemove from "../moviePage/UserListsWidget/icons/UserListIconRemove";
 
-const UserListsWidgetModal = ({hideModal, title, userLists, currentMovieData}) => {
+type UserListsWidgetModalProps = {
+  hideModal: () => void;
+  title: string;
+  userLists: UserList[];
+  currentMovieData: UserListItem;
+};
 
-  const {lang} = useGlobalContext();
+const UserListsWidgetModal: React.FC<UserListsWidgetModalProps> = ({
+  hideModal,
+  title,
+  userLists,
+  currentMovieData,
+}) => {
+  const { lang } = useGlobalContext();
 
-  const {
-    id: currentItemID,
-    mediaType: currentItemMediaType
-  } = currentMovieData;
+  const { id: currentItemID, mediaType: currentItemMediaType } =
+    currentMovieData;
 
-  const modalInnerRef = useRef(null);
+  const modalInnerRef = useRef<HTMLDivElement>(null);
 
-  useOutsideClick(modalInnerRef, hideModal);
+  useOutsideClick(modalInnerRef as MutableRefObject<HTMLDivElement>, hideModal);
 
- return (
-     <div className="user-lists-widget-inner" ref={modalInnerRef}>
-      {lang === 'en' ? 
-      (<h3>Add {`«${title}»`} to list...</h3>) : 
-      (<h3>Добавить {`«${title}»`} в список...</h3>)}
-       
-       <div className="user-lists-widget-container">
-         <ul className="user-lists-widget">
+  return (
+    <div className="user-lists-widget-inner" ref={modalInnerRef}>
+      {lang === "en" ? (
+        <h3>Add {`«${title}»`} to list...</h3>
+      ) : (
+        <h3>Добавить {`«${title}»`} в список...</h3>
+      )}
 
-          {userLists.map(({data: listItems, title: listTitle}, listIndex) => {
+      <div className="user-lists-widget-container">
+        <ul className="user-lists-widget">
+          {userLists.map(({ data: listItems, title: listTitle }, listIndex) => {
+            const itemInCurrentList = listItems.some((item) => {
+              return item.id === currentItemID;
+            });
 
-           const itemInCurrentList = listItems.some(item => {
-            return item.id === currentItemID
-           });
+            return (
+              <li className="user-list-item" key={listIndex}>
+                <div className="user-list-title">
+                  <span>{listTitle}</span>
+                </div>
 
-           return (
-            <li className="user-list-item" key={listIndex}>
-             <div className="user-list-title">
-             <span>{listTitle}</span>
-             </div>
-
-              {itemInCurrentList ? 
-               <button onClick={() => removeFromUserList(listIndex, currentItemID, currentItemMediaType)}>
-                 <UserListIconRemove/>
-               </button> :
-
-                 <button onClick={() => addToUserList(listIndex, currentItemID, currentItemMediaType)}>
-                 <UserListIconAdd/>
-                </button>
-              }
-            </li>
-           )
+                {itemInCurrentList ? (
+                  <button
+                    onClick={() =>
+                      removeFromUserList(
+                        listIndex,
+                        currentItemID,
+                        currentItemMediaType
+                      )
+                    }
+                  >
+                    <UserListIconRemove />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() =>
+                      addToUserList(
+                        listIndex,
+                        currentItemID,
+                        currentItemMediaType
+                      )
+                    }
+                  >
+                    <UserListIconAdd />
+                  </button>
+                )}
+              </li>
+            );
           })}
-        
-         </ul>
-       </div>
-     </div>
-)
-}
-
-UserListsWidgetModal.propTypes = {
-  hideModal: PropTypes.func,
-  title:PropTypes.string,
-  userLists: PropTypes.array,
-  currentMovieData: PropTypes.object
-}
+        </ul>
+      </div>
+    </div>
+  );
+};
 
 export default UserListsWidgetModal;

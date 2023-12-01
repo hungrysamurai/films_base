@@ -1,4 +1,4 @@
-const DeleteMovieIcon = () => {
+const DeleteMovieIcon: React.FC = () => {
   return (
     <svg
       width="22"
