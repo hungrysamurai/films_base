@@ -41,7 +41,7 @@ const SimilarMoviesList: React.FC<SimilarMoviesListProps> = ({
         x: 0,
       });
     }
-  }, [moviesFetchList, animationControl, elementWidth]);
+  }, [moviesFetchList, animationControl]);
 
   if (moviesFetchError.show) {
     return (

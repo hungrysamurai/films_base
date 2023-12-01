@@ -8,7 +8,7 @@ import {
 } from "../../utils/firebase/firebase.utils";
 
 import useOutsideClick from "../../hooks/useOutsideClick";
-import { useRef, useState } from "react";
+import { useRef, useState, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../contexts/UserContext";
 import { useGlobalContext } from "../../contexts/GlobalContext";
@@ -21,7 +21,7 @@ type UserModalProps = {
   hideModal: () => void;
 };
 
-const UserModal: React.FC<UserModalProps> = ({ hideModal }) => {
+const UserModal: React.FC<UserModalProps> = memo(({ hideModal }) => {
   const { currentUser } = useUserContext();
   const { baseName, lang } = useGlobalContext();
 
@@ -133,6 +133,6 @@ const UserModal: React.FC<UserModalProps> = ({ hideModal }) => {
       </ul>
     </div>
   );
-};
+});
 
 export default UserModal;

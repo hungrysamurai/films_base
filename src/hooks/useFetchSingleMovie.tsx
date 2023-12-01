@@ -9,7 +9,7 @@ import { Lang, MediaType } from "../types";
 
 const apiBase = import.meta.env.VITE_TMDB_API_BASE;
 const apiKey = import.meta.env.VITE_TMDB_API_KEY;
-const imagesUrlBase = `${import.meta.env.VITE_IMAGES_BASE_URL}w1280`;
+const imagesUrlBase = `${import.meta.env.VITE_IMAGES_BASE_URL}w780`;
 
 export const useFetchSingleMovie = (
   mediaType: MediaType,
