@@ -31,7 +31,6 @@ const UserMoviesList: React.FC<UserMoviesListProps> = ({
   if (moviesFetchLoading) {
     return <Loader />;
   }
-  console.log(moviesFetchList);
 
   return (
     <>

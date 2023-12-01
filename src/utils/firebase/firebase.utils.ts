@@ -211,7 +211,6 @@ export const removeFromUserList = async (
   id: string,
   mediaType: MediaType
 ) => {
-  console.log(listIndex, id, mediaType);
   const userListsRef = doc(db, "users", (auth.currentUser as User).uid);
   const userListsSnap: UserList[] = (await getDoc(userListsRef)).data()
     ?.userLists;
@@ -223,8 +222,6 @@ export const removeFromUserList = async (
       } else return true;
     }
   );
-
-  console.log(userListsSnap);
 
   await setDoc(userListsRef, {
     userLists: userListsSnap,
