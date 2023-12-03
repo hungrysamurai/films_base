@@ -6,7 +6,7 @@
   height: 100vh;
   overflow: hidden;
   z-index: 3;
-  backdrop-filter: blur(1rem);
+  backdrop-filter: blur(2rem);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -293,6 +293,7 @@
     align-items: flex-start;
     justify-content: center;
     scrollbar-width: none;
+    backdrop-filter: inherit;
 
     &::-webkit-scrollbar {
       display: none;
@@ -325,14 +326,14 @@
         margin-left: 0.1rem;
 
         svg {
-          width:1.25rem;
+          width: 1.25rem;
         }
       }
 
       .next-btn {
         margin-right: 0.1rem;
 
-      svg {
+        svg {
           width: 1.25rem;
         }
       }
