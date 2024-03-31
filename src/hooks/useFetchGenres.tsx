@@ -21,12 +21,13 @@ export const useFetchGenres = (mediaType: MediaType, lang: Lang) => {
         const { data }: AxiosResponse<FetchedGenresMovieList> = await axios(
           `${apiBase}/genre/${mediaType}/list?${apiKey}&language=${lang}`
         );
-
         const genres: GenreData[] = [];
+
         const all: GenreData = {
-          id: "all",
+          id: "",
           name: lang === "ru" ? "Все" : "All",
         };
+
         genres.push(all);
         if (data.genres) {
           data.genres.forEach((g) => genres.push(g as GenreData));

@@ -51,11 +51,14 @@ export const useFetchMoviesList = (
       });
 
       try {
+        const genresParam =
+          filterGenre !== "" ? `&with_genres=${filterGenre}` : "";
+
         let response: AxiosResponse<FetchedListData>;
 
         if (moviesListMode === "home") {
           response = await axios(
-            `${apiBase}/discover/${mediaType}?&page=${currentPage}&language=${lang}&with_genres=${filterGenre}&${filterListQueries[mediaType][filterList]}&${apiKey}`
+            `${apiBase}/discover/${mediaType}?page=${currentPage}&language=${lang}${genresParam}&${filterListQueries[mediaType][filterList]}&${apiKey}`
           );
         } else {
           response = await axios(

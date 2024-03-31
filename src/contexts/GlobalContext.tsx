@@ -11,7 +11,7 @@ const initialState: MoviesListState = {
   lang: getLang(),
   mediaType: MediaType.Movie,
   filterList: MovieFilterListTerm.TopRated,
-  filterGenre: "all",
+  filterGenre: "",
   page: 1,
   totalPages: 0,
   moviesList: [],
