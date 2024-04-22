@@ -2,7 +2,11 @@ import { useState, useCallback, useEffect } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { Lang, MediaType } from "../types";
 
-const apiBase: string = import.meta.env.VITE_TMDB_API_BASE;
+const apiBase: string =
+  import.meta.env.MODE === "development"
+    ? import.meta.env.VITE_PROXY_DATA_URL_DEV
+    : import.meta.env.VITE_PROXY_DATA_URL_PROD;
+
 const apiKey: string = import.meta.env.VITE_TMDB_API_KEY;
 
 export const useFetchGenres = (mediaType: MediaType, lang: Lang) => {

@@ -15,9 +15,15 @@ import {
   MoviesListReducerActionTypes,
 } from "../reducers/moviesListReducer";
 
-const apiBase: string = import.meta.env.VITE_TMDB_API_BASE;
+const apiBase: string =
+  import.meta.env.MODE === "development"
+    ? import.meta.env.VITE_PROXY_DATA_URL_DEV
+    : import.meta.env.VITE_PROXY_DATA_URL_PROD;
 const apiKey: string = import.meta.env.VITE_TMDB_API_KEY;
-const imagesUrlBase: string = `${import.meta.env.VITE_IMAGES_BASE_URL}w300`;
+const imagesUrlBase: string =
+  import.meta.env.MODE === "development"
+    ? `${import.meta.env.VITE_PROXY_DATA_FILE_URL_DEV}w300`
+    : `${import.meta.env.VITE_PROXY_DATA_FILE_URL_PROD}w300`;
 
 export const useFetchMoviesList = (
   mediaType: MediaType,
