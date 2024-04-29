@@ -6,7 +6,7 @@ export default defineConfig({
   base: "/projects/films_base/",
   plugins: [react()],
   build: {
-    outDir: "./dist",
+    outDir: "build",
     emptyOutDir: true,
   },
 });
