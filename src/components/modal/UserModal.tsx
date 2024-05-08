@@ -55,13 +55,13 @@ const UserModal: React.FC<UserModalProps> = memo(({ hideModal }) => {
     }
 
     dispatch(updateUserDisplayName(inputValue));
+
     setNewUserNameInputShow(() => false);
     updateUserLogin(inputValue);
   };
 
-  const changeUserPic = (file: File) => {
-    updateUserPhoto(file);
-    hideModal();
+  const changeUserPic = async (file: File) => {
+    await updateUserPhoto(file, dispatch);
   };
 
   const logoutAndRemoveUserFromStore = () => {

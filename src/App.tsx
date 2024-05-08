@@ -21,7 +21,6 @@ import {
   createUserDocumentFromAuth,
   onAuthStateChangedListener,
 } from "./utils/firebase/firebase.utils";
-import { getAuth, updateProfile } from "firebase/auth";
 
 function App() {
   const { lang } = useGlobalContext();
@@ -29,6 +28,7 @@ function App() {
   const dispatch = useAppDispatch();
   const currentUser = useAppSelector(getCurrentUser);
 
+  // Move to custom hook
   useEffect(() => {
     const unsubscribe = onAuthStateChangedListener((user) => {
       if (user) {

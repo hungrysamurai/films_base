@@ -34,6 +34,10 @@ import {
 import { imageSizeReducer } from "../imageSizeReducer";
 import { MediaType } from "../../types";
 
+
+import { updateUserPhotoURL } from "../../store/slices/authSlice";
+import { AppDispatch } from "../../store/store";
+
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: "filmsbase-bea7b.firebaseapp.com",
@@ -110,7 +114,7 @@ export const createUserDocumentFromAuth = async (
 
 export const signOutUser = async () => await signOut(auth);
 
-export const updateUserPhoto = async (file: File) => {
+export const updateUserPhoto = async (file: File, dispatch: AppDispatch) => {
   const fileName = new Date().getTime() + file.name;
   const storageRef = ref(storage, fileName);
 
@@ -131,6 +135,8 @@ export const updateUserPhoto = async (file: File) => {
           updateProfile(auth.currentUser as User, {
             photoURL,
           });
+
+          dispatch(updateUserPhotoURL(photoURL))
         });
       });
     });
