@@ -11,23 +11,24 @@ import AuthPage from "./pages/AuthPage";
 import ProfilePage from "./pages/ProfilePage";
 import ErrorMessage from "./components/ErrorMessage";
 import { Lang } from "./types";
+import getBaseURL from "./utils/getBaseURL";
 
 function App() {
-  const { baseName, lang } = useGlobalContext();
+  const { lang } = useGlobalContext();
   const { currentUser } = useUserContext();
 
   const ProtectedRoute = ({ children }: ReactChildrenType) => {
-    return currentUser ? children : <Navigate to={`${baseName}auth`} />;
+    return currentUser ? children : <Navigate to={getBaseURL("auth")} />;
   };
 
   const PublicRoute = ({ children }: ReactChildrenType) => {
-    return currentUser ? <Navigate to={`${baseName}profile`} /> : children;
+    return currentUser ? <Navigate to={getBaseURL("profile")} /> : children;
   };
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path={baseName} element={<PageWrapper />}>
+        <Route path={getBaseURL()} element={<PageWrapper />}>
           <Route index element={<Home />} />
           <Route path="movie/:id" element={<MoviePage />} />
           <Route path="tv/:id" element={<MoviePage />} />

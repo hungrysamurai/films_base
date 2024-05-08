@@ -21,6 +21,7 @@ import Modal from "../components/modal/Modal";
 import ImagesGalleryModal from "../components/modal/ImagesGalleryModal";
 import UserListsWidget from "../components/moviePage/UserListsWidget/UserListsWidget";
 import SimilarMoviesList from "../components/moviesList/SimilarMoviesList";
+import getBaseURL from "../utils/getBaseURL";
 
 export enum ModalDirection {
   Next = "next",
@@ -40,7 +41,10 @@ const MoviePage: React.FC = () => {
   const { id } = useParams();
   const location = useLocation();
 
-  const currentMediaType = location.pathname.split("/")[3] as MediaType;
+  // Set media type of item based on provided URL
+  const currentMediaType = location.pathname
+    .substring(getBaseURL().length)
+    .split("/")[0] as MediaType;
 
   const [imagesGalleryModalState, setImagesGalleryModalState] =
     useState<ImagesGalleryModalState>({

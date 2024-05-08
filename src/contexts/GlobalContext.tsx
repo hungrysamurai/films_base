@@ -22,7 +22,6 @@ const initialState: MoviesListState = {
 };
 
 const AppContext = createContext<IGlobalContext>({
-  baseName: "",
   currentTitle: "",
   dispatch: () => {},
   filterGenre: "",
@@ -44,7 +43,6 @@ const AppContext = createContext<IGlobalContext>({
 });
 
 const AppProvider = ({ children }: ReactChildrenType) => {
-  const baseName = import.meta.env.BASE_URL;
   const [currentTitle, setCurrentTitle] = useState<string>("");
   const [moviesListState, dispatch] = useReducer(
     moviesListReducer,
@@ -79,7 +77,6 @@ const AppProvider = ({ children }: ReactChildrenType) => {
   return (
     <AppContext.Provider
       value={{
-        baseName,
         lang,
         moviesFetchError,
         moviesFetchLoading,

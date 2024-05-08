@@ -13,6 +13,7 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 
 import FormInput from "./FormInput";
 import Button from "./Button";
+import getBaseURL from "../../utils/getBaseURL";
 
 type SignInFormFields = {
   email: string;
@@ -25,7 +26,7 @@ const defaultSignInFormFields: SignInFormFields = {
 };
 
 const SignInForm: React.FC = () => {
-  const { baseName, lang } = useGlobalContext();
+  const { lang } = useGlobalContext();
 
   const [signInFormFields, setSignInFormFields] = useState<SignInFormFields>(
     defaultSignInFormFields
@@ -93,7 +94,7 @@ const SignInForm: React.FC = () => {
         <Button
           onClick={logGoogleUser}
           type="button"
-          imgPath={`${baseName}assets/images/icons/icon-google.svg`}
+          imgPath={getBaseURL("assets/images/icons/icon-google.svg")}
         />
       </div>
     </motion.form>

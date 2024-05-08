@@ -123,7 +123,6 @@ declare global {
   };
 
   interface IGlobalContext {
-    baseName: string;
     currentTitle: string;
     dispatch: React.Dispatch<MoviesListReducerAction>;
     filterGenre: string;

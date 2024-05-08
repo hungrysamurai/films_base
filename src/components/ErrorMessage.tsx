@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useGlobalContext } from "../contexts/GlobalContext";
+import getBaseURL from "../utils/getBaseURL";
 
 type ErrorMessageProps = {
   errorMessage: string;
@@ -14,8 +14,6 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({
   showImage,
   fullHeight,
 }) => {
-  const { baseName } = useGlobalContext();
-
   return (
     <div
       className={`error-message-container ${fullHeight ? "full-height" : ""}`}
@@ -29,7 +27,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({
             repeat: Infinity,
             duration: 4,
           }}
-          src={`${baseName}assets/images/void.png`}
+          src={getBaseURL("assets/images/void.png")}
           alt="error"
         />
       )}

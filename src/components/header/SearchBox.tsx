@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 
 import SearchIcon from "./icons/SearchIcon";
 import { Lang } from "../../types";
+import getBaseURL from "../../utils/getBaseURL";
 
 const SearchBox: React.FC = () => {
-  const { mediaType, lang, baseName } = useGlobalContext();
+  const { mediaType, lang } = useGlobalContext();
 
   const text =
     lang === Lang.En
@@ -19,7 +20,7 @@ const SearchBox: React.FC = () => {
 
   const search = () => {
     if (searchTerm) {
-      navigate(`${baseName}search/${searchTerm}`);
+      navigate(getBaseURL(`search/${searchTerm}`));
       setSearchTerm("");
     }
   };

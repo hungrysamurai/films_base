@@ -3,11 +3,11 @@ import { removeFromUserList } from "../../utils/firebase/firebase.utils";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useGlobalContext } from "../../contexts/GlobalContext";
 import useListenWindowWidth from "../../hooks/useListenWindowWidth";
 
 import DeleteMovieIcon from "./icons/DeleteMovieIcon";
 import { MediaType } from "../../types";
+import getBaseURL from "../../utils/getBaseURL";
 
 type SingleMovieProps = {
   title: string;
@@ -32,7 +32,6 @@ const SingleMovie: React.FC<SingleMovieProps> = ({
   const [showDeleteButton, setShowDeleteButton] = useState(false);
   const currentWindowWidth = useListenWindowWidth();
 
-  const { baseName } = useGlobalContext();
   const imageLoaded = () => {
     setImageLoading(false);
   };
@@ -61,7 +60,7 @@ const SingleMovie: React.FC<SingleMovieProps> = ({
             ? ("none" as React.CSSProperties["pointerEvents"])
             : ("" as React.CSSProperties["pointerEvents"]),
         }}
-        to={`${baseName}${mediaType}/${id}`}
+        to={getBaseURL(`${mediaType}/${id}`)}
         draggable="false"
       >
         <div className="movie-poster-container">

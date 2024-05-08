@@ -16,6 +16,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import ProfilePicPlaceholder from "../header/icons/ProfilePicPlaceholderIcon";
 import CustomInput from "../CustomInput";
+import getBaseURL from "../../utils/getBaseURL";
 
 type UserModalProps = {
   hideModal: () => void;
@@ -23,7 +24,7 @@ type UserModalProps = {
 
 const UserModal: React.FC<UserModalProps> = memo(({ hideModal }) => {
   const { currentUser } = useUserContext();
-  const { baseName, lang } = useGlobalContext();
+  const { lang } = useGlobalContext();
 
   const navigate = useNavigate();
 
@@ -33,7 +34,7 @@ const UserModal: React.FC<UserModalProps> = memo(({ hideModal }) => {
 
   const navigateProfile = () => {
     hideModal();
-    navigate(`${baseName}profile`);
+    navigate(getBaseURL("profile"));
   };
 
   const hideUserNameInput = () => {
@@ -56,7 +57,7 @@ const UserModal: React.FC<UserModalProps> = memo(({ hideModal }) => {
 
   const logout = () => {
     hideModal();
-    navigate(baseName);
+    navigate(getBaseURL());
     signOutUser();
   };
 
