@@ -7,7 +7,7 @@ import { ReactElement } from "react";
 
 import { useParams, useLocation } from "react-router-dom";
 import { useGlobalContext } from "../contexts/GlobalContext";
-import { useUserContext } from "../contexts/UserContext";
+
 import { useEffect, useState, Suspense } from "react";
 import { useAnimation, AnimatePresence } from "framer-motion";
 import { useFetchSingleMovie } from "../hooks/useFetchSingleMovie";
@@ -23,6 +23,9 @@ import UserListsWidget from "../components/moviePage/UserListsWidget/UserListsWi
 import SimilarMoviesList from "../components/moviesList/SimilarMoviesList";
 import getBaseURL from "../utils/getBaseURL";
 
+import { useAppSelector } from "../store/hooks";
+import { getCurrentUser } from "../store/slices/authSlice";
+
 export enum ModalDirection {
   Next = "next",
   Prev = "prev",
@@ -36,7 +39,7 @@ export type ImagesGalleryModalState = {
 
 const MoviePage: React.FC = () => {
   const { setCurrentTitle, lang } = useGlobalContext();
-  const { currentUser } = useUserContext();
+  const currentUser = useAppSelector(getCurrentUser);
 
   const { id } = useParams();
   const location = useLocation();

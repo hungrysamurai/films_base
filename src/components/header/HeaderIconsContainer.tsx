@@ -1,7 +1,6 @@
 import { ColorTheme, Lang, ModalMode } from "../../types";
 
 import { useGlobalContext } from "../../contexts/GlobalContext";
-import { useUserContext } from "../../contexts/UserContext";
 
 import { Link } from "react-router-dom";
 
@@ -20,9 +19,13 @@ import LangEnIcon from "./icons/LangEnIcon";
 import LangRuIcon from "./icons/LangRuIcon";
 import { MoviesListReducerActionTypes } from "../../reducers/moviesListReducer";
 
+import { useAppSelector } from "../../store/hooks.ts";
+import { getCurrentUser } from "../../store/slices/authSlice.ts";
+
 const HeaderIconsContainer = () => {
   const { lang, dispatch } = useGlobalContext();
-  const { currentUser } = useUserContext();
+
+  const currentUser = useAppSelector(getCurrentUser);
 
   const [showModal, setShowModal] = useState(false);
   const [theme, setTheme] = useState(() => getTheme());

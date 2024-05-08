@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host --base=/projects/films_base/",
+    "dev": "vite --host --base=/",
     "build": "vite build --base=/",
     "deploy": "vite build --outDir ../../server/dist/public/projects/films_base --base=/projects/films_base/",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",

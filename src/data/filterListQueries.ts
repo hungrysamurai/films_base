@@ -1,4 +1,4 @@
-import { getFormattedDay } from "./getFormattedDay";
+import { getFormattedDay } from "../utils/getFormattedDay";
 import { MediaType, MovieFilterListTerm, TVFilterListTerm } from "../types";
 
 export const filterListQueries: FilterListQueries = {

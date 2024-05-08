@@ -10,7 +10,6 @@ import {
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useRef, useState, memo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUserContext } from "../../contexts/UserContext";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -18,13 +17,22 @@ import ProfilePicPlaceholder from "../header/icons/ProfilePicPlaceholderIcon";
 import CustomInput from "../CustomInput";
 import getBaseURL from "../../utils/getBaseURL";
 
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import {
+  getCurrentUser,
+  logout,
+  updateUserDisplayName,
+} from "../../store/slices/authSlice";
+
 type UserModalProps = {
   hideModal: () => void;
 };
 
 const UserModal: React.FC<UserModalProps> = memo(({ hideModal }) => {
-  const { currentUser } = useUserContext();
   const { lang } = useGlobalContext();
+
+  const dispatch = useAppDispatch();
+  const currentUser = useAppSelector(getCurrentUser);
 
   const navigate = useNavigate();
 
@@ -46,7 +54,8 @@ const UserModal: React.FC<UserModalProps> = memo(({ hideModal }) => {
       return;
     }
 
-    hideModal();
+    dispatch(updateUserDisplayName(inputValue));
+    setNewUserNameInputShow(() => false);
     updateUserLogin(inputValue);
   };
 
@@ -55,8 +64,9 @@ const UserModal: React.FC<UserModalProps> = memo(({ hideModal }) => {
     hideModal();
   };
 
-  const logout = () => {
+  const logoutAndRemoveUserFromStore = () => {
     hideModal();
+    dispatch(logout());
     navigate(getBaseURL());
     signOutUser();
   };
@@ -127,7 +137,7 @@ const UserModal: React.FC<UserModalProps> = memo(({ hideModal }) => {
           </label>
         </li>
         <li>
-          <button onClick={logout}>
+          <button onClick={logoutAndRemoveUserFromStore}>
             {lang === Lang.En ? "Sign-Out" : "Выйти"}
           </button>
         </li>

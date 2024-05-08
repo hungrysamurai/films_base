@@ -40,6 +40,11 @@ const SignInForm: React.FC = () => {
     try {
       await signInAuthUserWithEmailAndPassword(email, password);
     } catch (err) {
+      alert(
+        lang === Lang.En
+          ? "No user found with provided email!"
+          : "Пользователь не найден!!"
+      );
       console.log("handleSignInSubmit error:");
       console.log(err);
     }

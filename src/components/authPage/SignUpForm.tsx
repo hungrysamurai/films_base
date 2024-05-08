@@ -13,6 +13,8 @@ import { motion } from "framer-motion";
 
 import FormInput from "./FormInput.tsx";
 import Button from "./Button";
+import { useAppDispatch } from "../../store/hooks.ts";
+import { updateUserDisplayName } from "../../store/slices/authSlice.ts";
 
 type SignUpFormFields = {
   displayName: string;
@@ -29,7 +31,9 @@ const defaultSignUpFormFields: SignUpFormFields = {
 };
 
 const SignUpForm: React.FC = () => {
-  const { setCurrentTitle, lang } = useGlobalContext();
+  const { lang } = useGlobalContext();
+
+  const dispatch = useAppDispatch();
 
   const [signUpFormFields, setSignUpFormFields] = useState<SignUpFormFields>(
     defaultSignUpFormFields
@@ -49,13 +53,11 @@ const SignUpForm: React.FC = () => {
     }
 
     try {
-      const { user } = await createAuthUserWithEmailAndPassword(
-        email,
-        password
-      );
+      const auth = await createAuthUserWithEmailAndPassword(email, password);
 
-      await createUserDocumentFromAuth(user, displayName);
-      setCurrentTitle(displayName);
+      await createUserDocumentFromAuth(auth.user, displayName);
+
+      dispatch(updateUserDisplayName(displayName));
     } catch (err) {
       console.log("error from handleSignUpSubmit:");
       console.log(err);
@@ -65,6 +67,12 @@ const SignUpForm: React.FC = () => {
           lang === Lang.En
             ? "Email already in use!"
             : "Эта почта уже используется!"
+        );
+      } else {
+        alert(
+          lang === Lang.En
+            ? "Failed! Try with another credentials or wait few seconds and retry!"
+            : "Регистрация не удалась! Попробуйте использовать другие данные или повторите попытку чуть позже!"
         );
       }
     }

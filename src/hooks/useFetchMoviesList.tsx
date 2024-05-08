@@ -9,7 +9,7 @@ import {
 import { useState, useCallback, useEffect } from "react";
 import axios, { AxiosResponse, AxiosError } from "axios";
 import { MovieListItem, TVListItem } from "../utils/classes/moviesListItem";
-import { filterListQueries } from "../utils/getFilterListQuery";
+import { filterListQueries } from "../data/filterListQueries";
 import {
   MoviesListReducerAction,
   MoviesListReducerActionTypes,

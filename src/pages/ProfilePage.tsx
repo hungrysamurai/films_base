@@ -6,7 +6,6 @@ import userListsReducer, {
 } from "../reducers/userListsReducer";
 
 import { useEffect, useReducer, useRef, useState } from "react";
-import { useUserContext } from "../contexts/UserContext";
 import { useGlobalContext } from "../contexts/GlobalContext";
 import useListenWindowWidth from "../hooks/useListenWindowWidth";
 import { AnimatePresence } from "framer-motion";
@@ -18,13 +17,16 @@ import UserListIcon from "../components/profilePage/icons/UserListIcon";
 import { User } from "firebase/auth";
 import { ModalMode } from "../types.ts";
 
+import { useAppSelector } from "../store/hooks.ts";
+import { getCurrentUser } from "../store/slices/authSlice.ts";
+
 const usersListsInitialState: UsersListsState = {
   userLists: [],
   currentListIndex: 0,
 };
 
 const ProfilePage: React.FC = () => {
-  const { currentUser } = useUserContext();
+  const currentUser = useAppSelector(getCurrentUser);
   const { setCurrentTitle } = useGlobalContext();
 
   useEffect(() => {

@@ -2,7 +2,7 @@ import { db } from "../../../utils/firebase/firebase.utils";
 import { onSnapshot, doc } from "firebase/firestore";
 
 import { useEffect, useState } from "react";
-import { useUserContext } from "../../../contexts/UserContext";
+
 import { useGlobalContext } from "../../../contexts/GlobalContext";
 import { AnimatePresence } from "framer-motion";
 
@@ -11,6 +11,9 @@ import UserListsWidgetModal from "../../modal/UserListsWidgetModal";
 import UserListIcon from "../../profilePage/icons/UserListIcon";
 import { User } from "firebase/auth";
 import { Lang, MediaType, ModalMode } from "../../../types";
+
+import { useAppSelector } from "../../../store/hooks";
+import { getCurrentUser } from "../../../store/slices/authSlice";
 
 type UserListsWidgetProps = {
   id: string;
@@ -23,7 +26,7 @@ const UserListsWidget: React.FC<UserListsWidgetProps> = ({
   mediaType,
   title,
 }) => {
-  const { currentUser } = useUserContext();
+  const currentUser = useAppSelector(getCurrentUser);
   const { lang } = useGlobalContext();
 
   const [showModal, setShowModal] = useState(false);

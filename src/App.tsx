@@ -1,7 +1,8 @@
+import { useEffect } from "react";
+
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import { useGlobalContext } from "./contexts/GlobalContext";
-import { useUserContext } from "./contexts/UserContext";
 
 import PageWrapper from "./components/PageWrapper";
 import Home from "./pages/Home";
@@ -13,9 +14,39 @@ import ErrorMessage from "./components/ErrorMessage";
 import { Lang } from "./types";
 import getBaseURL from "./utils/getBaseURL";
 
+import { useAppDispatch, useAppSelector } from "./store/hooks";
+import { login, getCurrentUser } from "./store/slices/authSlice";
+
+import {
+  createUserDocumentFromAuth,
+  onAuthStateChangedListener,
+} from "./utils/firebase/firebase.utils";
+import { getAuth, updateProfile } from "firebase/auth";
+
 function App() {
   const { lang } = useGlobalContext();
-  const { currentUser } = useUserContext();
+
+  const dispatch = useAppDispatch();
+  const currentUser = useAppSelector(getCurrentUser);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChangedListener((user) => {
+      if (user) {
+        dispatch(
+          login({
+            uid: user.uid,
+            email: user.email || undefined,
+            displayName: user.displayName || null,
+            photoURL: user.photoURL || undefined,
+          })
+        );
+
+        createUserDocumentFromAuth(user);
+      }
+    });
+
+    return unsubscribe;
+  }, []);
 
   const ProtectedRoute = ({ children }: ReactChildrenType) => {
     return currentUser ? children : <Navigate to={getBaseURL("auth")} />;
