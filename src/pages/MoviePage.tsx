@@ -6,7 +6,6 @@ import {
 import { ReactElement } from "react";
 
 import { useParams, useLocation } from "react-router-dom";
-import { useGlobalContext } from "../contexts/GlobalContext";
 
 import { useEffect, useState, Suspense } from "react";
 import { useAnimation, AnimatePresence } from "framer-motion";
@@ -23,8 +22,9 @@ import UserListsWidget from "../components/moviePage/UserListsWidget/UserListsWi
 import SimilarMoviesList from "../components/moviesList/SimilarMoviesList";
 import getBaseURL from "../utils/getBaseURL";
 
-import { useAppSelector } from "../store/hooks";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { getCurrentUser } from "../store/slices/authSlice";
+import { getCurrentLang, setMainTitle } from "../store/slices/mainSlice";
 
 export enum ModalDirection {
   Next = "next",
@@ -38,7 +38,9 @@ export type ImagesGalleryModalState = {
 };
 
 const MoviePage: React.FC = () => {
-  const { setCurrentTitle, lang } = useGlobalContext();
+  const dispatch = useAppDispatch();
+
+  const lang = useAppSelector(getCurrentLang);
   const currentUser = useAppSelector(getCurrentUser);
 
   const { id } = useParams();
@@ -81,13 +83,13 @@ const MoviePage: React.FC = () => {
 
   useEffect(() => {
     if (isLoading) {
-      setCurrentTitle(() => "");
+      dispatch(setMainTitle(""));
     } else if (dataError.show) {
-      setCurrentTitle(dataError.message);
+      dispatch(setMainTitle(dataError.message));
     } else {
-      setCurrentTitle(title as string);
+      dispatch(setMainTitle(title as string));
     }
-  }, [title, setCurrentTitle, isLoading, lang, dataError]);
+  }, [title, isLoading, lang, dataError]);
 
   useEffect(() => {
     control.start({

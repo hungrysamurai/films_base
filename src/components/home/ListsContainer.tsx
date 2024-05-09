@@ -1,10 +1,14 @@
-import { movieLists, tvLists } from "../../data/Lists";
+import { movieLists, tvLists } from "../../data/lists";
 import { MovieFilterListTerm, TVFilterListTerm } from "../../types";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { MoviesListReducerActionTypes } from "../../reducers/moviesListReducer";
+import { useAppSelector } from "../../store/hooks";
+import { getCurrentLang } from "../../store/slices/mainSlice";
 
 const ListsContainer = () => {
-  const { mediaType, filterList, lang, dispatch } = useGlobalContext();
+  const { mediaType, filterList, dispatch } = useGlobalContext();
+
+  const lang = useAppSelector(getCurrentLang);
 
   const list = mediaType === "movie" ? movieLists[lang] : tvLists[lang];
 

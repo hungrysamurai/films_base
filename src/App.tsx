@@ -1,8 +1,4 @@
-import { useEffect } from "react";
-
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-
-import { useGlobalContext } from "./contexts/GlobalContext";
 
 import PageWrapper from "./components/PageWrapper";
 import Home from "./pages/Home";
@@ -14,39 +10,15 @@ import ErrorMessage from "./components/ErrorMessage";
 import { Lang } from "./types";
 import getBaseURL from "./utils/getBaseURL";
 
-import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { login, getCurrentUser } from "./store/slices/authSlice";
+import useCheckUserAuth from "./hooks/useCheckUserAuth";
 
-import {
-  createUserDocumentFromAuth,
-  onAuthStateChangedListener,
-} from "./utils/firebase/firebase.utils";
+import { getCurrentLang } from "./store/slices/mainSlice";
+import { useAppSelector } from "./store/hooks";
 
 function App() {
-  const { lang } = useGlobalContext();
+  const lang = useAppSelector(getCurrentLang);
 
-  const dispatch = useAppDispatch();
-  const currentUser = useAppSelector(getCurrentUser);
-
-  // Move to custom hook
-  useEffect(() => {
-    const unsubscribe = onAuthStateChangedListener((user) => {
-      if (user) {
-        dispatch(
-          login({
-            uid: user.uid,
-            email: user.email || undefined,
-            displayName: user.displayName || null,
-            photoURL: user.photoURL || undefined,
-          })
-        );
-
-        createUserDocumentFromAuth(user);
-      }
-    });
-
-    return unsubscribe;
-  }, []);
+  const { currentUser } = useCheckUserAuth();
 
   const ProtectedRoute = ({ children }: ReactChildrenType) => {
     return currentUser ? children : <Navigate to={getBaseURL("auth")} />;

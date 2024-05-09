@@ -5,11 +5,12 @@ import {
 
 import { useRef, MutableRefObject } from "react";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import { useGlobalContext } from "../../contexts/GlobalContext";
 
 import UserListIconAdd from "../moviePage/UserListsWidget/icons/UserListIconAdd";
 import UserListIconRemove from "../moviePage/UserListsWidget/icons/UserListIconRemove";
 import { Lang } from "../../types";
+import { useAppSelector } from "../../store/hooks";
+import { getCurrentLang } from "../../store/slices/mainSlice";
 
 type UserListsWidgetModalProps = {
   hideModal: () => void;
@@ -24,7 +25,7 @@ const UserListsWidgetModal: React.FC<UserListsWidgetModalProps> = ({
   userLists,
   currentMovieData,
 }) => {
-  const { lang } = useGlobalContext();
+  const lang = useAppSelector(getCurrentLang);
 
   const { id: currentItemID, mediaType: currentItemMediaType } =
     currentMovieData;

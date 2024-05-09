@@ -6,8 +6,13 @@ import { useFetchGenres } from "../../hooks/useFetchGenres";
 import ErrorMessage from "../ErrorMessage";
 import { MoviesListReducerActionTypes } from "../../reducers/moviesListReducer";
 
+import { useAppSelector } from "../../store/hooks";
+import { getCurrentLang } from "../../store/slices/mainSlice";
+
 const GenresList: React.FC = () => {
-  const { filterGenre, lang, mediaType, dispatch } = useGlobalContext();
+  const { filterGenre, mediaType, dispatch } = useGlobalContext();
+
+  const lang = useAppSelector(getCurrentLang);
 
   const {
     isLoading: genresFetchLoading,

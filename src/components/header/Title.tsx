@@ -1,8 +1,8 @@
-import { useGlobalContext } from "../../contexts/GlobalContext";
+import { useAppSelector } from "../../store/hooks";
+import { getCurrentMainTitle } from "../../store/slices/mainSlice";
 
 const Title: React.FC = () => {
-  const { currentTitle } = useGlobalContext();
-
+  const currentTitle = useAppSelector(getCurrentMainTitle);
   return (
     <div className="title-container">
       <h2 className="title-heading">{currentTitle}</h2>

@@ -1,10 +1,11 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useFetchUserMoviesList } from "../../hooks/useFetchUserMoviesList";
-import { useGlobalContext } from "../../contexts/GlobalContext";
 
 import SingleMovie from "./SingleMovie";
 import Loader from "../Loader";
 import ErrorMessage from "../ErrorMessage";
+import { useAppSelector } from "../../store/hooks";
+import { getCurrentLang } from "../../store/slices/mainSlice";
 
 type UserMoviesListProps = {
   currentUserList: UserListItem[];
@@ -15,7 +16,8 @@ const UserMoviesList: React.FC<UserMoviesListProps> = ({
   currentUserList,
   listIndex,
 }) => {
-  const { lang } = useGlobalContext();
+  const lang = useAppSelector(getCurrentLang);
+
   const {
     data: moviesFetchList,
     isLoading: moviesFetchLoading,

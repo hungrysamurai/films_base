@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { useGlobalContext } from "../contexts/GlobalContext";
 
 import AuthModeToggler from "../components/authPage/AuthModeToggler";
 import SignUpForm from "../components/authPage/SignUpForm";
 import SignInForm from "../components/authPage/SignInForm";
 import { Lang } from "../types";
+
+import { getCurrentLang, setMainTitle } from "../store/slices/mainSlice";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 
 export enum FormMode {
   SignIn = "sign-in",
@@ -12,14 +14,14 @@ export enum FormMode {
 }
 
 const AuthPage: React.FC = () => {
-  const { setCurrentTitle, lang } = useGlobalContext();
+  const dispatch = useAppDispatch();
+
+  const lang = useAppSelector(getCurrentLang);
   const [formMode, setFormMode] = useState<FormMode>(FormMode.SignIn);
 
   useEffect(() => {
-    setCurrentTitle(() => {
-      return lang === Lang.En ? "Account" : "Авторизация";
-    });
-  }, [setCurrentTitle, lang]);
+    dispatch(setMainTitle(lang === Lang.En ? "Account" : "Авторизация"));
+  }, [lang]);
 
   return (
     <section className="section-auth">

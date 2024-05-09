@@ -10,7 +10,6 @@ import {
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useRef, useState, memo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useGlobalContext } from "../../contexts/GlobalContext";
 import { AnimatePresence, motion } from "framer-motion";
 
 import ProfilePicPlaceholder from "../header/icons/ProfilePicPlaceholderIcon";
@@ -23,13 +22,14 @@ import {
   logout,
   updateUserDisplayName,
 } from "../../store/slices/authSlice";
+import { getCurrentLang } from "../../store/slices/mainSlice";
 
 type UserModalProps = {
   hideModal: () => void;
 };
 
 const UserModal: React.FC<UserModalProps> = memo(({ hideModal }) => {
-  const { lang } = useGlobalContext();
+  const lang = useAppSelector(getCurrentLang);
 
   const dispatch = useAppDispatch();
   const currentUser = useAppSelector(getCurrentUser);

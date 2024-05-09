@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { useFetchSimilarMoviesList } from "../../hooks/useFetchSimilarMoviesList";
-import { useGlobalContext } from "../../contexts/GlobalContext";
 
 import SingleMovie from "./SingleMovie";
 import Loader from "../Loader";
 import ErrorMessage from "../ErrorMessage";
 import { MediaType } from "../../types";
+import { useAppSelector } from "../../store/hooks";
+import { getCurrentLang } from "../../store/slices/mainSlice";
 
 type SimilarMoviesListProps = {
   itemID: string;
@@ -17,7 +18,7 @@ const SimilarMoviesList: React.FC<SimilarMoviesListProps> = ({
   itemID,
   itemMediaType,
 }) => {
-  const { lang } = useGlobalContext();
+  const lang = useAppSelector(getCurrentLang);
 
   const [elementWidth, setElementWidth] = useState(0);
 

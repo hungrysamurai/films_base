@@ -1,14 +1,14 @@
-import { MediaType, MovieFilterListTerm, Lang, MoviesListMode } from "../types";
+import { MediaType, MovieFilterListTerm, MoviesListMode } from "../types";
 
 import moviesListReducer from "../reducers/moviesListReducer";
 
-import { getLang } from "../utils/getLang";
-
-import { useState, useContext, createContext, useReducer } from "react";
+import { useContext, createContext, useReducer } from "react";
 import { useFetchMoviesList } from "../hooks/useFetchMoviesList";
+import { useAppSelector } from "../store/hooks";
+import { getCurrentLang } from "../store/slices/mainSlice";
 
 const initialState: MoviesListState = {
-  lang: getLang(),
+  // Params
   mediaType: MediaType.Movie,
   filterList: MovieFilterListTerm.TopRated,
   filterGenre: "",
@@ -16,17 +16,17 @@ const initialState: MoviesListState = {
   totalPages: 0,
   moviesList: [],
   uniqueIds: [],
+  // ?
   moviesListMode: MoviesListMode.Home,
+  // https://developer.themoviedb.org/reference/search-multi
   searchQuery: "",
   selectedMovie: "",
 };
 
 const AppContext = createContext<IGlobalContext>({
-  currentTitle: "",
   dispatch: () => {},
   filterGenre: "",
   filterList: MovieFilterListTerm.Upcoming,
-  lang: Lang.Ru,
   mediaType: MediaType.Movie,
   moviesFetchError: {
     message: "",
@@ -38,21 +38,21 @@ const AppContext = createContext<IGlobalContext>({
   page: 0,
   searchQuery: "",
   selectedMovie: "",
-  setCurrentTitle: () => {},
   totalPages: 0,
 });
 
 const AppProvider = ({ children }: ReactChildrenType) => {
-  const [currentTitle, setCurrentTitle] = useState<string>("");
   const [moviesListState, dispatch] = useReducer(
     moviesListReducer,
     initialState
   );
 
+  const lang = useAppSelector(getCurrentLang);
+
   const { isLoading: moviesFetchLoading, error: moviesFetchError } =
     useFetchMoviesList(
       moviesListState.mediaType,
-      moviesListState.lang,
+      lang,
       moviesListState.filterList,
       moviesListState.filterGenre,
       moviesListState.page,
@@ -62,7 +62,6 @@ const AppProvider = ({ children }: ReactChildrenType) => {
     );
 
   const {
-    lang,
     mediaType,
     filterList,
     filterGenre,
@@ -77,7 +76,6 @@ const AppProvider = ({ children }: ReactChildrenType) => {
   return (
     <AppContext.Provider
       value={{
-        lang,
         moviesFetchError,
         moviesFetchLoading,
         mediaType,
@@ -89,8 +87,6 @@ const AppProvider = ({ children }: ReactChildrenType) => {
         moviesListMode,
         dispatch,
         moviesList,
-        currentTitle,
-        setCurrentTitle,
         selectedMovie,
       }}
     >

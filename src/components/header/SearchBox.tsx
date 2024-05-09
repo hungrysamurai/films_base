@@ -5,9 +5,13 @@ import { useNavigate } from "react-router-dom";
 import SearchIcon from "./icons/SearchIcon";
 import { Lang } from "../../types";
 import getBaseURL from "../../utils/getBaseURL";
+import { useAppSelector } from "../../store/hooks";
+import { getCurrentLang } from "../../store/slices/mainSlice";
 
 const SearchBox: React.FC = () => {
-  const { mediaType, lang } = useGlobalContext();
+  const { mediaType } = useGlobalContext();
+
+  const lang = useAppSelector(getCurrentLang);
 
   const text =
     lang === Lang.En

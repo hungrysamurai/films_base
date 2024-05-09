@@ -5,27 +5,29 @@ import { createNewUserList } from "../../../utils/firebase/firebase.utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
-import { useGlobalContext } from "../../../contexts/GlobalContext";
-
 import CustomInput from "../../CustomInput";
 import ErrorMessage from "../../ErrorMessage";
 import UserListItem from "./UserListItem";
 import UserListIcon from "../icons/UserListIcon";
 import AddNewListIcon from "../icons/AddNewListIcon";
 import { Lang } from "../../../types";
+import { useAppSelector } from "../../../store/hooks";
+import { getCurrentLang } from "../../../store/slices/mainSlice";
 
 type UserListsProps = {
   userLists: UserList[];
   currentListIndex: number;
   dispatch: React.Dispatch<UserListReducerAction>;
+  hideModal?: Function;
 };
 
 const UserLists: React.FC<UserListsProps> = ({
   userLists,
   currentListIndex,
   dispatch,
+  hideModal,
 }) => {
-  const { lang } = useGlobalContext();
+  const lang = useAppSelector(getCurrentLang);
 
   const [newListInputShow, setNewListInputShow] = useState(false);
 
@@ -73,6 +75,7 @@ const UserLists: React.FC<UserListsProps> = ({
               active={currentListIndex === i ? true : false}
               dispatch={dispatch}
               listIndex={i}
+              hideModal={hideModal}
             />
           );
         })}

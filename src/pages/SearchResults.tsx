@@ -4,18 +4,23 @@ import { useEffect } from "react";
 
 import MoviesList from "../components/moviesList/MoviesList";
 import { MoviesListReducerActionTypes } from "../reducers/moviesListReducer";
+import { useAppDispatch } from "../store/hooks";
+import { setMainTitle } from "../store/slices/mainSlice";
 
 const SearchResults: React.FC = () => {
-  const { setCurrentTitle, dispatch, moviesListMode } = useGlobalContext();
+  const { dispatch: cDispatch, moviesListMode } = useGlobalContext();
   const { query } = useParams();
 
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
-    setCurrentTitle(query as string);
-    dispatch({
+    dispatch(setMainTitle(query as string));
+
+    cDispatch({
       type: MoviesListReducerActionTypes.SET_SEARCH_MODE,
       payload: query as string,
     });
-  }, [query, setCurrentTitle, dispatch, moviesListMode]);
+  }, [query, cDispatch, moviesListMode]);
 
   return (
     <section className="section-search-results">

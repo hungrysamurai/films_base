@@ -1,6 +1,4 @@
-import { ColorTheme, Lang, ModalMode } from "../../types";
-
-import { useGlobalContext } from "../../contexts/GlobalContext";
+import { ColorTheme, ModalMode } from "../../types";
 
 import { Link } from "react-router-dom";
 
@@ -17,13 +15,14 @@ import ThemeDarkIcon from "./icons/ThemeDarkIcon";
 import ThemeLightIcon from "./icons/ThemeLightIcon";
 import LangEnIcon from "./icons/LangEnIcon";
 import LangRuIcon from "./icons/LangRuIcon";
-import { MoviesListReducerActionTypes } from "../../reducers/moviesListReducer";
 
-import { useAppSelector } from "../../store/hooks.ts";
+import { useAppDispatch, useAppSelector } from "../../store/hooks.ts";
 import { getCurrentUser } from "../../store/slices/authSlice.ts";
+import { getCurrentLang, switchLang } from "../../store/slices/mainSlice.ts";
 
 const HeaderIconsContainer = () => {
-  const { lang, dispatch } = useGlobalContext();
+  const dispatch = useAppDispatch();
+  const lang = useAppSelector(getCurrentLang);
 
   const currentUser = useAppSelector(getCurrentUser);
 
@@ -40,26 +39,10 @@ const HeaderIconsContainer = () => {
   }, [theme]);
 
   const toggleTheme = () => {
-    if (theme === "dark") {
+    if (theme === ColorTheme.Dark) {
       setTheme(() => ColorTheme.Light);
     } else {
       setTheme(ColorTheme.Dark);
-    }
-  };
-
-  const toggleLang = () => {
-    if (lang === "ru") {
-      dispatch({
-        type: MoviesListReducerActionTypes.SET_LANG,
-        payload: Lang.En,
-      });
-      localStorage.setItem("FBlang", "en");
-    } else {
-      dispatch({
-        type: MoviesListReducerActionTypes.SET_LANG,
-        payload: Lang.Ru,
-      });
-      localStorage.setItem("FBlang", "ru");
     }
   };
 
@@ -103,7 +86,7 @@ const HeaderIconsContainer = () => {
           </AnimatePresence>
         </a>
 
-        <button onClick={toggleLang}>
+        <button onClick={() => dispatch(switchLang())}>
           {lang === "en" ? <LangEnIcon /> : <LangRuIcon />}
         </button>
       </div>

@@ -1,7 +1,8 @@
 import { Lang } from "../../types";
 import { FormMode } from "../../pages/AuthPage";
 
-import { useGlobalContext } from "../../contexts/GlobalContext";
+import { getCurrentLang } from "../../store/slices/mainSlice";
+import { useAppSelector } from "../../store/hooks";
 
 type AuthModeTogglerProps = {
   activeMode: FormMode;
@@ -12,7 +13,7 @@ const AuthModeToggler: React.FC<AuthModeTogglerProps> = ({
   activeMode,
   setActiveMode,
 }) => {
-  const { lang } = useGlobalContext();
+  const lang = useAppSelector(getCurrentLang);
 
   return (
     <div className="auth-mode-container">

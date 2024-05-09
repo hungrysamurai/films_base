@@ -7,14 +7,15 @@ import {
 } from "../../utils/firebase/firebase.utils";
 
 import { useState, FormEvent, ChangeEvent } from "react";
-import { useGlobalContext } from "../../contexts/GlobalContext";
 
 import { motion } from "framer-motion";
 
 import FormInput from "./FormInput.tsx";
 import Button from "./Button";
-import { useAppDispatch } from "../../store/hooks.ts";
+
+import { useAppDispatch, useAppSelector } from "../../store/hooks.ts";
 import { updateUserDisplayName } from "../../store/slices/authSlice.ts";
+import { getCurrentLang } from "../../store/slices/mainSlice.ts";
 
 type SignUpFormFields = {
   displayName: string;
@@ -31,9 +32,8 @@ const defaultSignUpFormFields: SignUpFormFields = {
 };
 
 const SignUpForm: React.FC = () => {
-  const { lang } = useGlobalContext();
-
   const dispatch = useAppDispatch();
+  const lang = useAppSelector(getCurrentLang);
 
   const [signUpFormFields, setSignUpFormFields] = useState<SignUpFormFields>(
     defaultSignUpFormFields

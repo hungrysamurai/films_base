@@ -6,7 +6,7 @@ import userListsReducer, {
 } from "../reducers/userListsReducer";
 
 import { useEffect, useReducer, useRef, useState } from "react";
-import { useGlobalContext } from "../contexts/GlobalContext";
+
 import useListenWindowWidth from "../hooks/useListenWindowWidth";
 import { AnimatePresence } from "framer-motion";
 
@@ -14,11 +14,12 @@ import UserLists from "../components/profilePage/UserLists/UserLists";
 import UserMoviesList from "../components/moviesList/UserMoviesList";
 import Modal from "../components/modal/Modal.tsx";
 import UserListIcon from "../components/profilePage/icons/UserListIcon";
-import { User } from "firebase/auth";
+
 import { ModalMode } from "../types.ts";
 
-import { useAppSelector } from "../store/hooks.ts";
-import { getCurrentUser } from "../store/slices/authSlice.ts";
+import { useAppDispatch, useAppSelector } from "../store/hooks.ts";
+import { AuthUser, getCurrentUser } from "../store/slices/authSlice.ts";
+import { setMainTitle } from "../store/slices/mainSlice.ts";
 
 const usersListsInitialState: UsersListsState = {
   userLists: [],
@@ -26,14 +27,15 @@ const usersListsInitialState: UsersListsState = {
 };
 
 const ProfilePage: React.FC = () => {
-  const currentUser = useAppSelector(getCurrentUser);
-  const { setCurrentTitle } = useGlobalContext();
+  const currentUser = useAppSelector(getCurrentUser) as AuthUser;
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    setCurrentTitle((currentUser as User).displayName as string);
-  }, [currentUser, setCurrentTitle]);
+    dispatch(setMainTitle(currentUser.displayName as string));
+  }, [currentUser]);
 
-  const [userListsState, dispatch] = useReducer(
+  const [userListsState, cDispatch] = useReducer(
     userListsReducer,
     usersListsInitialState
   );
@@ -47,25 +49,22 @@ const ProfilePage: React.FC = () => {
   const mounted = useRef(false);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(
-      doc(db, "users", (currentUser as User).uid),
-      (doc) => {
-        if (!doc.data()) return;
+    const unsubscribe = onSnapshot(doc(db, "users", currentUser.uid), (doc) => {
+      if (!doc.data()) return;
 
-        if (!mounted.current) {
-          dispatch({
-            type: UserListReducerActionTypes.LOAD_USER_LISTS,
-            payload: doc.data()?.userLists,
-          });
-          mounted.current = true;
-        } else {
-          dispatch({
-            type: UserListReducerActionTypes.UPDATE_USER_LISTS,
-            payload: doc.data()?.userLists,
-          });
-        }
+      if (!mounted.current) {
+        cDispatch({
+          type: UserListReducerActionTypes.LOAD_USER_LISTS,
+          payload: doc.data()?.userLists,
+        });
+        mounted.current = true;
+      } else {
+        cDispatch({
+          type: UserListReducerActionTypes.UPDATE_USER_LISTS,
+          payload: doc.data()?.userLists,
+        });
       }
-    );
+    });
     return unsubscribe;
   }, [currentUser]);
 
@@ -102,7 +101,7 @@ const ProfilePage: React.FC = () => {
                       userLists={userLists}
                       currentListIndex={currentListIndex}
                       dispatch={dispatch}
-                      // hideModal={hideModal}
+                      hideModal={hideModal}
                     />
                   </div>
                 </Modal>

@@ -9,11 +9,13 @@ import {
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useGlobalContext } from "../../contexts/GlobalContext";
 
 import FormInput from "./FormInput";
 import Button from "./Button";
 import getBaseURL from "../../utils/getBaseURL";
+
+import { useAppSelector } from "../../store/hooks";
+import { getCurrentLang } from "../../store/slices/mainSlice";
 
 type SignInFormFields = {
   email: string;
@@ -26,7 +28,7 @@ const defaultSignInFormFields: SignInFormFields = {
 };
 
 const SignInForm: React.FC = () => {
-  const { lang } = useGlobalContext();
+  const lang = useAppSelector(getCurrentLang);
 
   const [signInFormFields, setSignInFormFields] = useState<SignInFormFields>(
     defaultSignInFormFields

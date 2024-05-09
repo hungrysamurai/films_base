@@ -21,6 +21,7 @@ type UserListItemProps = {
   active: boolean;
   listIndex: number;
   dispatch: React.Dispatch<UserListReducerAction>;
+  hideModal?: Function;
 };
 
 const UserListItem: React.FC<UserListItemProps> = ({
@@ -28,6 +29,7 @@ const UserListItem: React.FC<UserListItemProps> = ({
   active,
   dispatch,
   listIndex,
+  hideModal,
 }) => {
   const [editTitleInputShow, setEditTitleInputShow] = useState(false);
   // const editTitleInputContainerRef = useRef(null);
@@ -70,6 +72,12 @@ const UserListItem: React.FC<UserListItemProps> = ({
               type: UserListReducerActionTypes.SET_CURRENT_LIST_INDEX,
               payload: listIndex,
             });
+
+            if (hideModal) {
+              setTimeout(() => {
+                hideModal();
+              }, 250);
+            }
           }}
         >
           <div className="user-list-title">
