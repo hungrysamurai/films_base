@@ -84,9 +84,6 @@ declare global {
   type FetchedItemVideosData =
     operations["movie-videos"]["responses"][200]["content"]["application/json"];
 
-  type FetchedGenresMovieList =
-    operations["genre-movie-list"]["responses"][200]["content"]["application/json"];
-
   type FetchedGenresTVList =
     operations["genre-tv-list"]["responses"][200]["content"]["application/json"];
 
