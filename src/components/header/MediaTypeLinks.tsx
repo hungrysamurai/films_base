@@ -1,17 +1,18 @@
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { MoviesListReducerActionTypes } from "../../reducers/moviesListReducer";
-import { useAppSelector } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import {
+  getHomePageMediaType,
+  setHomePageMediaType,
+} from "../../store/slices/homePageParamsSlice";
 import { getCurrentLang } from "../../store/slices/mainSlice";
 import { Lang, MediaType } from "../../types";
 
-type MediaTypeLinksProps = {
-  setCurrentMediaType: React.Dispatch<React.SetStateAction<MediaType>>;
-};
+const MediaTypeLinks: React.FC = () => {
+  const { mediaType, dispatch: cDispatch } = useGlobalContext();
 
-const MediaTypeLinks: React.FC<MediaTypeLinksProps> = ({
-  setCurrentMediaType,
-}) => {
-  const { mediaType, dispatch } = useGlobalContext();
+  const dispatch = useAppDispatch();
+  const homePageMediaType = useAppSelector(getHomePageMediaType);
 
   const lang = useAppSelector(getCurrentLang);
 
@@ -20,8 +21,8 @@ const MediaTypeLinks: React.FC<MediaTypeLinksProps> = ({
       <button
         className={mediaType === MediaType.Movie ? "active" : ""}
         onClick={() => {
-          setCurrentMediaType(() => MediaType.Movie);
-          dispatch({
+          dispatch(setHomePageMediaType(MediaType.Movie));
+          cDispatch({
             type: MoviesListReducerActionTypes.SET_MEDIA_TYPE,
             payload: MediaType.Movie,
           });
@@ -33,8 +34,8 @@ const MediaTypeLinks: React.FC<MediaTypeLinksProps> = ({
       <button
         className={mediaType === MediaType.TV ? "active" : ""}
         onClick={() => {
-          setCurrentMediaType(() => MediaType.TV);
-          dispatch({
+          dispatch(setHomePageMediaType(MediaType.TV));
+          cDispatch({
             type: MoviesListReducerActionTypes.SET_MEDIA_TYPE,
             payload: MediaType.TV,
           });

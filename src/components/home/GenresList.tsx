@@ -6,27 +6,29 @@ import { useFetchGenres } from "../../hooks/useFetchGenres";
 import ErrorMessage from "../ErrorMessage";
 import { MoviesListReducerActionTypes } from "../../reducers/moviesListReducer";
 
-import { useAppSelector } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { getCurrentLang } from "../../store/slices/mainSlice";
 import {
-  HomePageParamsActionTypes,
-  HomePageParamsReducerAction,
-} from "../../reducers/homePageParamsReducer";
+  getHomePageFilterGenre,
+  setHomePageFilterGenre,
+} from "../../store/slices/homePageParamsSlice";
 
-type GenresListProps = {
-  dispatch: React.Dispatch<HomePageParamsReducerAction>;
-};
+const GenresList: React.FC = () => {
+  const {
+    filterGenre: cFilterGenre,
+    mediaType: cMediaType,
+    dispatch: cDispatch,
+  } = useGlobalContext();
 
-const GenresList: React.FC<GenresListProps> = ({ dispatch }) => {
-  const { filterGenre, mediaType, dispatch: cDispatch } = useGlobalContext();
-
+  const dispatch = useAppDispatch();
+  const filterGenre = useAppSelector(getHomePageFilterGenre);
   const lang = useAppSelector(getCurrentLang);
 
   const {
     isLoading: genresFetchLoading,
     error: genresFetchError,
     data: genresFetchedList,
-  } = useFetchGenres(mediaType, lang);
+  } = useFetchGenres(cMediaType, lang);
 
   const [genresListWidth, setGenresListWidth] = useState(0);
 
@@ -42,10 +44,7 @@ const GenresList: React.FC<GenresListProps> = ({ dispatch }) => {
   }, [genresFetchedList, genresListWidth, control]);
 
   const setAndAnimateActiveGenre = (el: HTMLLIElement, id: string) => {
-    dispatch({
-      type: HomePageParamsActionTypes.SET_HOME_PAGE_FILTER_GENRE,
-      payload: `${id}`,
-    });
+    dispatch(setHomePageFilterGenre(id));
 
     cDispatch({
       type: MoviesListReducerActionTypes.SET_FILTER_GENRE,
@@ -113,7 +112,7 @@ const GenresList: React.FC<GenresListProps> = ({ dispatch }) => {
                   genre.id.toString()
                 )
               }
-              className={filterGenre === `${genre.id}` ? "active" : ""}
+              className={cFilterGenre === `${genre.id}` ? "active" : ""}
             >
               {`${genre.name[0].toUpperCase()}${genre.name.slice(1)}`}
             </li>

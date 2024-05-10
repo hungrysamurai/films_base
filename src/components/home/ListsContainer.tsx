@@ -2,27 +2,26 @@ import { movieLists, tvLists } from "../../data/lists";
 import { MovieFilterListTerm, TVFilterListTerm } from "../../types";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { MoviesListReducerActionTypes } from "../../reducers/moviesListReducer";
-import { useAppSelector } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { getCurrentLang } from "../../store/slices/mainSlice";
 import {
-  HomePageParamsActionTypes,
-  HomePageParamsReducerAction,
-} from "../../reducers/homePageParamsReducer";
+  getHomePageMediaType,
+  setHomePageFilterList,
+} from "../../store/slices/homePageParamsSlice";
 
-type ListsContainerProps = {
-  dispatch: React.Dispatch<HomePageParamsReducerAction>;
-  homePageParams: HomePageParamsState;
-};
+const ListsContainer: React.FC = () => {
+  const {
+    mediaType: cMediaType,
+    filterList,
+    dispatch: cDispatch,
+  } = useGlobalContext();
 
-const ListsContainer: React.FC<ListsContainerProps> = ({
-  dispatch,
-  homePageParams,
-}) => {
-  const { mediaType, filterList, dispatch: cDispatch } = useGlobalContext();
+  const dispatch = useAppDispatch();
 
   const lang = useAppSelector(getCurrentLang);
+  const mediaType = useAppSelector(getHomePageMediaType);
 
-  const list = mediaType === "movie" ? movieLists[lang] : tvLists[lang];
+  const list = cMediaType === "movie" ? movieLists[lang] : tvLists[lang];
 
   return (
     <div className="lists-container">
@@ -38,10 +37,8 @@ const ListsContainer: React.FC<ListsContainerProps> = ({
             <li
               key={i}
               onClick={() => {
-                dispatch({
-                  type: HomePageParamsActionTypes.SET_HOME_PAGE_FILTER_LIST,
-                  payload: dataValue,
-                });
+                dispatch(setHomePageFilterList(dataValue));
+
                 cDispatch({
                   type: MoviesListReducerActionTypes.SET_FILTER_LIST,
                   payload: dataValue,
