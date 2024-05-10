@@ -119,6 +119,12 @@ declare global {
     selectedMovie: string;
   };
 
+  type HomePageParamsState = {
+    mediaType: MediaType;
+    filterList: MovieFilterListTerm | TVFilterListTerm;
+    filterGenre: string;
+  };
+
   interface IGlobalContext {
     dispatch: React.Dispatch<MoviesListReducerAction>;
     filterGenre: string;

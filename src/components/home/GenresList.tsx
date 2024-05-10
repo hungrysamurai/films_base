@@ -8,9 +8,17 @@ import { MoviesListReducerActionTypes } from "../../reducers/moviesListReducer";
 
 import { useAppSelector } from "../../store/hooks";
 import { getCurrentLang } from "../../store/slices/mainSlice";
+import {
+  HomePageParamsActionTypes,
+  HomePageParamsReducerAction,
+} from "../../reducers/homePageParamsReducer";
 
-const GenresList: React.FC = () => {
-  const { filterGenre, mediaType, dispatch } = useGlobalContext();
+type GenresListProps = {
+  dispatch: React.Dispatch<HomePageParamsReducerAction>;
+};
+
+const GenresList: React.FC<GenresListProps> = ({ dispatch }) => {
+  const { filterGenre, mediaType, dispatch: cDispatch } = useGlobalContext();
 
   const lang = useAppSelector(getCurrentLang);
 
@@ -35,6 +43,11 @@ const GenresList: React.FC = () => {
 
   const setAndAnimateActiveGenre = (el: HTMLLIElement, id: string) => {
     dispatch({
+      type: HomePageParamsActionTypes.SET_HOME_PAGE_FILTER_GENRE,
+      payload: `${id}`,
+    });
+
+    cDispatch({
       type: MoviesListReducerActionTypes.SET_FILTER_GENRE,
       payload: `${id}`,
     });

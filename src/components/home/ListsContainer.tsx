@@ -4,9 +4,21 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 import { MoviesListReducerActionTypes } from "../../reducers/moviesListReducer";
 import { useAppSelector } from "../../store/hooks";
 import { getCurrentLang } from "../../store/slices/mainSlice";
+import {
+  HomePageParamsActionTypes,
+  HomePageParamsReducerAction,
+} from "../../reducers/homePageParamsReducer";
 
-const ListsContainer = () => {
-  const { mediaType, filterList, dispatch } = useGlobalContext();
+type ListsContainerProps = {
+  dispatch: React.Dispatch<HomePageParamsReducerAction>;
+  homePageParams: HomePageParamsState;
+};
+
+const ListsContainer: React.FC<ListsContainerProps> = ({
+  dispatch,
+  homePageParams,
+}) => {
+  const { mediaType, filterList, dispatch: cDispatch } = useGlobalContext();
 
   const lang = useAppSelector(getCurrentLang);
 
@@ -25,12 +37,16 @@ const ListsContainer = () => {
           return (
             <li
               key={i}
-              onClick={() =>
+              onClick={() => {
                 dispatch({
+                  type: HomePageParamsActionTypes.SET_HOME_PAGE_FILTER_LIST,
+                  payload: dataValue,
+                });
+                cDispatch({
                   type: MoviesListReducerActionTypes.SET_FILTER_LIST,
                   payload: dataValue,
-                })
-              }
+                });
+              }}
               className={filterList === dataValue ? "active" : ""}
             >
               {title}
