@@ -1,25 +1,25 @@
-import { db } from "../utils/firebase/firebase.utils";
-import { onSnapshot, doc } from "firebase/firestore";
+import { db } from '../utils/firebase/firebase.utils';
+import { onSnapshot, doc } from 'firebase/firestore';
 
 import userListsReducer, {
   UserListReducerActionTypes,
-} from "../reducers/userListsReducer";
+} from '../reducers/userListsReducer';
 
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from 'react';
 
-import useListenWindowWidth from "../hooks/useListenWindowWidth";
-import { AnimatePresence } from "framer-motion";
+import useListenWindowWidth from '../hooks/useListenWindowWidth';
+import { AnimatePresence } from 'framer-motion';
 
-import UserLists from "../components/profilePage/UserLists/UserLists";
-import UserMoviesList from "../components/moviesList/UserMoviesList";
-import Modal from "../components/modal/Modal.tsx";
-import UserListIcon from "../components/profilePage/icons/UserListIcon";
+import UserLists from '../components/profilePage/UserLists/UserLists';
+import UserMoviesList from '../components/moviesList/UserMoviesList';
+import Modal from '../components/modal/Modal.tsx';
+import UserListIcon from '../components/profilePage/icons/UserListIcon';
 
-import { ModalMode } from "../types.ts";
+import { ModalMode } from '../types.ts';
 
-import { useAppDispatch, useAppSelector } from "../store/hooks.ts";
-import { AuthUser, getCurrentUser } from "../store/slices/authSlice.ts";
-import { setMainTitle } from "../store/slices/mainSlice.ts";
+import { useAppDispatch, useAppSelector } from '../store/hooks.ts';
+import { AuthUser, getCurrentUser } from '../store/slices/authSlice.ts';
+import { setMainTitle } from '../store/slices/mainSlice.ts';
 
 const usersListsInitialState: UsersListsState = {
   userLists: [],
@@ -37,7 +37,7 @@ const ProfilePage: React.FC = () => {
 
   const [userListsState, cDispatch] = useReducer(
     userListsReducer,
-    usersListsInitialState
+    usersListsInitialState,
   );
 
   const [showModal, setShowModal] = useState(false);
@@ -49,7 +49,7 @@ const ProfilePage: React.FC = () => {
   const mounted = useRef(false);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(doc(db, "users", currentUser.uid), (doc) => {
+    const unsubscribe = onSnapshot(doc(db, 'users', currentUser.uid), (doc) => {
       if (!doc.data()) return;
 
       if (!mounted.current) {
@@ -75,12 +75,12 @@ const ProfilePage: React.FC = () => {
   return (
     <section className="section-profile">
       <div className="left-col">
-        {currentWindowWidth === "desktop" ? (
+        {currentWindowWidth === 'desktop' ? (
           <>
             <UserLists
               userLists={userLists}
               currentListIndex={currentListIndex}
-              dispatch={dispatch}
+              dispatch={cDispatch}
             />
           </>
         ) : (

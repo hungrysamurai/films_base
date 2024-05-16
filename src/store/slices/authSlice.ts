@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 export interface AuthUser {
   uid: string;
@@ -16,7 +16,7 @@ const initialState: AuthState = {
 };
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: (create) => ({
     login: create.reducer((state, action: PayloadAction<AuthUser>) => {
@@ -28,7 +28,7 @@ const authSlice = createSlice({
         if (state.currentUser) {
           state.currentUser.displayName = action.payload;
         }
-      }
+      },
     ),
 
     updateUserPhotoURL: create.reducer(
@@ -36,7 +36,7 @@ const authSlice = createSlice({
         if (state.currentUser) {
           state.currentUser.photoURL = action.payload;
         }
-      }
+      },
     ),
 
     logout: create.reducer((state) => {

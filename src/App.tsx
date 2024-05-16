@@ -1,19 +1,19 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-import PageWrapper from "./components/PageWrapper";
-import Home from "./pages/Home";
-import MoviePage from "./pages/MoviePage";
-import SearchResults from "./pages/SearchResults";
-import AuthPage from "./pages/AuthPage";
-import ProfilePage from "./pages/ProfilePage";
-import ErrorMessage from "./components/ErrorMessage";
-import { Lang } from "./types";
-import getBaseURL from "./utils/getBaseURL";
+import PageWrapper from './components/PageWrapper';
+import Home from './pages/Home';
+import MoviePage from './pages/MoviePage';
+import SearchResults from './pages/SearchResults';
+import AuthPage from './pages/AuthPage';
+import ProfilePage from './pages/ProfilePage';
+import ErrorMessage from './components/ErrorMessage';
+import { Lang } from './types';
+import getBaseURL from './utils/getBaseURL';
 
-import useCheckUserAuth from "./hooks/useCheckUserAuth";
+import useCheckUserAuth from './hooks/useCheckUserAuth';
 
-import { getCurrentLang } from "./store/slices/mainSlice";
-import { useAppSelector } from "./store/hooks";
+import { getCurrentLang } from './store/slices/mainSlice';
+import { useAppSelector } from './store/hooks';
 
 function App() {
   const lang = useAppSelector(getCurrentLang);
@@ -21,11 +21,11 @@ function App() {
   const { currentUser } = useCheckUserAuth();
 
   const ProtectedRoute = ({ children }: ReactChildrenType) => {
-    return currentUser ? children : <Navigate to={getBaseURL("auth")} />;
+    return currentUser ? children : <Navigate to={getBaseURL('auth')} />;
   };
 
   const PublicRoute = ({ children }: ReactChildrenType) => {
-    return currentUser ? <Navigate to={getBaseURL("profile")} /> : children;
+    return currentUser ? <Navigate to={getBaseURL('profile')} /> : children;
   };
 
   return (
@@ -62,8 +62,8 @@ function App() {
                   componentMessage="404"
                   errorMessage={
                     lang === Lang.En
-                      ? "This page is not exist"
-                      : "Такой страницы не существует!"
+                      ? 'This page is not exist'
+                      : 'Такой страницы не существует!'
                   }
                   showImage={true}
                   fullHeight={true}

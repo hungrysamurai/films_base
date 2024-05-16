@@ -1,20 +1,20 @@
 import {
   UserListReducerAction,
   UserListReducerActionTypes,
-} from "../../../reducers/userListsReducer";
+} from '../../../reducers/userListsReducer';
 
 import {
   removeUserList,
   editUserListTitle,
-} from "../../../utils/firebase/firebase.utils";
+} from '../../../utils/firebase/firebase.utils';
 
-import useOutsideClick from "../../../hooks/useOutsideClick";
-import { useState, useRef } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import useOutsideClick from '../../../hooks/useOutsideClick';
+import { useState, useRef } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 
-import EditListIcon from "../icons/EditListIcon";
-import DeleteListIcon from "../icons/DeleteListIcon";
-import CustomInput from "../../CustomInput";
+import EditListIcon from '../icons/EditListIcon';
+import DeleteListIcon from '../icons/DeleteListIcon';
+import CustomInput from '../../CustomInput';
 
 type UserListItemProps = {
   title: string;
@@ -43,7 +43,7 @@ const UserListItem: React.FC<UserListItemProps> = ({
 
   const submitEditListTitle = (inputValue: string) => {
     if (
-      inputValue === "" ||
+      inputValue === '' ||
       inputValue.length < 3 ||
       inputValue.length > 100 ||
       inputValue === title
@@ -62,12 +62,14 @@ const UserListItem: React.FC<UserListItemProps> = ({
           initialValue={title}
           submit={submitEditListTitle}
           hideCustomInput={hideEditTitleInput}
-          customClass={"user-list-item-input"}
+          customClass={'user-list-item-input'}
         />
       ) : (
         <div
-          className={`user-list-container ${active && "active"}`}
+          className={`user-list-container ${active && 'active'}`}
           onClick={() => {
+            console.log(listIndex);
+
             dispatch({
               type: UserListReducerActionTypes.SET_CURRENT_LIST_INDEX,
               payload: listIndex,
@@ -88,11 +90,11 @@ const UserListItem: React.FC<UserListItemProps> = ({
             {active && (
               <motion.div
                 initial={{
-                  y: "2rem",
+                  y: '2rem',
                   opacity: 0,
                 }}
                 animate={{
-                  y: "-50%",
+                  y: '-50%',
                   opacity: 1,
                 }}
                 className="user-list-icons-container"

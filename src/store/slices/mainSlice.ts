@@ -1,6 +1,6 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import { Lang } from "../../types";
+import { Lang } from '../../types';
 
 interface MainState {
   lang: Lang;
@@ -9,11 +9,11 @@ interface MainState {
 
 const initialState: MainState = {
   lang: Lang.Ru,
-  mainTitle: "",
+  mainTitle: '',
 };
 
 const mainSlice = createSlice({
-  name: "main",
+  name: 'main',
   initialState,
   reducers: (create) => ({
     switchLang: create.reducer((state) => {
@@ -23,10 +23,12 @@ const mainSlice = createSlice({
         state.lang = Lang.Ru;
       }
     }),
+
     setMainTitle: create.reducer((state, action: PayloadAction<string>) => {
       state.mainTitle = action.payload;
     }),
   }),
+
   selectors: {
     getCurrentLang: (state) => state.lang,
     getCurrentMainTitle: (state) => state.mainTitle,

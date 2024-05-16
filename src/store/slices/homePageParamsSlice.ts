@@ -1,5 +1,5 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { MediaType, MovieFilterListTerm, TVFilterListTerm } from "../../types";
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { MediaType, MovieFilterListTerm, TVFilterListTerm } from '../../types';
 
 export interface HomePageParamsState {
   mediaType: MediaType;
@@ -10,34 +10,37 @@ export interface HomePageParamsState {
 const initialState: HomePageParamsState = {
   mediaType: MediaType.Movie,
   filterList: MovieFilterListTerm.TopRated,
-  filterGenre: "",
+  filterGenre: '',
 };
 
 const homePageParamsSlice = createSlice({
-  name: "homePageParams",
+  name: 'homePageParams',
   initialState,
   reducers: (create) => ({
     setHomePageMediaType: create.reducer(
       (state, action: PayloadAction<MediaType>) => {
-        state.filterGenre = "";
+        state.filterGenre = '';
         state.filterList = MovieFilterListTerm.TopRated;
         state.mediaType = action.payload;
-      }
+      },
     ),
+
     setHomePageFilterList: create.reducer(
       (
         state,
-        action: PayloadAction<MovieFilterListTerm | TVFilterListTerm>
+        action: PayloadAction<MovieFilterListTerm | TVFilterListTerm>,
       ) => {
         state.filterList = action.payload;
-      }
+      },
     ),
+
     setHomePageFilterGenre: create.reducer(
       (state, action: PayloadAction<string>) => {
         state.filterGenre = action.payload;
-      }
+      },
     ),
   }),
+
   selectors: {
     getHomePageMediaType: (state) => state.mediaType,
     getHomePageFilterList: (state) => state.filterList,

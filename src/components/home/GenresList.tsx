@@ -1,23 +1,23 @@
-import { useState, useEffect, useRef } from "react";
-import { AnimationControls, motion, useAnimation } from "framer-motion";
-import { useGlobalContext } from "../../contexts/GlobalContext";
+import { useState, useEffect, useRef } from 'react';
+import { AnimationControls, motion, useAnimation } from 'framer-motion';
+import { useGlobalContext } from '../../contexts/GlobalContext';
 
-import ErrorMessage from "../ErrorMessage";
-import { MoviesListReducerActionTypes } from "../../reducers/moviesListReducer";
+import ErrorMessage from '../ErrorMessage';
+import { MoviesListReducerActionTypes } from '../../reducers/moviesListReducer';
 
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { getCurrentLang } from "../../store/slices/mainSlice";
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { getCurrentLang } from '../../store/slices/mainSlice';
 import {
   getHomePageFilterGenre,
   getHomePageMediaType,
   setHomePageFilterGenre,
-} from "../../store/slices/homePageParamsSlice";
-import { useGetGenresQuery } from "../../store/slices/apiSlice";
+} from '../../store/slices/homePageParamsSlice';
+import { useGetGenresQuery } from '../../store/slices/apiSlice';
 
 const animate = (
   control: AnimationControls,
   genresListWidth: number,
-  ref: React.RefObject<HTMLLIElement>
+  ref: React.RefObject<HTMLLIElement>,
 ): void => {
   const el = ref.current as HTMLLIElement;
 
@@ -25,7 +25,7 @@ const animate = (
     x: genresListWidth / 2 - el.offsetLeft - el.scrollWidth,
     transition: {
       stiffness: 50,
-      type: "spring",
+      type: 'spring',
     },
   });
 };
@@ -91,7 +91,7 @@ const GenresList: React.FC = () => {
   if (genresFetchLoading) {
     return (
       <div className="genres-list-container">
-        <h3>{lang === "ru" ? "Загрузка списка жанров" : "Loading..."}</h3>
+        <h3>{lang === 'ru' ? 'Загрузка списка жанров' : 'Loading...'}</h3>
       </div>
     );
   }
@@ -100,11 +100,11 @@ const GenresList: React.FC = () => {
     return (
       <div className="genres-list-container">
         <ErrorMessage
-          errorMessage={error.toString()}
+          errorMessage={error}
           componentMessage={
-            lang === "en"
-              ? "Fail to load genres list"
-              : "Ошибка при загрузке списка жанров"
+            lang === 'en'
+              ? 'Fail to load genres list'
+              : 'Ошибка при загрузке списка жанров'
           }
           showImage={false}
         />
@@ -124,7 +124,7 @@ const GenresList: React.FC = () => {
         animate={control}
         transition={{
           stiffness: 100,
-          type: "spring",
+          type: 'spring',
         }}
         initial={{
           x: activeGenreElementRef.current?.offsetLeft,
@@ -135,9 +135,9 @@ const GenresList: React.FC = () => {
             <li
               key={genre.id}
               onClick={() => setActiveGenre(genre.id.toString())}
-              className={filterGenre === `${genre.id}` ? "active" : ""}
+              className={filterGenre === `${genre.id}` ? 'active' : ''}
               ref={
-                genre.id === ""
+                genre.id === ''
                   ? allGenresElementRef
                   : filterGenre === genre.id.toString()
                   ? activeGenreElementRef
