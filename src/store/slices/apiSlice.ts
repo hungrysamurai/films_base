@@ -1,7 +1,5 @@
 import { fetchBaseQuery, createApi } from '@reduxjs/toolkit/query/react';
 import { Lang, MediaType } from '../../types';
-import { SerializedError } from '@reduxjs/toolkit';
-import { isErrorWithMessage } from '../../utils/isErrorWithMessage';
 
 const API_BASE: string =
   import.meta.env.MODE === 'development'
@@ -49,23 +47,12 @@ export const apiSlice = createApi({
         return genresList;
       },
 
-      transformErrorResponse: (error) => {
-        console.log(error);
-
-        // const errorData = response.data as { message: string };
-
-        // if (errorData) {
-        //   return errorData.message;
-        // }
-
-        // return response.status;
-
-        if (isErrorWithMessage(error)) {
-          return error.message;
-        } else {
-          return 'U'
+      transformErrorResponse: (errorResponse): APIError => {
+        return {
+          message: `Request failed with status code ${errorResponse.status}`,
+          errorResponse
         }
-      },
+      }
     }),
   }),
 });

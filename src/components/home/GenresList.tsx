@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { AnimationControls, motion, useAnimation } from 'framer-motion';
+import { useRef } from 'react';
+import { motion } from 'framer-motion';
 import { useGlobalContext } from '../../contexts/GlobalContext';
 
 import ErrorMessage from '../ErrorMessage';
@@ -13,22 +13,7 @@ import {
   setHomePageFilterGenre,
 } from '../../store/slices/homePageParamsSlice';
 import { useGetGenresQuery } from '../../store/slices/apiSlice';
-
-const animate = (
-  control: AnimationControls,
-  genresListWidth: number,
-  ref: React.RefObject<HTMLLIElement>,
-): void => {
-  const el = ref.current as HTMLLIElement;
-
-  control.start({
-    x: genresListWidth / 2 - el.offsetLeft - el.scrollWidth,
-    transition: {
-      stiffness: 50,
-      type: 'spring',
-    },
-  });
-};
+import useDraggableContainer from '../../hooks/useDraggableContainer';
 
 const GenresList: React.FC = () => {
   const { dispatch: cDispatch } = useGlobalContext();
@@ -45,38 +30,17 @@ const GenresList: React.FC = () => {
     error,
   } = useGetGenresQuery({ mediaType, lang });
 
-  const [genresListWidth, setGenresListWidth] = useState(0);
-
-  const control = useAnimation();
   const genresListContainerRef = useRef<HTMLUListElement>(null);
   const allGenresElementRef = useRef<HTMLLIElement>(null);
   const activeGenreElementRef = useRef<HTMLLIElement>(null);
 
-  // Set width of genres list container
-  useEffect(() => {
-    if (genresListContainerRef.current) {
-      setGenresListWidth(() => {
-        return (genresListContainerRef.current as HTMLUListElement).scrollWidth;
-      });
-    }
-  }, [genresFetchedList, genresListWidth]);
-
-  // Jump animation to 'all' element when media type changed
-  useEffect(() => {
-    if (
-      allGenresElementRef.current &&
-      !activeGenreElementRef.current &&
-      genresListWidth !== 0
-    ) {
-      animate(control, genresListWidth, allGenresElementRef);
-    }
-  }, [mediaType, genresListWidth]);
-
-  useEffect(() => {
-    if (activeGenreElementRef.current && genresListWidth !== 0) {
-      animate(control, genresListWidth, activeGenreElementRef);
-    }
-  }, [activeGenreElementRef.current, genresListWidth]);
+  const { containerWidth: genresListWidth, control } = useDraggableContainer(
+    genresListContainerRef,
+    genresFetchedList,
+    allGenresElementRef,
+    activeGenreElementRef,
+    mediaType,
+  );
 
   // Set current genre
   const setActiveGenre = (id: string) => {
@@ -100,7 +64,7 @@ const GenresList: React.FC = () => {
     return (
       <div className="genres-list-container">
         <ErrorMessage
-          errorMessage={error}
+          errorMessage={(error as APIError).message}
           componentMessage={
             lang === 'en'
               ? 'Fail to load genres list'

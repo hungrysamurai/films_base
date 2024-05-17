@@ -4,24 +4,24 @@ import {
   MovieFilterListTerm,
   TVFilterListTerm,
   MoviesListMode,
-} from "../types";
+} from '../types';
 
-import { useState, useCallback, useEffect } from "react";
-import axios, { AxiosResponse, AxiosError } from "axios";
-import { MovieListItem, TVListItem } from "../utils/classes/moviesListItem";
-import { filterListQueries } from "../data/filterListQueries";
+import { useState, useCallback, useEffect } from 'react';
+import axios, { AxiosResponse, AxiosError } from 'axios';
+import { MovieListItem, TVListItem } from '../utils/classes/moviesListItem';
+import { filterListQueries } from '../data/filterListQueries';
 import {
   MoviesListReducerAction,
   MoviesListReducerActionTypes,
-} from "../reducers/moviesListReducer";
+} from '../reducers/moviesListReducer';
 
 const apiBase: string =
-  import.meta.env.MODE === "development"
+  import.meta.env.MODE === 'development'
     ? import.meta.env.VITE_PROXY_DATA_URL_DEV
     : import.meta.env.VITE_PROXY_DATA_URL_PROD;
 const apiKey: string = import.meta.env.VITE_TMDB_API_KEY;
 const imagesUrlBase: string =
-  import.meta.env.MODE === "development"
+  import.meta.env.MODE === 'development'
     ? `${import.meta.env.VITE_PROXY_DATA_FILE_URL_DEV}w300`
     : `${import.meta.env.VITE_PROXY_DATA_FILE_URL_PROD}w300`;
 
@@ -33,12 +33,12 @@ export const useFetchMoviesList = (
   page: number,
   searchQuery: string,
   moviesListMode: MoviesListMode,
-  dispatch: React.Dispatch<MoviesListReducerAction>
+  dispatch: React.Dispatch<MoviesListReducerAction>,
 ) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<FetchDataError>({
     show: false,
-    message: "",
+    message: '',
   });
 
   const fetchMoviesList = useCallback(
@@ -48,27 +48,27 @@ export const useFetchMoviesList = (
       filterList: MovieFilterListTerm | TVFilterListTerm,
       filterGenre: string,
       currentPage: number,
-      searchQuery: string
+      searchQuery: string,
     ) => {
       setIsLoading(true);
       setError({
         show: false,
-        message: "",
+        message: '',
       });
 
       try {
         const genresParam =
-          filterGenre !== "" ? `&with_genres=${filterGenre}` : "";
+          filterGenre !== '' ? `&with_genres=${filterGenre}` : '';
 
         let response: AxiosResponse<FetchedListData>;
 
-        if (moviesListMode === "home") {
+        if (moviesListMode === 'home') {
           response = await axios(
-            `${apiBase}/discover/${mediaType}?page=${currentPage}&language=${lang}${genresParam}&${filterListQueries[mediaType][filterList]}&${apiKey}`
+            `${apiBase}/discover/${mediaType}?page=${currentPage}&language=${lang}${genresParam}&${filterListQueries[mediaType][filterList]}&${apiKey}`,
           );
         } else {
           response = await axios(
-            `${apiBase}/search/${mediaType}?${apiKey}&query=${searchQuery}&page=${currentPage}&language=${lang}`
+            `${apiBase}/search/${mediaType}?${apiKey}&query=${searchQuery}&page=${currentPage}&language=${lang}`,
           );
         }
 
@@ -76,9 +76,9 @@ export const useFetchMoviesList = (
 
         if (fetchedData.total_results === 0) {
           throw new Error(
-            lang === "ru"
-              ? "Нет результатов, удовлетворяющих заданным условиям"
-              : "No matching results"
+            lang === 'ru'
+              ? 'Нет результатов, удовлетворяющих заданным условиям'
+              : 'No matching results',
           );
         }
 
@@ -95,7 +95,7 @@ export const useFetchMoviesList = (
             if (currentPage === 1) {
               ids.push(item.id as number);
             }
-          }
+          },
         );
 
         if (currentPage === 1) {
@@ -125,7 +125,7 @@ export const useFetchMoviesList = (
         setIsLoading(false);
       }
     },
-    [dispatch, moviesListMode]
+    [dispatch, moviesListMode],
   );
 
   useEffect(() => {
@@ -135,7 +135,7 @@ export const useFetchMoviesList = (
       filterList,
       filterGenre,
       page,
-      searchQuery
+      searchQuery,
     );
   }, [
     mediaType,

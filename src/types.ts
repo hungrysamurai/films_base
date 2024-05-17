@@ -2,6 +2,8 @@ import { operations } from "./tmdb_types";
 import { MoviesListReducerAction } from "./reducers/moviesListReducer";
 import { MovieListItem, TVListItem } from "./utils/classes/moviesListItem";
 import { ReactElement } from "react";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
 
 export enum ColorTheme {
   Dark = "dark",
@@ -169,4 +171,9 @@ declare global {
   type FilterLists = {
     [key in Lang]: FilterList[];
   };
+
+  type APIError = {
+    errorResponse: FetchBaseQueryError | SerializedError | undefined,
+    message: string
+  }
 }
