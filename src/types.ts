@@ -1,47 +1,47 @@
-import { operations } from "./tmdb_types";
-import { MoviesListReducerAction } from "./reducers/moviesListReducer";
-import { MovieListItem, TVListItem } from "./utils/classes/moviesListItem";
-import { ReactElement } from "react";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { SerializedError } from "@reduxjs/toolkit";
+import { operations } from './tmdb_types';
+import { MoviesListReducerAction } from './reducers/moviesListReducer';
+import { MovieListItem, TVListItem } from './utils/classes/moviesListItem';
+import { ReactElement } from 'react';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { SerializedError } from '@reduxjs/toolkit';
 
 export enum ColorTheme {
-  Dark = "dark",
-  Light = "light",
+  Dark = 'dark',
+  Light = 'light',
 }
 
 export enum Lang {
-  Ru = "ru",
-  En = "en",
+  Ru = 'ru',
+  En = 'en',
 }
 
 export enum MediaType {
-  Movie = "movie",
-  TV = "tv",
+  Movie = 'movie',
+  TV = 'tv',
 }
 
 export enum MovieFilterListTerm {
-  Upcoming = "upcoming",
-  NowPlaying = "now_playing",
-  Popular = "popular",
-  TopRated = "top_rated",
+  Upcoming = 'upcoming',
+  NowPlaying = 'now_playing',
+  Popular = 'popular',
+  TopRated = 'top_rated',
 }
 
 export enum TVFilterListTerm {
-  OnTheAir = "on_the_air",
-  Popular = "popular",
-  TopRated = "top_rated",
+  OnTheAir = 'on_the_air',
+  Popular = 'popular',
+  TopRated = 'top_rated',
 }
 
 export enum MoviesListMode {
-  Home = "home",
-  Search = "search",
+  Home = 'home',
+  Search = 'search',
 }
 
 export enum ModalMode {
-  Gallery = "gallery",
-  Box = "box",
-  Overlay = "overlay",
+  Gallery = 'gallery',
+  Box = 'box',
+  Overlay = 'overlay',
 }
 
 type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
@@ -54,40 +54,46 @@ declare global {
   };
 
   type FetchedListItemMovie = ArrayElement<
-    operations["discover-movie"]["responses"][200]["content"]["application/json"]["results"]
+    operations['discover-movie']['responses'][200]['content']['application/json']['results']
   >;
 
   type FetchedListItemTV = ArrayElement<
-    operations["discover-tv"]["responses"][200]["content"]["application/json"]["results"]
+    operations['discover-tv']['responses'][200]['content']['application/json']['results']
   >;
 
   type FetchedListData = Required<
-    operations["discover-tv"]["responses"][200]["content"]["application/json"]
+    operations['discover-tv']['responses'][200]['content']['application/json']
   >;
 
   type FetchedListInitialData = [
     MovieListItem[] | TVListItem[],
     number[],
-    number?
+    number?,
   ];
 
   type FetchedMovieData =
-    operations["movie-details"]["responses"][200]["content"]["application/json"];
+    operations['movie-details']['responses'][200]['content']['application/json'];
 
   type FetchedTVData =
-    operations["tv-series-details"]["responses"][200]["content"]["application/json"];
+    operations['tv-series-details']['responses'][200]['content']['application/json'];
 
   type FetchedCreditsData =
-    operations["movie-credits"]["responses"][200]["content"]["application/json"];
+    operations['movie-credits']['responses'][200]['content']['application/json'];
 
   type FetchedItemImageData =
-    operations["movie-images"]["responses"][200]["content"]["application/json"];
+    operations['movie-images']['responses'][200]['content']['application/json'];
 
   type FetchedItemVideosData =
-    operations["movie-videos"]["responses"][200]["content"]["application/json"];
+    operations['movie-videos']['responses'][200]['content']['application/json'];
 
   type FetchedGenresTVList =
-    operations["genre-tv-list"]["responses"][200]["content"]["application/json"];
+    operations['genre-tv-list']['responses'][200]['content']['application/json'];
+
+  type FetchRequestFailedError = {
+    status_code: number;
+    status_message: string;
+    success: false;
+  };
 
   type FetchDataError = {
     message: string;
@@ -95,7 +101,7 @@ declare global {
   };
 
   type GenreData = {
-    id: "" | number;
+    id: '' | number;
     name: string;
   };
 
@@ -173,7 +179,15 @@ declare global {
   };
 
   type APIError = {
-    errorResponse: FetchBaseQueryError | SerializedError | undefined,
-    message: string
-  }
+    errorResponse: FetchBaseQueryError | SerializedError | undefined;
+    message: string;
+  };
+
+  type OnlyProperties<T> = {
+    [K in keyof T]: T[K] extends Function ? never : K;
+  }[keyof T];
+
+  type InstanceProperties<T> = Pick<T, OnlyProperties<T>>;
+
+  type MoviesListItemProps = InstanceProperties<TVListItem | MovieListItem>;
 }

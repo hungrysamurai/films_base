@@ -1,27 +1,22 @@
-import { movieLists, tvLists } from "../../data/lists";
-import { MovieFilterListTerm, TVFilterListTerm } from "../../types";
-import { useGlobalContext } from "../../contexts/GlobalContext";
-import { MoviesListReducerActionTypes } from "../../reducers/moviesListReducer";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { getCurrentLang } from "../../store/slices/mainSlice";
+import { movieLists, tvLists } from '../../data/lists';
+import { MovieFilterListTerm, TVFilterListTerm } from '../../types';
+
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { getCurrentLang } from '../../store/slices/mainSlice';
 import {
+  getHomePageFilterList,
   getHomePageMediaType,
   setHomePageFilterList,
-} from "../../store/slices/homePageParamsSlice";
+} from '../../store/slices/homePageParamsSlice';
 
 const ListsContainer: React.FC = () => {
-  const {
-    mediaType: cMediaType,
-    filterList,
-    dispatch: cDispatch,
-  } = useGlobalContext();
-
   const dispatch = useAppDispatch();
 
   const lang = useAppSelector(getCurrentLang);
   const mediaType = useAppSelector(getHomePageMediaType);
+  const filterList = useAppSelector(getHomePageFilterList);
 
-  const list = cMediaType === "movie" ? movieLists[lang] : tvLists[lang];
+  const list = mediaType === 'movie' ? movieLists[lang] : tvLists[lang];
 
   return (
     <div className="lists-container">
@@ -38,13 +33,8 @@ const ListsContainer: React.FC = () => {
               key={i}
               onClick={() => {
                 dispatch(setHomePageFilterList(dataValue));
-
-                cDispatch({
-                  type: MoviesListReducerActionTypes.SET_FILTER_LIST,
-                  payload: dataValue,
-                });
               }}
-              className={filterList === dataValue ? "active" : ""}
+              className={filterList === dataValue ? 'active' : ''}
             >
               {title}
             </li>

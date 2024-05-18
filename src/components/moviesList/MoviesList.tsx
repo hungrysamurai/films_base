@@ -1,70 +1,56 @@
-import { useGlobalContext } from "../../contexts/GlobalContext";
-import { useEffect, useCallback, useRef, useLayoutEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import SingleMovie from "./SingleMovie";
-import Loader from "../Loader";
-import ErrorMessage from "../ErrorMessage";
-import { MoviesListReducerActionTypes } from "../../reducers/moviesListReducer";
+import { useEffect, useRef, useLayoutEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import SingleMovie from './SingleMovie';
+import Loader from '../Loader';
+import ErrorMessage from '../ErrorMessage';
 
-const MoviesList: React.FC = () => {
-  const {
-    moviesFetchLoading,
-    moviesFetchError,
-    dispatch,
-    moviesList,
-    page,
-    totalPages,
-    selectedMovie,
-  } = useGlobalContext();
+import { useAppDispatch } from '../../store/hooks';
 
+import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
+import useInfiniteScroll from '../../hooks/useInfiniteScroll';
+
+type MoviesListProps = {
+  increasePageCount: () => void;
+  moviesList: MoviesListItemProps[];
+  currentPage: number;
+  totalPages: number;
+  lastActiveItem: string;
+  setLastActiveItem: ActionCreatorWithPayload<string>;
+  isError: boolean;
+  isLoading: boolean;
+};
+
+const MoviesList: React.FC<MoviesListProps> = ({
+  increasePageCount,
+  moviesList,
+  currentPage,
+  totalPages,
+  lastActiveItem,
+  setLastActiveItem,
+  isError,
+  isLoading,
+}) => {
+  const dispatch = useAppDispatch();
+
+  // Scroll to element
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
-    scrollRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-      inline: "start",
-    });
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'start',
+      });
+    }
   }, []);
 
-  const setScrollTargetOnCurrent = (id: string) => {
-    dispatch({
-      type: MoviesListReducerActionTypes.SET_MOVIE_TO_SCROLL,
-      payload: id,
-    });
-  };
+  useInfiniteScroll(currentPage, totalPages, increasePageCount, isError);
 
-  const scrollHandler = useCallback(() => {
-    if (page < totalPages) {
-      if (
-        window.innerHeight + window.scrollY >=
-        document.body.scrollHeight - 100
-      ) {
-        const nextPage = page + 1;
-        dispatch({
-          type: MoviesListReducerActionTypes.INCREASE_PAGE,
-          payload: nextPage,
-        });
-      }
-    }
-  }, [dispatch, page, totalPages]);
-
-  useEffect(() => {
-    if (moviesFetchError.show) {
-      return;
-    }
-
-    if (totalPages > 1) {
-      window.addEventListener("scroll", scrollHandler);
-    }
-
-    return () => window.removeEventListener("scroll", scrollHandler);
-  }, [moviesFetchError, totalPages, scrollHandler]);
-
-  if (moviesFetchError.show) {
+  if (isError) {
     return (
       <ErrorMessage
-        errorMessage={moviesFetchError.message}
+        errorMessage={'Request Failed'}
         componentMessage="Ошибка при загрузке списка"
         showImage={true}
       />
@@ -76,17 +62,15 @@ const MoviesList: React.FC = () => {
       <motion.div layout layoutRoot className="movies-list-container">
         {moviesList.map(({ posterUrl, title, id, mediaType }) => {
           if (title.length > 35) {
-            title = title.slice(0, 35) + "...";
+            title = title.slice(0, 35) + '...';
           }
 
           return (
             <AnimatePresence key={id}>
               {/* div for restore scroll */}
               <div
-                onClick={() => {
-                  setScrollTargetOnCurrent(`${id}`);
-                }}
-                ref={`${id}` === selectedMovie ? scrollRef : null}
+                onClick={() => dispatch(setLastActiveItem(id.toString()))}
+                ref={`${id}` === lastActiveItem ? scrollRef : null}
                 className="scroll-wrapper"
               >
                 <SingleMovie
@@ -101,7 +85,7 @@ const MoviesList: React.FC = () => {
         })}
       </motion.div>
 
-      {moviesFetchLoading && <Loader />}
+      {isLoading && <Loader />}
     </>
   );
 };
