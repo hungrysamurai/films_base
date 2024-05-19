@@ -1,4 +1,4 @@
-import { useEffect, useRef, useLayoutEffect } from 'react';
+import { useRef, useLayoutEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SingleMovie from './SingleMovie';
 import Loader from '../Loader';
@@ -17,7 +17,7 @@ type MoviesListProps = {
   lastActiveItem: string;
   setLastActiveItem: ActionCreatorWithPayload<string>;
   isError: boolean;
-  isLoading: boolean;
+  isFetching: boolean;
 };
 
 const MoviesList: React.FC<MoviesListProps> = ({
@@ -28,7 +28,7 @@ const MoviesList: React.FC<MoviesListProps> = ({
   lastActiveItem,
   setLastActiveItem,
   isError,
-  isLoading,
+  isFetching,
 }) => {
   const dispatch = useAppDispatch();
 
@@ -85,7 +85,7 @@ const MoviesList: React.FC<MoviesListProps> = ({
         })}
       </motion.div>
 
-      {isLoading && <Loader />}
+      {isFetching && <Loader />}
     </>
   );
 };

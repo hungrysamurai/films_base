@@ -11,8 +11,6 @@ import {
 } from '../../types';
 import { filterListQueries } from '../../data/filterListQueries';
 import { MovieListItem, TVListItem } from '../../utils/classes/moviesListItem';
-import { AppDispatch } from '../store';
-import { setHomePageTotalPages } from './homePageParamsSlice';
 
 const API_BASE: string =
   import.meta.env.MODE === 'development'
@@ -68,7 +66,7 @@ export const apiSlice = createApi({
     }),
 
     getMoviesList: build.query<
-      MoviesListItemProps[],
+      { itemsList: MoviesListItemProps[]; totalPages: number },
       {
         mediaType: MediaType;
         filterList: MovieFilterListTerm | TVFilterListTerm;
@@ -77,9 +75,7 @@ export const apiSlice = createApi({
         currentPage: number;
       }
     >({
-      queryFn: async (args, queryApi, _, baseQuery) => {
-        const dispatch = queryApi.dispatch as AppDispatch;
-
+      queryFn: async (args, __, _, baseQuery) => {
         const { mediaType, filterList, filterGenre, lang, currentPage } = args;
         const genresParam =
           filterGenre !== '' ? `&with_genres=${filterGenre}` : '';
@@ -137,15 +133,9 @@ export const apiSlice = createApi({
           },
         );
 
-        if (currentPage === 1) {
-          dispatch(
-            setHomePageTotalPages(
-              responseData.total_pages > 500 ? 500 : responseData.total_pages,
-            ),
-          );
-        }
-
-        return { data: output };
+        return {
+          data: { itemsList: output, totalPages: responseData.total_pages },
+        };
       },
 
       serializeQueryArgs: ({ endpointName, queryArgs }) => {
@@ -154,11 +144,13 @@ export const apiSlice = createApi({
       },
 
       merge: (currentCache, newItems) => {
-        const existingIds = new Set(currentCache.map((item) => item.id));
-        const deduplicatedItems = newItems.filter(
+        const existingIds = new Set(
+          currentCache.itemsList.map((item) => item.id),
+        );
+        const deduplicatedItems = newItems.itemsList.filter(
           (item) => !existingIds.has(item.id),
         );
-        currentCache.push(...deduplicatedItems);
+        currentCache.itemsList.push(...deduplicatedItems);
       },
 
       forceRefetch: ({ currentArg, previousArg }) => {

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 function useInfiniteScroll(
   currentPage: number,
@@ -6,8 +6,14 @@ function useInfiniteScroll(
   increasePage: () => void,
   isError: boolean,
 ) {
+  const currentPageRef = useRef(currentPage);
+
+  useEffect(() => {
+    currentPageRef.current = currentPage;
+  }, [currentPage]);
+
   const scrollHandler = () => {
-    if (currentPage < totalPages) {
+    if (currentPageRef.current < totalPages) {
       if (
         window.innerHeight + window.scrollY >=
         document.body.scrollHeight - 100

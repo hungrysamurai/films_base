@@ -6,7 +6,6 @@ export interface HomePageParamsState {
   filterList: MovieFilterListTerm | TVFilterListTerm;
   filterGenre: string;
   currentPage: number;
-  totalPages: number;
   lastActiveItem: string;
 }
 
@@ -15,7 +14,6 @@ const initialState: HomePageParamsState = {
   filterList: MovieFilterListTerm.TopRated,
   filterGenre: '',
   currentPage: 1,
-  totalPages: 0,
   lastActiveItem: '',
 };
 
@@ -28,9 +26,7 @@ const homePageParamsSlice = createSlice({
         state.filterGenre = '';
         state.filterList = MovieFilterListTerm.TopRated;
         state.mediaType = action.payload;
-
         state.currentPage = 1;
-        state.totalPages = 0;
       },
     ),
 
@@ -40,30 +36,20 @@ const homePageParamsSlice = createSlice({
         action: PayloadAction<MovieFilterListTerm | TVFilterListTerm>,
       ) => {
         state.filterList = action.payload;
-
         state.currentPage = 1;
-        state.totalPages = 0;
       },
     ),
 
     setHomePageFilterGenre: create.reducer(
       (state, action: PayloadAction<string>) => {
         state.filterGenre = action.payload;
-
         state.currentPage = 1;
-        state.totalPages = 0;
       },
     ),
 
     increaseHomePageCurrentPage: create.reducer((state) => {
       state.currentPage = state.currentPage + 1;
     }),
-
-    setHomePageTotalPages: create.reducer(
-      (state, action: PayloadAction<number>) => {
-        state.totalPages = action.payload;
-      },
-    ),
 
     setHomePageLastActiveItem: create.reducer(
       (state, action: PayloadAction<string>) => {
@@ -77,7 +63,6 @@ const homePageParamsSlice = createSlice({
     getHomePageFilterList: (state) => state.filterList,
     getHomePageFilterGenre: (state) => state.filterGenre,
     getHomePageCurrentPage: (state) => state.currentPage,
-    getHomePageTotalPages: (state) => state.totalPages,
     getHomePageLastActiveItem: (state) => state.lastActiveItem,
   },
 });
@@ -87,7 +72,6 @@ export const {
   setHomePageFilterList,
   setHomePageFilterGenre,
   increaseHomePageCurrentPage,
-  setHomePageTotalPages,
   setHomePageLastActiveItem,
 } = homePageParamsSlice.actions;
 
@@ -96,7 +80,6 @@ export const {
   getHomePageFilterList,
   getHomePageFilterGenre,
   getHomePageCurrentPage,
-  getHomePageTotalPages,
   getHomePageLastActiveItem,
 } = homePageParamsSlice.selectors;
 

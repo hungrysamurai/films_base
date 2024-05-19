@@ -10,11 +10,11 @@ import {
   getHomePageFilterList,
   getHomePageLastActiveItem,
   getHomePageMediaType,
-  getHomePageTotalPages,
   increaseHomePageCurrentPage,
   setHomePageLastActiveItem,
 } from '../store/slices/homePageParamsSlice';
 import { useGetMoviesListQuery } from '../store/slices/apiSlice';
+import { useCallback } from 'react';
 
 const Home: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -24,14 +24,10 @@ const Home: React.FC = () => {
   const filterGenre = useAppSelector(getHomePageFilterGenre);
   const lang = useAppSelector(getCurrentLang);
   const currentPage = useAppSelector(getHomePageCurrentPage);
-  const totalPages = useAppSelector(getHomePageTotalPages);
+
   const lastActiveItem = useAppSelector(getHomePageLastActiveItem);
 
-  const {
-    data = [],
-    isLoading,
-    isError,
-  } = useGetMoviesListQuery({
+  const { data, isError, isFetching } = useGetMoviesListQuery({
     mediaType,
     filterList,
     filterGenre,
@@ -39,9 +35,9 @@ const Home: React.FC = () => {
     currentPage,
   });
 
-  const increasePageCount = () => {
+  const increasePageCount = useCallback(() => {
     dispatch(increaseHomePageCurrentPage());
-  };
+  }, [dispatch]);
 
   return (
     <section className="section-home">
@@ -51,12 +47,12 @@ const Home: React.FC = () => {
       <MoviesList
         increasePageCount={increasePageCount}
         currentPage={currentPage}
-        totalPages={totalPages}
+        totalPages={data && data.totalPages ? data?.totalPages : 0}
         lastActiveItem={lastActiveItem}
         setLastActiveItem={setHomePageLastActiveItem}
-        moviesList={data}
+        moviesList={data ? data.itemsList : []}
         isError={isError}
-        isLoading={isLoading}
+        isFetching={isFetching}
       />
     </section>
   );
