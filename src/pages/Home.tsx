@@ -14,12 +14,9 @@ import {
   setHomePageCurrentPage,
   setHomePageLastActiveItem,
 } from '../store/slices/homePageParamsSlice';
-import {
-  selectCachedLastFetchedPage,
-  useGetMoviesListQuery,
-} from '../store/slices/apiSlice';
+import { apiSlice, useGetMoviesListQuery } from '../store/slices/apiSlice';
 
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 const Home: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -29,19 +26,31 @@ const Home: React.FC = () => {
   const filterGenre = useAppSelector(getHomePageFilterGenre);
   const lang = useAppSelector(getCurrentLang);
   const currentPage = useAppSelector(getHomePageCurrentPage);
-
   const lastActiveItem = useAppSelector(getHomePageLastActiveItem);
 
-  // Use the memoized selector to access cached data
-  const lastFetchedPage = useAppSelector((state) =>
-    selectCachedLastFetchedPage(state, {
-      mediaType,
-      filterList,
-      filterGenre,
-      lang,
-      currentPage,
-    }),
+  // Get cache for current endpoint & args
+  const getCurrentCachedData = useMemo(
+    () =>
+      apiSlice.endpoints.getMoviesList.select({
+        mediaType,
+        filterList,
+        filterGenre,
+        lang,
+        currentPage,
+      }),
+    [mediaType, filterList, filterGenre, lang, currentPage],
   );
+
+  const { data: cachedData } = useAppSelector(getCurrentCachedData);
+
+  // If cache contains some data = set currentPage to currentPage in cache
+  useEffect(() => {
+    if (cachedData && cachedData.lastFetchedPage) {
+      if (cachedData.lastFetchedPage > currentPage) {
+        dispatch(setHomePageCurrentPage(cachedData.lastFetchedPage));
+      }
+    }
+  }, [cachedData]);
 
   const { data, isError, isFetching } = useGetMoviesListQuery({
     mediaType,
@@ -51,21 +60,16 @@ const Home: React.FC = () => {
     currentPage,
   });
 
-  useEffect(() => {
-    if (lastFetchedPage) {
-      if (lastFetchedPage > currentPage) {
-        dispatch(setHomePageCurrentPage(lastFetchedPage));
-      }
-    }
-  }, [lastFetchedPage]);
-
   const increasePageCount = useCallback(() => {
     dispatch(increaseHomePageCurrentPage());
   }, [dispatch]);
 
-  const setLastActiveItem = (id: string) => {
-    dispatch(setHomePageLastActiveItem(id));
-  };
+  const setLastActiveItem = useCallback(
+    (id: string) => {
+      dispatch(setHomePageLastActiveItem(id));
+    },
+    [dispatch],
+  );
 
   return (
     <section className="section-home">
@@ -75,10 +79,10 @@ const Home: React.FC = () => {
       <MoviesList
         increasePageCount={increasePageCount}
         currentPage={currentPage}
-        totalPages={data && data.totalPages ? data?.totalPages : 0}
+        totalPages={data?.totalPages ?? 0}
         lastActiveItem={lastActiveItem}
         setLastActiveItem={setLastActiveItem}
-        moviesList={data ? data.itemsList : []}
+        moviesList={data?.itemsList ?? []}
         isError={isError}
         isFetching={isFetching}
       />

@@ -11,8 +11,6 @@ import {
 } from '../../types';
 import { filterListQueries } from '../../data/filterListQueries';
 import { MovieListItem, TVListItem } from '../../utils/classes/moviesListItem';
-import { createSelector } from '@reduxjs/toolkit';
-import { RootState } from '../store';
 
 const API_BASE: string =
   import.meta.env.MODE === 'development'
@@ -58,13 +56,6 @@ export const apiSlice = createApi({
 
         return genresList;
       },
-
-      // transformErrorResponse: (errorResponse): APIError => {
-      //   return {
-      //     message: `Request failed with status code ${errorResponse.status}`,
-      //     errorResponse,
-      //   };
-      // },
     }),
 
     getMoviesList: build.query<
@@ -161,7 +152,13 @@ export const apiSlice = createApi({
           (item) => !existingIds.has(item.id),
         );
         currentCache.itemsList.push(...deduplicatedItems);
-        currentCache.lastFetchedPage = newItems.lastFetchedPage;
+
+        // Dont update cache lastFetchedPage value if new query with old args have lastFetchedPage less than current
+        if (currentCache.lastFetchedPage < newItems.lastFetchedPage) {
+          currentCache.lastFetchedPage = newItems.lastFetchedPage;
+        } else {
+          currentCache.lastFetchedPage = currentCache.lastFetchedPage;
+        }
       },
 
       forceRefetch: ({ currentArg, previousArg }) => {
@@ -176,7 +173,7 @@ export const apiSlice = createApi({
     }),
 
     getSearchResults: build.query<
-      { itemsList: MoviesListItemProps[]; totalPages: number },
+      { itemsList: MoviesListItemProps[]; totalPages: number; lastFetchedPage: number },
       { lang: Lang; currentPage: number; searchQuery: string }
     >({
       queryFn: async (args, __, _, baseQuery) => {
@@ -243,6 +240,7 @@ export const apiSlice = createApi({
           data: {
             itemsList: output,
             totalPages: responseData.total_pages || 0,
+            lastFetchedPage: responseData.page || 1
           },
         };
       },
@@ -260,6 +258,12 @@ export const apiSlice = createApi({
           (item) => !existingPairs.has(`${item.id}-${item.mediaType}`),
         );
         currentCache.itemsList.push(...deduplicatedItems);
+
+        if (currentCache.lastFetchedPage < newItems.lastFetchedPage) {
+          currentCache.lastFetchedPage = newItems.lastFetchedPage;
+        } else {
+          currentCache.lastFetchedPage = currentCache.lastFetchedPage;
+        }
       },
 
       forceRefetch: ({ currentArg, previousArg }) => {
@@ -278,18 +282,3 @@ export const {
   useGetMoviesListQuery,
   useGetSearchResultsQuery,
 } = apiSlice;
-
-// Create a memoized selector for the getMoviesList endpoint
-export const selectCachedLastFetchedPage = createSelector(
-  (
-    state: RootState,
-    queryArgs: {
-      mediaType: MediaType;
-      filterList: MovieFilterListTerm | TVFilterListTerm;
-      filterGenre: string;
-      lang: Lang;
-      currentPage: number;
-    },
-  ) => apiSlice.endpoints.getMoviesList.select(queryArgs)(state),
-  (result) => result?.data?.lastFetchedPage,
-);

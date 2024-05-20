@@ -1,15 +1,17 @@
 import { useParams } from 'react-router-dom';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { getCurrentLang, setMainTitle } from '../store/slices/mainSlice';
-import { useGetSearchResultsQuery } from '../store/slices/apiSlice';
+import { apiSlice, useGetSearchResultsQuery } from '../store/slices/apiSlice';
 import MoviesList from '../components/moviesList/MoviesList';
+
 import {
   getSearchPageCurrentPage,
   getSearchPageLastActiveItem,
   getSearchPageSearchQuery,
   increaseSearchPageCurrentPage,
+  setSearchPageCurrentPage,
   setSearchPageLastActiveItem,
   setSearchPageSearchQuery,
 } from '../store/slices/searchPageParamsSlice';
@@ -24,6 +26,26 @@ const SearchResults: React.FC = () => {
   const searchQuery = useAppSelector(getSearchPageSearchQuery);
   const currentPage = useAppSelector(getSearchPageCurrentPage);
   const lastActiveItem = useAppSelector(getSearchPageLastActiveItem);
+
+  const getCurrentCachedData = useMemo(
+    () =>
+      apiSlice.endpoints.getSearchResults.select({
+        lang,
+        searchQuery,
+        currentPage,
+      }),
+    [lang, searchQuery, currentPage],
+  );
+
+  const { data: cachedData } = useAppSelector(getCurrentCachedData);
+
+  useEffect(() => {
+    if (cachedData && cachedData.lastFetchedPage) {
+      if (cachedData.lastFetchedPage > currentPage) {
+        dispatch(setSearchPageCurrentPage(cachedData.lastFetchedPage));
+      }
+    }
+  }, [cachedData]);
 
   // Initially check
   useEffect(() => {
@@ -40,9 +62,12 @@ const SearchResults: React.FC = () => {
     dispatch(increaseSearchPageCurrentPage());
   }, [dispatch]);
 
-  const setLastActiveSearchItem = (id: string) => {
-    dispatch(setSearchPageLastActiveItem(id));
-  };
+  const setLastActiveSearchItem = useCallback(
+    (id: string) => {
+      dispatch(setSearchPageLastActiveItem(id));
+    },
+    [dispatch],
+  );
 
   const { data, isError, isFetching } = useGetSearchResultsQuery({
     lang,
@@ -55,10 +80,10 @@ const SearchResults: React.FC = () => {
       <MoviesList
         increasePageCount={increasePageCount}
         currentPage={currentPage}
-        totalPages={data && data.totalPages ? data?.totalPages : 0}
+        totalPages={data?.totalPages ?? 0}
         lastActiveItem={lastActiveItem}
         setLastActiveItem={setLastActiveSearchItem}
-        moviesList={data ? data.itemsList : []}
+        moviesList={data?.itemsList ?? []}
         isError={isError}
         isFetching={isFetching}
       />

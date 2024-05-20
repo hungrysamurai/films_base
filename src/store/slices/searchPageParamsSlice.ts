@@ -34,6 +34,12 @@ const searchPageParamsSlice = createSlice({
         state.lastActiveItem = action.payload;
       },
     ),
+
+    setSearchPageCurrentPage: create.reducer(
+      (state, action: PayloadAction<number>) => {
+        state.currentPage = action.payload;
+      }
+    )
   }),
 
   selectors: {
@@ -47,6 +53,7 @@ export const {
   setSearchPageSearchQuery,
   increaseSearchPageCurrentPage,
   setSearchPageLastActiveItem,
+  setSearchPageCurrentPage
 } = searchPageParamsSlice.actions;
 
 export const {
