@@ -93,6 +93,7 @@ export const apiSlice = createApi({
                 message:
                   (response.data as FetchRequestFailedError).status_message ||
                   'Request failed',
+                status: 401
               },
             } as FetchBaseQueryError,
           };
@@ -109,6 +110,7 @@ export const apiSlice = createApi({
                   lang === 'ru'
                     ? 'Нет результатов, удовлетворяющих заданным условиям'
                     : 'No matching results',
+                status: 500
               },
             } as FetchBaseQueryError,
           };
@@ -195,6 +197,7 @@ export const apiSlice = createApi({
                 message:
                   (response.data as FetchRequestFailedError).status_message ||
                   'Request failed',
+                status: 401
               },
             } as FetchBaseQueryError,
           };
@@ -211,6 +214,7 @@ export const apiSlice = createApi({
                   lang === 'ru'
                     ? 'Нет результатов, удовлетворяющих заданным условиям'
                     : 'No matching results',
+                status: 500
               },
             } as FetchBaseQueryError,
           };
@@ -274,6 +278,32 @@ export const apiSlice = createApi({
         );
       },
     }),
+
+    getSimilarMovies: build.query<
+      MoviesListItemProps[],
+      {
+        lang: Lang,
+        itemID: string,
+        itemMediaType: MediaType
+      }>({
+        query: ({ itemID, itemMediaType, lang }) =>
+          `/${itemMediaType}/${itemID}/similar?${API_KEY}&language=${lang}`,
+
+        transformResponse: (response: FetchedListData, _, { itemMediaType }) => {
+
+          const output: MoviesListItemProps[] = [];
+
+          response.results.forEach((item) => {
+            if (itemMediaType === MediaType.Movie) {
+              output.push(new MovieListItem(IMG_BASE_URL, item, itemMediaType).getValues());
+            } else if (itemMediaType === MediaType.TV) {
+              output.push(new TVListItem(IMG_BASE_URL, item, itemMediaType).getValues());
+            }
+          });
+
+          return output;
+        },
+      }),
   }),
 });
 
@@ -281,4 +311,5 @@ export const {
   useGetGenresQuery,
   useGetMoviesListQuery,
   useGetSearchResultsQuery,
+  useGetSimilarMoviesQuery
 } = apiSlice;

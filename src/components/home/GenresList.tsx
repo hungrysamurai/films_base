@@ -30,13 +30,13 @@ const GenresList: React.FC = () => {
   const allGenresElementRef = useRef<HTMLLIElement>(null);
   const activeGenreElementRef = useRef<HTMLLIElement>(null);
 
-  const { containerWidth: genresListWidth, control } = useDraggableContainer(
-    genresListContainerRef,
-    genresFetchedList,
-    allGenresElementRef,
-    activeGenreElementRef,
-    mediaType,
-  );
+  const { containerWidth: genresListWidth, control } = useDraggableContainer({
+    containerRef: genresListContainerRef,
+    dataTrigger: genresFetchedList,
+    defaultElementRef: allGenresElementRef,
+    activeElementRef: activeGenreElementRef,
+    additionalTriggers: [mediaType],
+  });
 
   // Set current genre
   const setActiveGenre = (id: string) => {

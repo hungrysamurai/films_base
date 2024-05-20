@@ -1,13 +1,14 @@
-import { useState, useEffect, useRef } from "react";
-import { motion, useAnimation } from "framer-motion";
-import { useFetchSimilarMoviesList } from "../../hooks/useFetchSimilarMoviesList";
+import { useState, useRef } from 'react';
+import { motion } from 'framer-motion';
 
-import SingleMovie from "./SingleMovie";
-import Loader from "../Loader";
-import ErrorMessage from "../ErrorMessage";
-import { MediaType } from "../../types";
-import { useAppSelector } from "../../store/hooks";
-import { getCurrentLang } from "../../store/slices/mainSlice";
+import SingleMovie from './SingleMovie';
+import Loader from '../Loader';
+import ErrorMessage from '../ErrorMessage';
+import { MediaType } from '../../types';
+import { useAppSelector } from '../../store/hooks';
+import { getCurrentLang } from '../../store/slices/mainSlice';
+import { useGetSimilarMoviesQuery } from '../../store/slices/apiSlice';
+import useDraggableContainer from '../../hooks/useDraggableContainer';
 
 type SimilarMoviesListProps = {
   itemID: string;
@@ -20,49 +21,45 @@ const SimilarMoviesList: React.FC<SimilarMoviesListProps> = ({
 }) => {
   const lang = useAppSelector(getCurrentLang);
 
-  const [elementWidth, setElementWidth] = useState(0);
-
   const [isDrag, setIsDrag] = useState(false);
+
   const moviesListRef = useRef<HTMLDivElement>(null);
-  const animationControl = useAnimation();
 
   const {
-    data: moviesFetchList,
-    isLoading: moviesFetchLoading,
-    error: moviesFetchError,
-  } = useFetchSimilarMoviesList(lang, itemID, itemMediaType);
+    data: itemsList = [],
+    isLoading,
+    isError,
+  } = useGetSimilarMoviesQuery({
+    lang,
+    itemID,
+    itemMediaType,
+  });
 
-  useEffect(() => {
-    if (moviesListRef.current) {
-      setElementWidth(() => {
-        return (moviesListRef.current as HTMLDivElement).scrollWidth;
-      });
+  const { control: animationControl, containerWidth: elementWidth } =
+    useDraggableContainer({
+      containerRef: moviesListRef,
+      dataTrigger: itemsList,
+      startAnimation: { x: 0 },
+      additionalTriggers: [],
+    });
 
-      animationControl.start({
-        x: 0,
-      });
-    }
-  }, [moviesFetchList, animationControl]);
-
-  if (moviesFetchError.show) {
+  if (isError) {
     return (
       <ErrorMessage
-        errorMessage={moviesFetchError.message}
+        errorMessage={'Request failed!'}
         componentMessage="Ошибка при загрузке списка"
         showImage={true}
       />
     );
   }
 
-  if (moviesFetchLoading) {
+  if (isLoading) {
     return <Loader />;
   }
 
   return (
     <div className="similar-movies-list-wrapper">
-      {moviesFetchList.length > 0 && (
-        <h2>{lang === "en" ? "Similar" : "Похожие"}</h2>
-      )}
+      {itemsList.length > 0 && <h2>{lang === 'en' ? 'Similar' : 'Похожие'}</h2>}
       <motion.div
         layout
         layoutRoot
@@ -74,15 +71,15 @@ const SimilarMoviesList: React.FC<SimilarMoviesListProps> = ({
         }}
         animate={animationControl}
         initial={{
-          x: "50%",
+          x: '50%',
         }}
         ref={moviesListRef}
         onDrag={() => setIsDrag(() => true)}
         onDragEnd={() => setIsDrag(() => false)}
       >
-        {moviesFetchList.map(({ posterUrl, title, id, mediaType }) => {
+        {itemsList.map(({ posterUrl, title, id, mediaType }) => {
           if (title.length > 35) {
-            title = title.slice(0, 35) + "...";
+            title = title.slice(0, 35) + '...';
           }
 
           return (
