@@ -4,18 +4,15 @@ import SingleMovie from './SingleMovie';
 import Loader from '../Loader';
 import ErrorMessage from '../ErrorMessage';
 
-import { useAppDispatch } from '../../store/hooks';
-
-import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
 import useInfiniteScroll from '../../hooks/useInfiniteScroll';
 
 type MoviesListProps = {
   increasePageCount: () => void;
-  moviesList: MoviesListItemProps[];
   currentPage: number;
   totalPages: number;
+  moviesList: MoviesListItemProps[];
   lastActiveItem: string;
-  setLastActiveItem: ActionCreatorWithPayload<string>;
+  setLastActiveItem: (id: string) => void;
   isError: boolean;
   isFetching: boolean;
 };
@@ -30,8 +27,6 @@ const MoviesList: React.FC<MoviesListProps> = ({
   isError,
   isFetching,
 }) => {
-  const dispatch = useAppDispatch();
-
   // Scroll to element
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -69,7 +64,7 @@ const MoviesList: React.FC<MoviesListProps> = ({
             <AnimatePresence key={id}>
               {/* div for restore scroll */}
               <div
-                onClick={() => dispatch(setLastActiveItem(id.toString()))}
+                onClick={() => setLastActiveItem(id.toString())}
                 ref={`${id}` === lastActiveItem ? scrollRef : null}
                 className="scroll-wrapper"
               >

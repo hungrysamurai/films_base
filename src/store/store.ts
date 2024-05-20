@@ -1,15 +1,17 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore } from '@reduxjs/toolkit';
 
-import authReducer from "./slices/authSlice";
-import mainReducer from "./slices/mainSlice";
-import homePageParamsReducer from "./slices/homePageParamsSlice";
-import { apiSlice } from "./slices/apiSlice";
+import authReducer from './slices/authSlice';
+import mainReducer from './slices/mainSlice';
+import homePageParamsReducer from './slices/homePageParamsSlice';
+import searchPageParamsReducer from './slices/searchPageParamsSlice';
+import { apiSlice } from './slices/apiSlice';
 
 export const store = configureStore({
   reducer: {
     main: mainReducer,
     auth: authReducer,
     homePageParams: homePageParamsReducer,
+    searchPageParams: searchPageParamsReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

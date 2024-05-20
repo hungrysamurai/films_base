@@ -1,5 +1,4 @@
 import { operations } from './tmdb_types';
-import { MoviesListReducerAction } from './reducers/moviesListReducer';
 import { MovieListItem, TVListItem } from './utils/classes/moviesListItem';
 import { ReactElement } from 'react';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
@@ -89,6 +88,9 @@ declare global {
   type FetchedGenresTVList =
     operations['genre-tv-list']['responses'][200]['content']['application/json'];
 
+  type FetchedSearchQueryData =
+    operations['search-multi']['responses'][200]['content']['application/json'];
+
   type FetchRequestFailedError = {
     status_code: number;
     status_message: string;
@@ -129,21 +131,6 @@ declare global {
     filterList: MovieFilterListTerm | TVFilterListTerm;
     filterGenre: string;
   };
-
-  interface IGlobalContext {
-    dispatch: React.Dispatch<MoviesListReducerAction>;
-    filterGenre: string;
-    filterList: MovieFilterListTerm | TVFilterListTerm;
-    mediaType: MediaType;
-    moviesFetchError: FetchDataError;
-    moviesFetchLoading: boolean;
-    moviesList: MovieListItem[] | TVListItem[];
-    moviesListMode: MoviesListMode;
-    page: number;
-    searchQuery: string;
-    selectedMovie: string;
-    totalPages: number;
-  }
 
   type UserListItem = {
     id: string;

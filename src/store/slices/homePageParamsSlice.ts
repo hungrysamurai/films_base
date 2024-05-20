@@ -51,6 +51,10 @@ const homePageParamsSlice = createSlice({
       state.currentPage = state.currentPage + 1;
     }),
 
+    setHomePageCurrentPage: (state, action: PayloadAction<number>) => {
+      state.currentPage = action.payload;
+    },
+
     setHomePageLastActiveItem: create.reducer(
       (state, action: PayloadAction<string>) => {
         state.lastActiveItem = action.payload;
@@ -73,6 +77,7 @@ export const {
   setHomePageFilterGenre,
   increaseHomePageCurrentPage,
   setHomePageLastActiveItem,
+  setHomePageCurrentPage,
 } = homePageParamsSlice.actions;
 
 export const {

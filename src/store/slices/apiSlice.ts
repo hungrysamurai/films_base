@@ -11,6 +11,8 @@ import {
 } from '../../types';
 import { filterListQueries } from '../../data/filterListQueries';
 import { MovieListItem, TVListItem } from '../../utils/classes/moviesListItem';
+import { createSelector } from '@reduxjs/toolkit';
+import { RootState } from '../store';
 
 const API_BASE: string =
   import.meta.env.MODE === 'development'
@@ -66,7 +68,11 @@ export const apiSlice = createApi({
     }),
 
     getMoviesList: build.query<
-      { itemsList: MoviesListItemProps[]; totalPages: number },
+      {
+        itemsList: MoviesListItemProps[];
+        totalPages: number;
+        lastFetchedPage: number;
+      },
       {
         mediaType: MediaType;
         filterList: MovieFilterListTerm | TVFilterListTerm;
@@ -134,7 +140,11 @@ export const apiSlice = createApi({
         );
 
         return {
-          data: { itemsList: output, totalPages: responseData.total_pages },
+          data: {
+            itemsList: output,
+            totalPages: responseData.total_pages,
+            lastFetchedPage: responseData.page,
+          },
         };
       },
 
@@ -151,6 +161,7 @@ export const apiSlice = createApi({
           (item) => !existingIds.has(item.id),
         );
         currentCache.itemsList.push(...deduplicatedItems);
+        currentCache.lastFetchedPage = newItems.lastFetchedPage;
       },
 
       forceRefetch: ({ currentArg, previousArg }) => {
@@ -163,7 +174,122 @@ export const apiSlice = createApi({
         );
       },
     }),
+
+    getSearchResults: build.query<
+      { itemsList: MoviesListItemProps[]; totalPages: number },
+      { lang: Lang; currentPage: number; searchQuery: string }
+    >({
+      queryFn: async (args, __, _, baseQuery) => {
+        const { lang, searchQuery, currentPage } = args;
+
+        const response = await baseQuery(
+          `/search/multi?${API_KEY}&query=${searchQuery}&page=${currentPage}&language=${lang}`,
+        );
+
+        if (response.error) {
+          return { error: response.error };
+        }
+
+        if ((response.data as FetchRequestFailedError).success === false) {
+          return {
+            error: {
+              status: 401,
+              data: {
+                message:
+                  (response.data as FetchRequestFailedError).status_message ||
+                  'Request failed',
+              },
+            } as FetchBaseQueryError,
+          };
+        }
+
+        const responseData = response.data as FetchedSearchQueryData;
+
+        if (responseData.total_results === 0) {
+          return {
+            error: {
+              status: 500,
+              data: {
+                message:
+                  lang === 'ru'
+                    ? 'Нет результатов, удовлетворяющих заданным условиям'
+                    : 'No matching results',
+              },
+            } as FetchBaseQueryError,
+          };
+        }
+
+        const output: MoviesListItemProps[] = [];
+
+        if (responseData.results) {
+          responseData.results.forEach((item) => {
+            if (item.media_type === MediaType.Movie) {
+              output.push(
+                new MovieListItem(
+                  IMG_BASE_URL,
+                  item,
+                  item.media_type,
+                ).getValues(),
+              );
+            } else if (item.media_type === MediaType.TV) {
+              output.push(
+                new TVListItem(IMG_BASE_URL, item, item.media_type).getValues(),
+              );
+            }
+          });
+        }
+
+        return {
+          data: {
+            itemsList: output,
+            totalPages: responseData.total_pages || 0,
+          },
+        };
+      },
+
+      serializeQueryArgs: ({ endpointName, queryArgs }) => {
+        const { lang, searchQuery } = queryArgs;
+        return `${endpointName}-${searchQuery}-${lang}`;
+      },
+
+      merge: (currentCache, newItems) => {
+        const existingPairs = new Set(
+          currentCache.itemsList.map((item) => `${item.id}-${item.mediaType}`),
+        );
+        const deduplicatedItems = newItems.itemsList.filter(
+          (item) => !existingPairs.has(`${item.id}-${item.mediaType}`),
+        );
+        currentCache.itemsList.push(...deduplicatedItems);
+      },
+
+      forceRefetch: ({ currentArg, previousArg }) => {
+        return (
+          currentArg?.currentPage !== previousArg?.currentPage ||
+          currentArg?.searchQuery !== previousArg?.searchQuery ||
+          currentArg?.lang !== previousArg?.lang
+        );
+      },
+    }),
   }),
 });
 
-export const { useGetGenresQuery, useGetMoviesListQuery } = apiSlice;
+export const {
+  useGetGenresQuery,
+  useGetMoviesListQuery,
+  useGetSearchResultsQuery,
+} = apiSlice;
+
+// Create a memoized selector for the getMoviesList endpoint
+export const selectCachedLastFetchedPage = createSelector(
+  (
+    state: RootState,
+    queryArgs: {
+      mediaType: MediaType;
+      filterList: MovieFilterListTerm | TVFilterListTerm;
+      filterGenre: string;
+      lang: Lang;
+      currentPage: number;
+    },
+  ) => apiSlice.endpoints.getMoviesList.select(queryArgs)(state),
+  (result) => result?.data?.lastFetchedPage,
+);

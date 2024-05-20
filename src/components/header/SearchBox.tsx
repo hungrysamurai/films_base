@@ -4,11 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import SearchIcon from './icons/SearchIcon';
 import { Lang } from '../../types';
 import getBaseURL from '../../utils/getBaseURL';
-import { useAppSelector } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { getCurrentLang } from '../../store/slices/mainSlice';
 import { getHomePageMediaType } from '../../store/slices/homePageParamsSlice';
+import { setSearchPageSearchQuery } from '../../store/slices/searchPageParamsSlice';
 
 const SearchBox: React.FC = () => {
+  const dispatch = useAppDispatch();
+
   const lang = useAppSelector(getCurrentLang);
   const mediaType = useAppSelector(getHomePageMediaType);
 
@@ -23,6 +26,7 @@ const SearchBox: React.FC = () => {
 
   const search = () => {
     if (searchTerm) {
+      dispatch(setSearchPageSearchQuery(searchTerm));
       navigate(getBaseURL(`search/${searchTerm}`));
       setSearchTerm('');
     }
