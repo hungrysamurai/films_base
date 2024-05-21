@@ -1,34 +1,31 @@
-import { MediaType, ModalMode } from "../types";
-import {
-  SingleMovieData,
-  SingleTVData,
-} from "../utils/classes/singleMovieData";
-import { ReactElement } from "react";
+import { Lang, MediaType, ModalMode } from '../types';
 
-import { useParams, useLocation } from "react-router-dom";
+import { ReactElement } from 'react';
 
-import { useEffect, useState, Suspense } from "react";
-import { useAnimation, AnimatePresence } from "framer-motion";
-import { useFetchSingleMovie } from "../hooks/useFetchSingleMovie";
+import { useParams, useLocation } from 'react-router-dom';
 
-import ImageGallery from "../components/moviePage/ImageGallery";
-import Loader from "../components/Loader";
-import MoviePoster from "../components/moviePage/MoviePoster";
-import YoutubeEmbed from "../components/moviePage/Youtubeembed";
-import ErrorMessage from "../components/ErrorMessage";
-import Modal from "../components/modal/Modal";
-import ImagesGalleryModal from "../components/modal/ImagesGalleryModal";
-import UserListsWidget from "../components/moviePage/UserListsWidget/UserListsWidget";
-import SimilarMoviesList from "../components/moviesList/SimilarMoviesList";
-import getBaseURL from "../utils/getBaseURL";
+import { useEffect, useState, Suspense } from 'react';
+import { useAnimation, AnimatePresence } from 'framer-motion';
 
-import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { getCurrentUser } from "../store/slices/authSlice";
-import { getCurrentLang, setMainTitle } from "../store/slices/mainSlice";
+import ImageGallery from '../components/moviePage/ImageGallery';
+import Loader from '../components/Loader';
+import MoviePoster from '../components/moviePage/MoviePoster';
+import YoutubeEmbed from '../components/moviePage/Youtubeembed';
+import ErrorMessage from '../components/ErrorMessage';
+import Modal from '../components/modal/Modal';
+import ImagesGalleryModal from '../components/modal/ImagesGalleryModal';
+import UserListsWidget from '../components/moviePage/UserListsWidget/UserListsWidget';
+import SimilarMoviesList from '../components/moviesList/SimilarMoviesList';
+import getBaseURL from '../utils/getBaseURL';
+
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { getCurrentUser } from '../store/slices/authSlice';
+import { getCurrentLang, setMainTitle } from '../store/slices/mainSlice';
+import useGetSingleMovie from '../hooks/useGetSingleMovie';
 
 export enum ModalDirection {
-  Next = "next",
-  Prev = "prev",
+  Next = 'next',
+  Prev = 'prev',
 }
 
 export type ImagesGalleryModalState = {
@@ -49,7 +46,7 @@ const MoviePage: React.FC = () => {
   // Set media type of item based on provided URL
   const currentMediaType = location.pathname
     .substring(getBaseURL().length)
-    .split("/")[0] as MediaType;
+    .split('/')[0] as MediaType;
 
   const [imagesGalleryModalState, setImagesGalleryModalState] =
     useState<ImagesGalleryModalState>({
@@ -60,22 +57,36 @@ const MoviePage: React.FC = () => {
 
   const control = useAnimation();
 
+  // const {
+  //   // data,
+  //   // images,
+  //   // videos,
+  //   // dataError,
+  //   // imagesError,
+  //   // videosError,
+  //   // isLoading,
+  // } = useFetchSingleMovie(currentMediaType, lang, id as string);
+
   const {
     data,
     images,
     videos,
-    dataError,
-    imagesError,
-    videosError,
     isLoading,
-  } = useFetchSingleMovie(currentMediaType, lang, id as string);
+    isDataError,
+    isImagesError,
+    isVideosError,
+  } = useGetSingleMovie({
+    mediaType: currentMediaType,
+    lang,
+    id: id as string,
+  });
 
   const {
-    data: mediaData,
+    data: mediaData = [],
     description,
     title,
     poster,
-  } = (data as SingleMovieData | SingleTVData) || {};
+  } = (data as SingleItemDataProps) || {};
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -83,13 +94,17 @@ const MoviePage: React.FC = () => {
 
   useEffect(() => {
     if (isLoading) {
-      dispatch(setMainTitle(""));
-    } else if (dataError.show) {
-      dispatch(setMainTitle(dataError.message));
+      dispatch(setMainTitle(''));
+    } else if (isDataError) {
+      dispatch(
+        setMainTitle(
+          lang === Lang.En ? 'Request failed!' : 'Ошибка загрузки данных!',
+        ),
+      );
     } else {
       dispatch(setMainTitle(title as string));
     }
-  }, [title, isLoading, lang, dataError]);
+  }, [title, isLoading, lang, isDataError]);
 
   useEffect(() => {
     control.start({
@@ -112,7 +127,7 @@ const MoviePage: React.FC = () => {
   };
 
   const hideModal = (target: HTMLDivElement) => {
-    if (target.classList.contains("modal-index-controls")) {
+    if (target.classList.contains('modal-index-controls')) {
       setImagesGalleryModalState((prev) => {
         return {
           ...prev,
@@ -167,9 +182,9 @@ const MoviePage: React.FC = () => {
 
       <div className="movie-wrapper">
         <div className="left-col">
-          {dataError.show ? (
+          {isDataError ? (
             <ErrorMessage
-              errorMessage={dataError.message}
+              errorMessage={'Request Failed!'}
               componentMessage="Ошибка при загрузке данных"
               showImage={true}
             />
@@ -177,9 +192,9 @@ const MoviePage: React.FC = () => {
             <MoviePoster image={poster} />
           )}
 
-          {videosError.show ? (
+          {isVideosError ? (
             <ErrorMessage
-              errorMessage={videosError.message}
+              errorMessage={'Request Failed!'}
               componentMessage="Ошибка при загрузке видео"
               showImage={true}
             />
@@ -200,9 +215,9 @@ const MoviePage: React.FC = () => {
           )}
 
           <div className="data-container">
-            {dataError.show ? (
+            {isDataError ? (
               <ErrorMessage
-                errorMessage={dataError.message}
+                errorMessage={'Request Failed!'}
                 componentMessage="Ошибка при загрузке данных"
                 showImage={false}
               />
@@ -222,9 +237,9 @@ const MoviePage: React.FC = () => {
           <div className="description-container">
             <p>{description}</p>
           </div>
-          {imagesError.show ? (
+          {isImagesError ? (
             <ErrorMessage
-              errorMessage={videosError.message}
+              errorMessage={'Request Failed!'}
               componentMessage="Ошибка при загрузке галереи"
               showImage={true}
             />

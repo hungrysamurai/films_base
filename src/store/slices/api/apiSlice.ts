@@ -8,19 +8,24 @@ import {
   MediaType,
   MovieFilterListTerm,
   TVFilterListTerm,
-} from '../../types';
-import { filterListQueries } from '../../data/filterListQueries';
-import { MovieListItem, TVListItem } from '../../utils/classes/moviesListItem';
+} from '../../../types';
+import { filterListQueries } from '../../../data/filterListQueries';
+import { MovieListItem, TVListItem } from '../../../utils/classes/moviesListItem';
+import { SingleMovieData, SingleTVData } from '../../../utils/classes/singleMovieData';
 
 const API_BASE: string =
   import.meta.env.MODE === 'development'
     ? import.meta.env.VITE_PROXY_DATA_URL_DEV
     : import.meta.env.VITE_PROXY_DATA_URL_PROD;
 const API_KEY: string = import.meta.env.VITE_TMDB_API_KEY;
-const IMG_BASE_URL: string =
+const IMG_BASE_URL_300: string =
   import.meta.env.MODE === 'development'
     ? `${import.meta.env.VITE_PROXY_DATA_FILE_URL_DEV}w300`
     : `${import.meta.env.VITE_PROXY_DATA_FILE_URL_PROD}w300`;
+const IMG_BASE_URL_780: string =
+  import.meta.env.MODE === 'development'
+    ? `${import.meta.env.VITE_PROXY_DATA_FILE_URL_DEV}w780`
+    : `${import.meta.env.VITE_PROXY_DATA_FILE_URL_PROD}w780`;
 
 const baseQuery = fetchBaseQuery({
   baseUrl: API_BASE,
@@ -122,11 +127,11 @@ export const apiSlice = createApi({
           (item: FetchedListItemMovie | FetchedListItemTV) => {
             if (mediaType === MediaType.Movie) {
               output.push(
-                new MovieListItem(IMG_BASE_URL, item, mediaType).getValues(),
+                new MovieListItem(IMG_BASE_URL_300, item, mediaType).getValues(),
               );
             } else if (mediaType === MediaType.TV) {
               output.push(
-                new TVListItem(IMG_BASE_URL, item, mediaType).getValues(),
+                new TVListItem(IMG_BASE_URL_300, item, mediaType).getValues(),
               );
             }
           },
@@ -227,14 +232,14 @@ export const apiSlice = createApi({
             if (item.media_type === MediaType.Movie) {
               output.push(
                 new MovieListItem(
-                  IMG_BASE_URL,
+                  IMG_BASE_URL_300,
                   item,
                   item.media_type,
                 ).getValues(),
               );
             } else if (item.media_type === MediaType.TV) {
               output.push(
-                new TVListItem(IMG_BASE_URL, item, item.media_type).getValues(),
+                new TVListItem(IMG_BASE_URL_300, item, item.media_type).getValues(),
               );
             }
           });
@@ -295,15 +300,153 @@ export const apiSlice = createApi({
 
           response.results.forEach((item) => {
             if (itemMediaType === MediaType.Movie) {
-              output.push(new MovieListItem(IMG_BASE_URL, item, itemMediaType).getValues());
+              output.push(new MovieListItem(IMG_BASE_URL_300, item, itemMediaType).getValues());
             } else if (itemMediaType === MediaType.TV) {
-              output.push(new TVListItem(IMG_BASE_URL, item, itemMediaType).getValues());
+              output.push(new TVListItem(IMG_BASE_URL_300, item, itemMediaType).getValues());
             }
           });
 
           return output;
         },
       }),
+
+    getSingleMovieData: build.query<
+      {
+        data: SingleItemDetailsData;
+        description: string | undefined;
+        title: string | undefined;
+        poster: string;
+      },
+      {
+        mediaType: MediaType,
+        lang: Lang,
+        id: string
+      }
+    >({
+      queryFn: async (args, __, _, baseQuery) => {
+        const { mediaType, lang, id } = args;
+
+        const response = await baseQuery(
+          `/${mediaType}/${id}?${API_KEY}&language=${lang}`,
+        );
+
+        if (response.error) {
+          return { error: response.error };
+        }
+
+        if ((response.data as FetchRequestFailedError).success === false) {
+          return {
+            error: {
+              status: 401,
+              data: {
+                message:
+                  (response.data as FetchRequestFailedError).status_message ||
+                  'Request failed',
+                status: 401
+              },
+            } as FetchBaseQueryError,
+          };
+        }
+
+        const responseData = response.data as FetchedMovieData | FetchedTVData;
+
+        let creditsData: FetchedCreditsData | null = null;
+
+        // Get director name
+        if (mediaType === 'movie') {
+          try {
+            const creditsResponse = await baseQuery(
+              `/${mediaType}/${id}/credits?${API_KEY}&language=${lang}`,
+            );
+
+            const creditsResponseData = creditsResponse.data as FetchedCreditsData;
+
+            creditsData = Object.keys(creditsResponseData).length !== 0 ? creditsResponseData : null;
+
+          } catch (err) {
+            console.log(err);
+          }
+        }
+
+        if (mediaType === MediaType.Movie) {
+          return { data: new SingleMovieData(responseData, creditsData, lang, IMG_BASE_URL_780).getValues() };
+        } else if (mediaType === MediaType.TV) {
+          return { data: new SingleTVData(responseData, creditsData, lang, IMG_BASE_URL_780).getValues() };
+        } else {
+          return {
+            error: {
+              status: 500,
+              data: {
+                message:
+                  lang === 'ru'
+                    ? 'Ошибка при загрузке данных'
+                    : 'Data loading error',
+                status: 500
+              },
+            } as FetchBaseQueryError,
+          }
+        }
+      }
+    }),
+
+    getSingleMovieImages: build.query<
+      string[],
+      {
+        mediaType: MediaType,
+        id: string
+      }
+    >({
+      query: ({ mediaType, id }) => `/${mediaType}/${id}/images?${API_KEY}`,
+
+      transformResponse: (response: FetchedItemImageData) => {
+
+        const { backdrops } = response;
+
+        const imagesPaths: Array<string> = [];
+        if (backdrops) {
+          if (backdrops.length > 20) {
+            backdrops.splice(20);
+          }
+
+          backdrops.forEach((backdropObj) => {
+            imagesPaths.push(IMG_BASE_URL_780 + backdropObj.file_path);
+          });
+        }
+
+        return imagesPaths;
+      }
+    }),
+
+    getSingleMovieVideos: build.query<
+      string[],
+      {
+        mediaType: MediaType,
+        lang: Lang,
+        id: string
+      }
+    >({
+      query: ({ mediaType, lang, id }) => `/${mediaType}/${id}/videos?${API_KEY}&language=${lang}`,
+
+      transformResponse: (response: FetchedItemVideosData) => {
+        const { results } = response;
+
+        const videoKeys: string[] = [];
+
+        if (results) {
+          const trailers = results.filter(
+            (item) => item.type === 'Trailer' && item.site === 'YouTube',
+          );
+
+          if (trailers.length !== 0) {
+            trailers.forEach((trailer) => {
+              videoKeys.push(trailer.key as string);
+            });
+          }
+        }
+
+        return videoKeys;
+      }
+    }),
   }),
 });
 
@@ -311,5 +454,8 @@ export const {
   useGetGenresQuery,
   useGetMoviesListQuery,
   useGetSearchResultsQuery,
-  useGetSimilarMoviesQuery
+  useGetSimilarMoviesQuery,
+  useGetSingleMovieDataQuery,
+  useGetSingleMovieImagesQuery,
+  useGetSingleMovieVideosQuery
 } = apiSlice;

@@ -3,7 +3,10 @@ import { useCallback, useEffect, useMemo } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { getCurrentLang, setMainTitle } from '../store/slices/mainSlice';
-import { apiSlice, useGetSearchResultsQuery } from '../store/slices/apiSlice';
+import {
+  apiSlice,
+  useGetSearchResultsQuery,
+} from '../store/slices/api/apiSlice';
 import MoviesList from '../components/moviesList/MoviesList';
 
 import {

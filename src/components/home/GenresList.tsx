@@ -10,7 +10,7 @@ import {
   getHomePageMediaType,
   setHomePageFilterGenre,
 } from '../../store/slices/homePageParamsSlice';
-import { useGetGenresQuery } from '../../store/slices/apiSlice';
+import { useGetGenresQuery } from '../../store/slices/api/apiSlice';
 import useDraggableContainer from '../../hooks/useDraggableContainer';
 
 const GenresList: React.FC = () => {

@@ -71,7 +71,6 @@ function useDraggableContainer({
   // Jump to active
   useEffect(() => {
     if (activeElementRef) {
-      console.log(activeElementRef);
       if (activeElementRef.current && containerWidth !== 0) {
         animate(control, containerWidth, activeElementRef);
       }

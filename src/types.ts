@@ -3,6 +3,7 @@ import { MovieListItem, TVListItem } from './utils/classes/moviesListItem';
 import { ReactElement } from 'react';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { SerializedError } from '@reduxjs/toolkit';
+import { SingleMovieData, SingleTVData } from './utils/classes/singleMovieData';
 
 export enum ColorTheme {
   Dark = 'dark',
@@ -177,4 +178,6 @@ declare global {
   type InstanceProperties<T> = Pick<T, OnlyProperties<T>>;
 
   type MoviesListItemProps = InstanceProperties<TVListItem | MovieListItem>;
+
+  type SingleItemDataProps = InstanceProperties<SingleMovieData | SingleTVData>
 }

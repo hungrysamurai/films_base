@@ -43,8 +43,8 @@ class SingleItemData<T extends FetchedMovieData | FetchedTVData> {
         month[month.length - 1] === "ь"
           ? month.slice(0, -1) + "я"
           : month[month.length - 1] === "й"
-          ? month.slice(0, -1) + "я"
-          : month + "а";
+            ? month.slice(0, -1) + "я"
+            : month + "а";
     }
 
     const year = date.getFullYear();
@@ -68,7 +68,7 @@ class SingleItemData<T extends FetchedMovieData | FetchedTVData> {
     return this.itemData.genres?.reduce((string, current, i) => {
       return i === 0
         ? (current.name as string)[0].toUpperCase() +
-            (current.name as string).slice(1)
+        (current.name as string).slice(1)
         : `${string}, ${current.name}`;
     }, "");
   }
@@ -161,6 +161,15 @@ class SingleItemData<T extends FetchedMovieData | FetchedTVData> {
     )?.name;
     return this.director;
   }
+
+  getValues() {
+    return {
+      data: this.data,
+      description: this.description,
+      title: this.title,
+      poster: this.poster
+    }
+  }
 }
 
 export class SingleTVData extends SingleItemData<FetchedTVData> {
@@ -179,51 +188,51 @@ export class SingleTVData extends SingleItemData<FetchedTVData> {
     return [
       ...(this.itemData.first_air_date
         ? [
-            {
-              [`${this.lang === "en" ? "Release date" : "Дата выхода"}`]:
-                this.getReleaseDate(this.itemData.first_air_date),
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Release date" : "Дата выхода"}`]:
+              this.getReleaseDate(this.itemData.first_air_date),
+          },
+        ]
         : []),
       ...(this.itemData.genres
         ? [
-            {
-              [`${this.lang === "en" ? "Genres" : "Жанр"}`]:
-                this.getGenresList(),
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Genres" : "Жанр"}`]:
+              this.getGenresList(),
+          },
+        ]
         : []),
       ...(this.itemData.production_countries
         ? [
-            {
-              [`${this.lang === "en" ? "Country" : "Страна"}`]:
-                this.getCountriesList(),
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Country" : "Страна"}`]:
+              this.getCountriesList(),
+          },
+        ]
         : []),
       ...(this.itemData.number_of_seasons
         ? [
-            {
-              [`${this.lang === "en" ? "Total Seasons" : "Всего сезонов"}`]:
-                this.itemData.number_of_seasons.toString(),
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Total Seasons" : "Всего сезонов"}`]:
+              this.itemData.number_of_seasons.toString(),
+          },
+        ]
         : []),
       ...(this.itemData.number_of_episodes
         ? [
-            {
-              [`${this.lang === "en" ? "Total episodes" : "Серий"}`]:
-                this.itemData.number_of_episodes.toString(),
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Total episodes" : "Серий"}`]:
+              this.itemData.number_of_episodes.toString(),
+          },
+        ]
         : []),
       ...(this.itemData.vote_average
         ? [
-            {
-              [`${this.lang === "en" ? "TMDB Rating" : "Рейтинг TMDB"}`]:
-                this.itemData.vote_average.toString(),
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "TMDB Rating" : "Рейтинг TMDB"}`]:
+              this.itemData.vote_average.toString(),
+          },
+        ]
         : []),
     ];
   }
@@ -245,67 +254,67 @@ export class SingleMovieData extends SingleItemData<FetchedMovieData> {
     return [
       ...(this.itemData.release_date
         ? [
-            {
-              [`${this.lang === "en" ? "Release date" : "Дата выхода"}`]:
-                this.getReleaseDate(this.itemData.release_date),
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Release date" : "Дата выхода"}`]:
+              this.getReleaseDate(this.itemData.release_date),
+          },
+        ]
         : []),
       ...(this.itemData.genres
         ? [
-            {
-              [`${this.lang === "en" ? "Genres" : "Жанр"}`]:
-                this.getGenresList(),
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Genres" : "Жанр"}`]:
+              this.getGenresList(),
+          },
+        ]
         : []),
       ...(this.itemData.production_countries
         ? [
-            {
-              [`${this.lang === "en" ? "Country" : "Страна"}`]:
-                this.getCountriesList(),
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Country" : "Страна"}`]:
+              this.getCountriesList(),
+          },
+        ]
         : []),
       ...(this.getDirector()
         ? [
-            {
-              [`${this.lang === "en" ? "Director" : "Режиссёр"}`]:
-                this?.director,
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Director" : "Режиссёр"}`]:
+              this?.director,
+          },
+        ]
         : []),
       ...(this.itemData.budget
         ? [
-            {
-              [`${this.lang === "en" ? "Budget" : "Бюджет"}`]:
-                this.getBudgetString(this.itemData.budget),
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Budget" : "Бюджет"}`]:
+              this.getBudgetString(this.itemData.budget),
+          },
+        ]
         : []),
       ...(this.itemData.revenue
         ? [
-            {
-              [`${this.lang === "en" ? "Revenue" : "Сборы"}`]:
-                this.getBudgetString(this.itemData.revenue),
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Revenue" : "Сборы"}`]:
+              this.getBudgetString(this.itemData.revenue),
+          },
+        ]
         : []),
       ...(this.itemData.runtime
         ? [
-            {
-              [`${this.lang === "en" ? "Runtime" : "Продолжительность"}`]:
-                this.getRuntime(this.itemData.runtime),
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "Runtime" : "Продолжительность"}`]:
+              this.getRuntime(this.itemData.runtime),
+          },
+        ]
         : []),
       ...(this.itemData.vote_average
         ? [
-            {
-              [`${this.lang === "en" ? "TMDB Rating" : "Рейтинг TMDB"}`]:
-                this.itemData.vote_average.toString(),
-            },
-          ]
+          {
+            [`${this.lang === "en" ? "TMDB Rating" : "Рейтинг TMDB"}`]:
+              this.itemData.vote_average.toString(),
+          },
+        ]
         : []),
     ];
   }

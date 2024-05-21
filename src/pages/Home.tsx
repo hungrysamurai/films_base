@@ -14,7 +14,7 @@ import {
   setHomePageCurrentPage,
   setHomePageLastActiveItem,
 } from '../store/slices/homePageParamsSlice';
-import { apiSlice, useGetMoviesListQuery } from '../store/slices/apiSlice';
+import { apiSlice, useGetMoviesListQuery } from '../store/slices/api/apiSlice';
 
 import { useCallback, useEffect, useMemo } from 'react';
 

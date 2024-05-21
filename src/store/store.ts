@@ -4,7 +4,7 @@ import authReducer from './slices/authSlice';
 import mainReducer from './slices/mainSlice';
 import homePageParamsReducer from './slices/homePageParamsSlice';
 import searchPageParamsReducer from './slices/searchPageParamsSlice';
-import { apiSlice } from './slices/apiSlice';
+import { apiSlice } from './slices/api/apiSlice';
 
 export const store = configureStore({
   reducer: {
