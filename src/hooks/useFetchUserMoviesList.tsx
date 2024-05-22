@@ -1,28 +1,27 @@
-import { useState, useCallback, useEffect } from "react";
-import axios, { AxiosResponse, AxiosError } from "axios";
-import { MovieListItem, TVListItem } from "../utils/classes/moviesListItem";
-import { Lang, MediaType } from "../types";
+import { useState, useCallback, useEffect } from 'react';
+import axios, { AxiosResponse, AxiosError } from 'axios';
+import { MovieListItem, TVListItem } from '../utils/classes/moviesListItem';
+import { Lang, MediaType } from '../types';
 
-// const apiBase: string = import.meta.env.VITE_TMDB_API_BASE;
 const apiBase: string =
-  import.meta.env.MODE === "development"
+  import.meta.env.MODE === 'development'
     ? import.meta.env.VITE_PROXY_DATA_URL_DEV
     : import.meta.env.VITE_PROXY_DATA_URL_PROD;
 const apiKey: string = import.meta.env.VITE_TMDB_API_KEY;
-// const imagesUrlBase: string = `${import.meta.env.VITE_IMAGES_BASE_URL}w300`;
+
 const imagesUrlBase: string =
-  import.meta.env.MODE === "development"
+  import.meta.env.MODE === 'development'
     ? `${import.meta.env.VITE_PROXY_DATA_FILE_URL_DEV}w300`
     : `${import.meta.env.VITE_PROXY_DATA_FILE_URL_PROD}w300`;
 
 export const useFetchUserMoviesList = (
   lang: Lang,
-  currentUserList: UserItemsLists
+  currentUserList: UserItemsLists,
 ) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<FetchDataError>({
     show: false,
-    message: "",
+    message: '',
   });
   const [data, setData] = useState<MovieListItem[] | TVListItem[]>([]);
 
@@ -32,7 +31,7 @@ export const useFetchUserMoviesList = (
 
       setError({
         show: false,
-        message: "",
+        message: '',
       });
 
       try {
@@ -42,7 +41,7 @@ export const useFetchUserMoviesList = (
           try {
             const movie: AxiosResponse<FetchedMovieData | FetchedTVData> =
               await axios(
-                `${apiBase}/${mediaType}/${id}?${apiKey}&language=${lang}`
+                `${apiBase}/${mediaType}/${id}?${apiKey}&language=${lang}`,
               );
 
             const { data } = movie;
@@ -58,7 +57,7 @@ export const useFetchUserMoviesList = (
 
         if (output.length === 0) {
           throw new Error(
-            `${lang === "ru" ? "Этот список пуст" : "This list is empty"}`
+            `${lang === 'ru' ? 'Этот список пуст' : 'This list is empty'}`,
           );
         }
 
@@ -73,7 +72,7 @@ export const useFetchUserMoviesList = (
         setIsLoading(false);
       }
     },
-    [currentUserList]
+    [currentUserList],
   );
   useEffect(() => {
     fetchMoviesList(lang);

@@ -10,8 +10,14 @@ import {
   TVFilterListTerm,
 } from '../../../types';
 import { filterListQueries } from '../../../data/filterListQueries';
-import { MovieListItem, TVListItem } from '../../../utils/classes/moviesListItem';
-import { SingleMovieData, SingleTVData } from '../../../utils/classes/singleMovieData';
+import {
+  MovieListItem,
+  TVListItem,
+} from '../../../utils/classes/moviesListItem';
+import {
+  SingleMovieData,
+  SingleTVData,
+} from '../../../utils/classes/singleMovieData';
 
 const API_BASE: string =
   import.meta.env.MODE === 'development'
@@ -43,7 +49,7 @@ const baseQuery = fetchBaseQuery({
 
 export const apiSlice = createApi({
   baseQuery,
-
+  keepUnusedDataFor: 600,
   endpoints: (build) => ({
     getGenres: build.query<GenreData[], { mediaType: MediaType; lang: Lang }>({
       query: ({ mediaType, lang }) =>
@@ -98,7 +104,7 @@ export const apiSlice = createApi({
                 message:
                   (response.data as FetchRequestFailedError).status_message ||
                   'Request failed',
-                status: 401
+                status: 401,
               },
             } as FetchBaseQueryError,
           };
@@ -115,7 +121,7 @@ export const apiSlice = createApi({
                   lang === 'ru'
                     ? 'Нет результатов, удовлетворяющих заданным условиям'
                     : 'No matching results',
-                status: 500
+                status: 500,
               },
             } as FetchBaseQueryError,
           };
@@ -127,7 +133,11 @@ export const apiSlice = createApi({
           (item: FetchedListItemMovie | FetchedListItemTV) => {
             if (mediaType === MediaType.Movie) {
               output.push(
-                new MovieListItem(IMG_BASE_URL_300, item, mediaType).getValues(),
+                new MovieListItem(
+                  IMG_BASE_URL_300,
+                  item,
+                  mediaType,
+                ).getValues(),
               );
             } else if (mediaType === MediaType.TV) {
               output.push(
@@ -180,7 +190,11 @@ export const apiSlice = createApi({
     }),
 
     getSearchResults: build.query<
-      { itemsList: MoviesListItemProps[]; totalPages: number; lastFetchedPage: number },
+      {
+        itemsList: MoviesListItemProps[];
+        totalPages: number;
+        lastFetchedPage: number;
+      },
       { lang: Lang; currentPage: number; searchQuery: string }
     >({
       queryFn: async (args, __, _, baseQuery) => {
@@ -202,7 +216,7 @@ export const apiSlice = createApi({
                 message:
                   (response.data as FetchRequestFailedError).status_message ||
                   'Request failed',
-                status: 401
+                status: 401,
               },
             } as FetchBaseQueryError,
           };
@@ -219,7 +233,7 @@ export const apiSlice = createApi({
                   lang === 'ru'
                     ? 'Нет результатов, удовлетворяющих заданным условиям'
                     : 'No matching results',
-                status: 500
+                status: 500,
               },
             } as FetchBaseQueryError,
           };
@@ -239,7 +253,11 @@ export const apiSlice = createApi({
               );
             } else if (item.media_type === MediaType.TV) {
               output.push(
-                new TVListItem(IMG_BASE_URL_300, item, item.media_type).getValues(),
+                new TVListItem(
+                  IMG_BASE_URL_300,
+                  item,
+                  item.media_type,
+                ).getValues(),
               );
             }
           });
@@ -249,7 +267,7 @@ export const apiSlice = createApi({
           data: {
             itemsList: output,
             totalPages: responseData.total_pages || 0,
-            lastFetchedPage: responseData.page || 1
+            lastFetchedPage: responseData.page || 1,
           },
         };
       },
@@ -287,28 +305,36 @@ export const apiSlice = createApi({
     getSimilarMovies: build.query<
       MoviesListItemProps[],
       {
-        lang: Lang,
-        itemID: string,
-        itemMediaType: MediaType
-      }>({
-        query: ({ itemID, itemMediaType, lang }) =>
-          `/${itemMediaType}/${itemID}/similar?${API_KEY}&language=${lang}`,
+        lang: Lang;
+        itemID: string;
+        itemMediaType: MediaType;
+      }
+    >({
+      query: ({ itemID, itemMediaType, lang }) =>
+        `/${itemMediaType}/${itemID}/similar?${API_KEY}&language=${lang}`,
 
-        transformResponse: (response: FetchedListData, _, { itemMediaType }) => {
+      transformResponse: (response: FetchedListData, _, { itemMediaType }) => {
+        const output: MoviesListItemProps[] = [];
 
-          const output: MoviesListItemProps[] = [];
+        response.results.forEach((item) => {
+          if (itemMediaType === MediaType.Movie) {
+            output.push(
+              new MovieListItem(
+                IMG_BASE_URL_300,
+                item,
+                itemMediaType,
+              ).getValues(),
+            );
+          } else if (itemMediaType === MediaType.TV) {
+            output.push(
+              new TVListItem(IMG_BASE_URL_300, item, itemMediaType).getValues(),
+            );
+          }
+        });
 
-          response.results.forEach((item) => {
-            if (itemMediaType === MediaType.Movie) {
-              output.push(new MovieListItem(IMG_BASE_URL_300, item, itemMediaType).getValues());
-            } else if (itemMediaType === MediaType.TV) {
-              output.push(new TVListItem(IMG_BASE_URL_300, item, itemMediaType).getValues());
-            }
-          });
-
-          return output;
-        },
-      }),
+        return output;
+      },
+    }),
 
     getSingleMovieData: build.query<
       {
@@ -318,9 +344,9 @@ export const apiSlice = createApi({
         poster: string;
       },
       {
-        mediaType: MediaType,
-        lang: Lang,
-        id: string
+        mediaType: MediaType;
+        lang: Lang;
+        id: string;
       }
     >({
       queryFn: async (args, __, _, baseQuery) => {
@@ -342,7 +368,7 @@ export const apiSlice = createApi({
                 message:
                   (response.data as FetchRequestFailedError).status_message ||
                   'Request failed',
-                status: 401
+                status: 401,
               },
             } as FetchBaseQueryError,
           };
@@ -359,19 +385,36 @@ export const apiSlice = createApi({
               `/${mediaType}/${id}/credits?${API_KEY}&language=${lang}`,
             );
 
-            const creditsResponseData = creditsResponse.data as FetchedCreditsData;
+            const creditsResponseData =
+              creditsResponse.data as FetchedCreditsData;
 
-            creditsData = Object.keys(creditsResponseData).length !== 0 ? creditsResponseData : null;
-
+            creditsData =
+              Object.keys(creditsResponseData).length !== 0
+                ? creditsResponseData
+                : null;
           } catch (err) {
             console.log(err);
           }
         }
 
         if (mediaType === MediaType.Movie) {
-          return { data: new SingleMovieData(responseData, creditsData, lang, IMG_BASE_URL_780).getValues() };
+          return {
+            data: new SingleMovieData(
+              responseData,
+              creditsData,
+              lang,
+              IMG_BASE_URL_780,
+            ).getValues(),
+          };
         } else if (mediaType === MediaType.TV) {
-          return { data: new SingleTVData(responseData, creditsData, lang, IMG_BASE_URL_780).getValues() };
+          return {
+            data: new SingleTVData(
+              responseData,
+              creditsData,
+              lang,
+              IMG_BASE_URL_780,
+            ).getValues(),
+          };
         } else {
           return {
             error: {
@@ -381,25 +424,24 @@ export const apiSlice = createApi({
                   lang === 'ru'
                     ? 'Ошибка при загрузке данных'
                     : 'Data loading error',
-                status: 500
+                status: 500,
               },
             } as FetchBaseQueryError,
-          }
+          };
         }
-      }
+      },
     }),
 
     getSingleMovieImages: build.query<
       string[],
       {
-        mediaType: MediaType,
-        id: string
+        mediaType: MediaType;
+        id: string;
       }
     >({
       query: ({ mediaType, id }) => `/${mediaType}/${id}/images?${API_KEY}`,
 
       transformResponse: (response: FetchedItemImageData) => {
-
         const { backdrops } = response;
 
         const imagesPaths: Array<string> = [];
@@ -414,18 +456,19 @@ export const apiSlice = createApi({
         }
 
         return imagesPaths;
-      }
+      },
     }),
 
     getSingleMovieVideos: build.query<
       string[],
       {
-        mediaType: MediaType,
-        lang: Lang,
-        id: string
+        mediaType: MediaType;
+        lang: Lang;
+        id: string;
       }
     >({
-      query: ({ mediaType, lang, id }) => `/${mediaType}/${id}/videos?${API_KEY}&language=${lang}`,
+      query: ({ mediaType, lang, id }) =>
+        `/${mediaType}/${id}/videos?${API_KEY}&language=${lang}`,
 
       transformResponse: (response: FetchedItemVideosData) => {
         const { results } = response;
@@ -445,7 +488,7 @@ export const apiSlice = createApi({
         }
 
         return videoKeys;
-      }
+      },
     }),
   }),
 });
@@ -457,5 +500,5 @@ export const {
   useGetSimilarMoviesQuery,
   useGetSingleMovieDataQuery,
   useGetSingleMovieImagesQuery,
-  useGetSingleMovieVideosQuery
+  useGetSingleMovieVideosQuery,
 } = apiSlice;

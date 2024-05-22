@@ -5,7 +5,7 @@ import {
 } from 'framer-motion';
 import { useState, useEffect } from 'react';
 
-const animate = (
+const animateTransition = (
   control: AnimationControls,
   containerWidth: number,
   ref: React.RefObject<HTMLElement>,
@@ -23,11 +23,11 @@ const animate = (
 
 interface UseDraggableContainerParams {
   containerRef: React.RefObject<HTMLElement>;
-  dataTrigger: unknown;
+  dataTrigger: unknown | unknown[];
   defaultElementRef?: React.RefObject<HTMLElement>;
   activeElementRef?: React.RefObject<HTMLElement>;
-  startAnimation?: AnimationDefinition;
-  additionalTriggers: unknown[] | [];
+  isGallery?: boolean;
+  additionalTriggers?: unknown[] | [];
 }
 
 function useDraggableContainer({
@@ -35,49 +35,94 @@ function useDraggableContainer({
   dataTrigger,
   defaultElementRef,
   activeElementRef,
-  startAnimation,
-  additionalTriggers,
+  isGallery = false,
+  additionalTriggers = [],
 }: UseDraggableContainerParams) {
   const [containerWidth, setContainerWidth] = useState(0);
-
   const control = useAnimation();
+
+  // Gallery states
+  const [galleryRow, setGalleryRow] = useState<unknown[]>([]);
+  const [totalElementsLoaded, setTotalElementsLoaded] = useState(0);
+  const [galleryElementsIsLoading, setGalleryElementsIsLoading] =
+    useState(true);
 
   // Set width of container
   useEffect(() => {
-    if (containerRef.current) {
+    if (containerRef.current && !isGallery) {
       setContainerWidth(() => {
         return (containerRef.current as HTMLElement).scrollWidth;
       });
-
-      if (startAnimation) {
-        control.start(startAnimation);
-      }
     }
   }, [dataTrigger, containerWidth]);
 
   // Jump to default
   useEffect(() => {
-    if (defaultElementRef) {
+    if (defaultElementRef && !isGallery) {
       if (
         defaultElementRef.current &&
         !activeElementRef?.current &&
         containerWidth !== 0
       ) {
-        animate(control, containerWidth, defaultElementRef);
+        animateTransition(control, containerWidth, defaultElementRef);
       }
     }
-  }, [containerWidth, ...additionalTriggers]);
+  }, [activeElementRef?.current, containerWidth, ...additionalTriggers]);
 
   // Jump to active
   useEffect(() => {
-    if (activeElementRef) {
+    if (activeElementRef && !isGallery) {
       if (activeElementRef.current && containerWidth !== 0) {
-        animate(control, containerWidth, activeElementRef);
+        animateTransition(control, containerWidth, activeElementRef);
       }
     }
   }, [activeElementRef?.current, containerWidth]);
 
-  return { containerWidth, control };
+  // Gallery effects
+
+  useEffect(() => {
+    if (Array.isArray(dataTrigger) && isGallery) {
+      setGalleryRow(() => dataTrigger);
+
+      if (dataTrigger.length === 0) {
+        setGalleryElementsIsLoading(false);
+      }
+    }
+  }, [dataTrigger]);
+
+  useEffect(() => {
+    if (
+      totalElementsLoaded === galleryRow.length &&
+      containerRef.current &&
+      isGallery
+    ) {
+      setContainerWidth(() => {
+        return (containerRef.current as HTMLElement).scrollWidth;
+      });
+
+      if (containerWidth !== 0) {
+        control.start({
+          opacity: 1,
+          x:
+            galleryRow.length > 4
+              ? -Math.floor(containerWidth / galleryRow.length / 2)
+              : 0,
+          transition: { duration: 1 },
+        });
+
+        setGalleryElementsIsLoading(false);
+      }
+    }
+  }, [totalElementsLoaded, galleryRow, containerWidth]);
+
+  return {
+    containerWidth,
+    control,
+    totalElementsLoaded,
+    galleryRow,
+    setTotalElementsLoaded,
+    galleryElementsIsLoading,
+  };
 }
 
 export default useDraggableContainer;

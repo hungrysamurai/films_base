@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, memo } from 'react';
 import { motion } from 'framer-motion';
 
 import SingleMovie from './SingleMovie';
@@ -15,87 +15,83 @@ type SimilarMoviesListProps = {
   itemMediaType: MediaType;
 };
 
-const SimilarMoviesList: React.FC<SimilarMoviesListProps> = ({
-  itemID,
-  itemMediaType,
-}) => {
-  const lang = useAppSelector(getCurrentLang);
+const SimilarMoviesList: React.FC<SimilarMoviesListProps> = memo(
+  ({ itemID, itemMediaType }) => {
+    const lang = useAppSelector(getCurrentLang);
 
-  const [isDrag, setIsDrag] = useState(false);
+    const [isDrag, setIsDrag] = useState(false);
 
-  const moviesListRef = useRef<HTMLDivElement>(null);
+    const moviesListRef = useRef<HTMLDivElement>(null);
 
-  const {
-    data: itemsList = [],
-    isLoading,
-    isError,
-  } = useGetSimilarMoviesQuery({
-    lang,
-    itemID,
-    itemMediaType,
-  });
-
-  const { control: animationControl, containerWidth: elementWidth } =
-    useDraggableContainer({
-      containerRef: moviesListRef,
-      dataTrigger: itemsList,
-      startAnimation: { x: 0 },
-      additionalTriggers: [],
+    const {
+      data: itemsList = [],
+      isLoading,
+      isError,
+    } = useGetSimilarMoviesQuery({
+      lang,
+      itemID,
+      itemMediaType,
     });
 
-  if (isError) {
+    const { control: animationControl, containerWidth: elementWidth } =
+      useDraggableContainer({
+        containerRef: moviesListRef,
+        dataTrigger: itemsList,
+      });
+
+    if (isError) {
+      return (
+        <ErrorMessage
+          errorMessage={'Request failed!'}
+          componentMessage="Ошибка при загрузке списка"
+          showImage={true}
+        />
+      );
+    }
+
+    if (isLoading) {
+      return <Loader />;
+    }
+
     return (
-      <ErrorMessage
-        errorMessage={'Request failed!'}
-        componentMessage="Ошибка при загрузке списка"
-        showImage={true}
-      />
+      <div className="similar-movies-list-wrapper">
+        {itemsList.length > 0 && (
+          <h2>{lang === 'en' ? 'Similar' : 'Похожие'}</h2>
+        )}
+        <motion.div
+          layout
+          layoutRoot
+          className="movies-list-container similar"
+          drag="x"
+          dragConstraints={{
+            left: (elementWidth / 1.2) * -1,
+            right: elementWidth / 1.2,
+          }}
+          animate={animationControl}
+          ref={moviesListRef}
+          onDrag={() => setIsDrag(() => true)}
+          onDragEnd={() => setIsDrag(() => false)}
+        >
+          {itemsList.map(({ posterUrl, title, id, mediaType }) => {
+            if (title.length > 35) {
+              title = title.slice(0, 35) + '...';
+            }
+
+            return (
+              <SingleMovie
+                key={id}
+                poster={posterUrl}
+                title={title}
+                id={`${id}`}
+                mediaType={mediaType}
+                isDrag={isDrag}
+              />
+            );
+          })}
+        </motion.div>
+      </div>
     );
-  }
-
-  if (isLoading) {
-    return <Loader />;
-  }
-
-  return (
-    <div className="similar-movies-list-wrapper">
-      {itemsList.length > 0 && <h2>{lang === 'en' ? 'Similar' : 'Похожие'}</h2>}
-      <motion.div
-        layout
-        layoutRoot
-        className="movies-list-container similar"
-        drag="x"
-        dragConstraints={{
-          left: (elementWidth / 1.2) * -1,
-          right: elementWidth / 1.2,
-        }}
-        animate={animationControl}
-        initial={{
-          x: '50%',
-        }}
-        ref={moviesListRef}
-        onDrag={() => setIsDrag(() => true)}
-        onDragEnd={() => setIsDrag(() => false)}
-      >
-        {itemsList.map(({ posterUrl, title, id, mediaType }) => {
-          if (title.length > 35) {
-            title = title.slice(0, 35) + '...';
-          }
-
-          return (
-            <SingleMovie
-              key={id}
-              poster={posterUrl}
-              title={title}
-              id={`${id}`}
-              mediaType={mediaType}
-              isDrag={isDrag}
-            />
-          );
-        })}
-      </motion.div>
-    </div>
-  );
-};
+  },
+);
 
 export default SimilarMoviesList;

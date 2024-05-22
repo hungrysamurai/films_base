@@ -57,16 +57,6 @@ const MoviePage: React.FC = () => {
 
   const control = useAnimation();
 
-  // const {
-  //   // data,
-  //   // images,
-  //   // videos,
-  //   // dataError,
-  //   // imagesError,
-  //   // videosError,
-  //   // isLoading,
-  // } = useFetchSingleMovie(currentMediaType, lang, id as string);
-
   const {
     data,
     images,
