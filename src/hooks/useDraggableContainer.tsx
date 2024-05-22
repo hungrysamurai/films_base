@@ -1,8 +1,4 @@
-import {
-  AnimationControls,
-  AnimationDefinition,
-  useAnimation,
-} from 'framer-motion';
+import { AnimationControls, useAnimation } from 'framer-motion';
 import { useState, useEffect } from 'react';
 
 const animateTransition = (
@@ -30,6 +26,7 @@ interface UseDraggableContainerParams {
   additionalTriggers?: unknown[] | [];
 }
 
+// //////////////MAYBE - SPLIT
 function useDraggableContainer({
   containerRef,
   dataTrigger,

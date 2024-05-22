@@ -1,30 +1,26 @@
-import { UserListReducerAction } from "../../../reducers/userListsReducer";
+import { createNewUserList } from '../../../utils/firebase/firebase.utils';
 
-import { createNewUserList } from "../../../utils/firebase/firebase.utils";
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
 
-import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
-
-import CustomInput from "../../CustomInput";
-import ErrorMessage from "../../ErrorMessage";
-import UserListItem from "./UserListItem";
-import UserListIcon from "../icons/UserListIcon";
-import AddNewListIcon from "../icons/AddNewListIcon";
-import { Lang } from "../../../types";
-import { useAppSelector } from "../../../store/hooks";
-import { getCurrentLang } from "../../../store/slices/mainSlice";
+import CustomInput from '../../CustomInput';
+import ErrorMessage from '../../ErrorMessage';
+import UserListItem from './UserListItem';
+import UserListIcon from '../icons/UserListIcon';
+import AddNewListIcon from '../icons/AddNewListIcon';
+import { Lang } from '../../../types';
+import { useAppSelector } from '../../../store/hooks';
+import { getCurrentLang } from '../../../store/slices/mainSlice';
 
 type UserListsProps = {
   userLists: UserList[];
   currentListIndex: number;
-  dispatch: React.Dispatch<UserListReducerAction>;
   hideModal?: Function;
 };
 
 const UserLists: React.FC<UserListsProps> = ({
   userLists,
   currentListIndex,
-  dispatch,
   hideModal,
 }) => {
   const lang = useAppSelector(getCurrentLang);
@@ -40,7 +36,7 @@ const UserLists: React.FC<UserListsProps> = ({
   };
 
   const submitNewUserList = (inputValue: string) => {
-    if (inputValue === "" || inputValue.length < 3 || inputValue.length > 100) {
+    if (inputValue === '' || inputValue.length < 3 || inputValue.length > 100) {
       return;
     }
 
@@ -59,8 +55,8 @@ const UserLists: React.FC<UserListsProps> = ({
         <ErrorMessage
           errorMessage={
             lang === Lang.En
-              ? "No list found. Add new list 👇"
-              : "Не найдено ни одного списка. Добавить список 👇"
+              ? 'No list found. Add new list 👇'
+              : 'Не найдено ни одного списка. Добавить список 👇'
           }
           showImage={true}
         />
@@ -73,7 +69,6 @@ const UserLists: React.FC<UserListsProps> = ({
               key={i}
               title={title}
               active={currentListIndex === i ? true : false}
-              dispatch={dispatch}
               listIndex={i}
               hideModal={hideModal}
             />
@@ -87,9 +82,9 @@ const UserLists: React.FC<UserListsProps> = ({
             initialValue=""
             submit={submitNewUserList}
             hideCustomInput={hideNewUserListInput}
-            customClass={"user-list-item-input"}
+            customClass={'user-list-item-input'}
             placeholder={
-              lang === "en" ? "New list title..." : "Название списка..."
+              lang === 'en' ? 'New list title...' : 'Название списка...'
             }
           />
         ) : (

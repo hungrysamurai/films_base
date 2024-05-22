@@ -1,45 +1,37 @@
 import {
-  UserListReducerAction,
-  UserListReducerActionTypes,
-} from '../../../reducers/userListsReducer';
-
-import {
   removeUserList,
   editUserListTitle,
 } from '../../../utils/firebase/firebase.utils';
 
-import useOutsideClick from '../../../hooks/useOutsideClick';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import EditListIcon from '../icons/EditListIcon';
 import DeleteListIcon from '../icons/DeleteListIcon';
 import CustomInput from '../../CustomInput';
+import { useAppDispatch } from '../../../store/hooks';
+import { setCurrentListIndex } from '../../../store/slices/userListsSlice';
 
 type UserListItemProps = {
   title: string;
   active: boolean;
   listIndex: number;
-  dispatch: React.Dispatch<UserListReducerAction>;
   hideModal?: Function;
 };
 
 const UserListItem: React.FC<UserListItemProps> = ({
   title,
   active,
-  dispatch,
   listIndex,
   hideModal,
 }) => {
+  const dispatch = useAppDispatch();
+
   const [editTitleInputShow, setEditTitleInputShow] = useState(false);
-  // const editTitleInputContainerRef = useRef(null);
 
   const hideEditTitleInput = () => {
     setEditTitleInputShow(() => false);
   };
-
-  // console.log(editTitleInputContainerRef);
-  // useOutsideClick(editTitleInputContainerRef, hideEditTitleInput);
 
   const submitEditListTitle = (inputValue: string) => {
     if (
@@ -68,12 +60,7 @@ const UserListItem: React.FC<UserListItemProps> = ({
         <div
           className={`user-list-container ${active && 'active'}`}
           onClick={() => {
-            console.log(listIndex);
-
-            dispatch({
-              type: UserListReducerActionTypes.SET_CURRENT_LIST_INDEX,
-              payload: listIndex,
-            });
+            dispatch(setCurrentListIndex(listIndex));
 
             if (hideModal) {
               setTimeout(() => {

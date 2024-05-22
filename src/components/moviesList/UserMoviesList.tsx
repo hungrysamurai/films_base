@@ -1,11 +1,11 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { useFetchUserMoviesList } from "../../hooks/useFetchUserMoviesList";
+import { motion, AnimatePresence } from 'framer-motion';
 
-import SingleMovie from "./SingleMovie";
-import Loader from "../Loader";
-import ErrorMessage from "../ErrorMessage";
-import { useAppSelector } from "../../store/hooks";
-import { getCurrentLang } from "../../store/slices/mainSlice";
+import SingleMovie from './SingleMovie';
+import Loader from '../Loader';
+import ErrorMessage from '../ErrorMessage';
+import { useAppSelector } from '../../store/hooks';
+import { getCurrentLang } from '../../store/slices/mainSlice';
+import { useGetUserMoviesListQuery } from '../../store/slices/api/apiSlice';
 
 type UserMoviesListProps = {
   currentUserList: UserListItem[];
@@ -19,27 +19,35 @@ const UserMoviesList: React.FC<UserMoviesListProps> = ({
   const lang = useAppSelector(getCurrentLang);
 
   const {
-    data: moviesFetchList,
-    isLoading: moviesFetchLoading,
-    error: moviesFetchError,
-  } = useFetchUserMoviesList(lang, currentUserList);
+    data = [],
+    isLoading,
+    isError,
+  } = useGetUserMoviesListQuery({
+    lang,
+    currentUserList,
+  });
 
-  if (moviesFetchError.show) {
+  if (isError) {
     return (
-      <ErrorMessage errorMessage={moviesFetchError.message} showImage={true} />
+      <ErrorMessage
+        errorMessage={`${
+          lang === 'ru' ? 'Этот список пуст' : 'This list is empty'
+        }`}
+        showImage={true}
+      />
     );
   }
 
-  if (moviesFetchLoading) {
+  if (isLoading) {
     return <Loader />;
   }
 
   return (
     <>
       <motion.div layout layoutRoot className="movies-list-container">
-        {moviesFetchList.map(({ posterUrl, title, id, mediaType }) => {
+        {data.map(({ posterUrl, title, id, mediaType }) => {
           if (title.length > 35) {
-            title = title.slice(0, 35) + "...";
+            title = title.slice(0, 35) + '...';
           }
 
           return (

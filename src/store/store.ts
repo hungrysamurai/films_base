@@ -4,6 +4,7 @@ import authReducer from './slices/authSlice';
 import mainReducer from './slices/mainSlice';
 import homePageParamsReducer from './slices/homePageParamsSlice';
 import searchPageParamsReducer from './slices/searchPageParamsSlice';
+import userListsReducer from './slices/userListsSlice';
 import { apiSlice } from './slices/api/apiSlice';
 
 export const store = configureStore({
@@ -12,6 +13,7 @@ export const store = configureStore({
     auth: authReducer,
     homePageParams: homePageParamsReducer,
     searchPageParams: searchPageParamsReducer,
+    userLists: userListsReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
