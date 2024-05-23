@@ -8,7 +8,7 @@ import { MediaType } from '../../types';
 import { useAppSelector } from '../../store/hooks';
 import { getCurrentLang } from '../../store/slices/mainSlice';
 import { useGetSimilarMoviesQuery } from '../../store/slices/api/apiSlice';
-import useDraggableContainer from '../../hooks/useDraggableContainer';
+import useDraggableList from '../../hooks/useDraggableList';
 
 type SimilarMoviesListProps = {
   itemID: string;
@@ -34,7 +34,7 @@ const SimilarMoviesList: React.FC<SimilarMoviesListProps> = memo(
     });
 
     const { control: animationControl, containerWidth: elementWidth } =
-      useDraggableContainer({
+      useDraggableList({
         containerRef: moviesListRef,
         dataTrigger: itemsList,
       });

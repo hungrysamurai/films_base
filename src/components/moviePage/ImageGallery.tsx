@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import useDraggableContainer from '../../hooks/useDraggableContainer';
+
+import useDraggableGallery from '../../hooks/useDraggableGallery';
 
 type ImageGalleryProp = {
   openModal: (data: string[], imageIndex: number) => void;
@@ -15,16 +16,15 @@ const ImageGallery: React.FC<ImageGalleryProp> = ({
   const galleryRowContainerRef = useRef<HTMLDivElement>(null);
 
   const {
+    containerWidth,
+    control,
     totalElementsLoaded,
     galleryRow,
-    containerWidth,
-    setTotalElementsLoaded,
     galleryElementsIsLoading,
-    control,
-  } = useDraggableContainer({
+    setTotalElementsLoaded,
+  } = useDraggableGallery({
     containerRef: galleryRowContainerRef,
-    dataTrigger: imagesArray,
-    isGallery: true,
+    elementsArray: imagesArray,
   });
 
   const openImage = (index: number) => {

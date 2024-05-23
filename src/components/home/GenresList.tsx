@@ -11,7 +11,7 @@ import {
   setHomePageFilterGenre,
 } from '../../store/slices/homePageParamsSlice';
 import { useGetGenresQuery } from '../../store/slices/api/apiSlice';
-import useDraggableContainer from '../../hooks/useDraggableContainer';
+import useDraggableList from '../../hooks/useDraggableList';
 
 const GenresList: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -30,7 +30,7 @@ const GenresList: React.FC = () => {
   const allGenresElementRef = useRef<HTMLLIElement>(null);
   const activeGenreElementRef = useRef<HTMLLIElement>(null);
 
-  const { containerWidth: genresListWidth, control } = useDraggableContainer({
+  const { containerWidth: genresListWidth, control } = useDraggableList({
     containerRef: genresListContainerRef,
     dataTrigger: genresFetchedList,
     defaultElementRef: allGenresElementRef,
