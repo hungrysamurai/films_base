@@ -1,5 +1,10 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
+interface UsersListsState {
+ userLists: UserList[];
+ currentListIndex: number;
+};
+
 const initialState: UsersListsState = {
  userLists: [],
  currentListIndex: 0,

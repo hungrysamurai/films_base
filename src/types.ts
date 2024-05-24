@@ -1,8 +1,7 @@
 import { operations } from './tmdb_types';
 import { MovieListItem, TVListItem } from './utils/classes/moviesListItem';
 import { ReactElement } from 'react';
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import { SerializedError } from '@reduxjs/toolkit';
+
 import { SingleMovieData, SingleTVData } from './utils/classes/singleMovieData';
 
 export enum ColorTheme {
@@ -33,11 +32,6 @@ export enum TVFilterListTerm {
   TopRated = 'top_rated',
 }
 
-export enum MoviesListMode {
-  Home = 'home',
-  Search = 'search',
-}
-
 export enum ModalMode {
   Gallery = 'gallery',
   Box = 'box',
@@ -45,6 +39,12 @@ export enum ModalMode {
 }
 
 type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
+
+type OnlyProperties<T> = {
+  [K in keyof T]: T[K] extends Function ? never : K;
+}[keyof T];
+
+type InstanceProperties<T> = Pick<T, OnlyProperties<T>>;
 
 declare global {
   type FilterListQueries = {
@@ -65,12 +65,6 @@ declare global {
     operations['discover-tv']['responses'][200]['content']['application/json']
   >;
 
-  type FetchedListInitialData = [
-    MovieListItem[] | TVListItem[],
-    number[],
-    number?,
-  ];
-
   type FetchedMovieData =
     operations['movie-details']['responses'][200]['content']['application/json'];
 
@@ -86,9 +80,6 @@ declare global {
   type FetchedItemVideosData =
     operations['movie-videos']['responses'][200]['content']['application/json'];
 
-  type FetchedGenresTVList =
-    operations['genre-tv-list']['responses'][200]['content']['application/json'];
-
   type FetchedSearchQueryData =
     operations['search-multi']['responses'][200]['content']['application/json'];
 
@@ -96,11 +87,6 @@ declare global {
     status_code: number;
     status_message: string;
     success: false;
-  };
-
-  type FetchDataError = {
-    message: string;
-    show: boolean;
   };
 
   type GenreData = {
@@ -114,25 +100,6 @@ declare global {
 
   type SingleItemDetailsData = SingleItemDetailsDataItem[];
 
-  type MoviesListState = {
-    mediaType: MediaType;
-    filterList: MovieFilterListTerm | TVFilterListTerm;
-    filterGenre: string;
-    page: number;
-    totalPages: number;
-    moviesList: MovieListItem[] | TVListItem[];
-    uniqueIds: number[];
-    moviesListMode: MoviesListMode;
-    searchQuery: string;
-    selectedMovie: string;
-  };
-
-  type HomePageParamsState = {
-    mediaType: MediaType;
-    filterList: MovieFilterListTerm | TVFilterListTerm;
-    filterGenre: string;
-  };
-
   type UserListItem = {
     id: string;
     mediaType: MediaType;
@@ -143,11 +110,6 @@ declare global {
   type UserList = {
     title: string;
     data: UserItemsLists;
-  };
-
-  type UsersListsState = {
-    userLists: UserList[];
-    currentListIndex: number;
   };
 
   type ReactChildrenType = { children?: ReactElement | ReactElement[] };
@@ -165,17 +127,6 @@ declare global {
   type FilterLists = {
     [key in Lang]: FilterList[];
   };
-
-  type APIError = {
-    errorResponse: FetchBaseQueryError | SerializedError | undefined;
-    message: string;
-  };
-
-  type OnlyProperties<T> = {
-    [K in keyof T]: T[K] extends Function ? never : K;
-  }[keyof T];
-
-  type InstanceProperties<T> = Pick<T, OnlyProperties<T>>;
 
   type MoviesListItemProps = InstanceProperties<TVListItem | MovieListItem>;
 
