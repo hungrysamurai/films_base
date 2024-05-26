@@ -7,7 +7,7 @@ import ErrorMessage from '../ErrorMessage';
 import { MediaType } from '../../types';
 import { useAppSelector } from '../../store/hooks';
 import { getCurrentLang } from '../../store/slices/mainSlice';
-import { useGetSimilarMoviesQuery } from '../../store/slices/api/apiSlice';
+import { useGetSimilarMoviesQuery } from '../../store/slices/api/endpoints/getSimilarMovies';
 import useDraggableList from '../../hooks/useDraggableList';
 
 type SimilarMoviesListProps = {

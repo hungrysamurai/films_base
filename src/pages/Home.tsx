@@ -14,7 +14,11 @@ import {
   setHomePageCurrentPage,
   setHomePageLastActiveItem,
 } from '../store/slices/homePageParamsSlice';
-import { apiSlice, useGetMoviesListQuery } from '../store/slices/api/apiSlice';
+
+import {
+  extendedApi,
+  useGetMoviesListQuery,
+} from '../store/slices/api/endpoints/getMoviesList';
 
 import { useCallback, useEffect, useMemo } from 'react';
 
@@ -31,7 +35,7 @@ const Home: React.FC = () => {
   // Get cache for current endpoint & args
   const getCurrentCachedData = useMemo(
     () =>
-      apiSlice.endpoints.getMoviesList.select({
+      extendedApi.endpoints.getMoviesList.select({
         mediaType,
         filterList,
         filterGenre,
@@ -52,7 +56,7 @@ const Home: React.FC = () => {
     }
   }, [cachedData]);
 
-  const { data, isError, isFetching } = useGetMoviesListQuery({
+  const { data, isError, isLoading } = useGetMoviesListQuery({
     mediaType,
     filterList,
     filterGenre,
@@ -84,7 +88,7 @@ const Home: React.FC = () => {
         setLastActiveItem={setLastActiveItem}
         moviesList={data?.itemsList ?? []}
         isError={isError}
-        isFetching={isFetching}
+        isLoading={isLoading}
       />
     </section>
   );

@@ -3,10 +3,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { getCurrentLang, setMainTitle } from '../store/slices/mainSlice';
-import {
-  apiSlice,
-  useGetSearchResultsQuery,
-} from '../store/slices/api/apiSlice';
+
 import MoviesList from '../components/moviesList/MoviesList';
 
 import {
@@ -18,6 +15,10 @@ import {
   setSearchPageLastActiveItem,
   setSearchPageSearchQuery,
 } from '../store/slices/searchPageParamsSlice';
+import {
+  extendedApi,
+  useGetSearchResultsQuery,
+} from '../store/slices/api/endpoints/getSearchResults';
 
 const SearchResults: React.FC = () => {
   const { query: paramsQuery } = useParams();
@@ -32,7 +33,7 @@ const SearchResults: React.FC = () => {
 
   const getCurrentCachedData = useMemo(
     () =>
-      apiSlice.endpoints.getSearchResults.select({
+      extendedApi.endpoints.getSearchResults.select({
         lang,
         searchQuery,
         currentPage,
@@ -72,7 +73,7 @@ const SearchResults: React.FC = () => {
     [dispatch],
   );
 
-  const { data, isError, isFetching } = useGetSearchResultsQuery({
+  const { data, isError, isLoading } = useGetSearchResultsQuery({
     lang,
     searchQuery,
     currentPage,
@@ -88,7 +89,7 @@ const SearchResults: React.FC = () => {
         setLastActiveItem={setLastActiveSearchItem}
         moviesList={data?.itemsList ?? []}
         isError={isError}
-        isFetching={isFetching}
+        isLoading={isLoading}
       />
     </section>
   );

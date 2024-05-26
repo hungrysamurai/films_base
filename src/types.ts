@@ -130,5 +130,5 @@ declare global {
 
   type MoviesListItemProps = InstanceProperties<TVListItem | MovieListItem>;
 
-  type SingleItemDataProps = InstanceProperties<SingleMovieData | SingleTVData>
+  type SingleItemDataProps = InstanceProperties<SingleMovieData | SingleTVData>;
 }

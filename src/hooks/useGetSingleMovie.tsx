@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import {
-  useGetSingleMovieDataQuery,
-  useGetSingleMovieImagesQuery,
-  useGetSingleMovieVideosQuery,
-} from '../store/slices/api/apiSlice';
+
+import { useGetSingleMovieDataQuery } from '../store/slices/api/endpoints/getSingleMovieData';
+import { useGetSingleMovieImagesQuery } from '../store/slices/api/endpoints/getSingleMovieImages';
+import { useGetSingleMovieVideosQuery } from '../store/slices/api/endpoints/getSingleMovieVideos';
 import { Lang, MediaType } from '../types';
 
 interface UseGetSingleMovieParams {

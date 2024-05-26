@@ -5,8 +5,7 @@ import Loader from '../Loader';
 import ErrorMessage from '../ErrorMessage';
 import { useAppSelector } from '../../store/hooks';
 import { getCurrentLang } from '../../store/slices/mainSlice';
-import { useGetUserMoviesListQuery } from '../../store/slices/api/apiSlice';
-
+import { useGetUserMoviesListQuery } from '../../store/slices/api/endpoints/getUserMoviesList';
 type UserMoviesListProps = {
   currentUserList: UserListItem[];
   listIndex: number;

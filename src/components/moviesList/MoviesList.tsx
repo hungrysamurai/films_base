@@ -14,7 +14,7 @@ type MoviesListProps = {
   lastActiveItem: string;
   setLastActiveItem: (id: string) => void;
   isError: boolean;
-  isFetching: boolean;
+  isLoading: boolean;
 };
 
 const MoviesList: React.FC<MoviesListProps> = ({
@@ -25,7 +25,7 @@ const MoviesList: React.FC<MoviesListProps> = ({
   lastActiveItem,
   setLastActiveItem,
   isError,
-  isFetching,
+  isLoading,
 }) => {
   // Scroll to element
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -80,7 +80,7 @@ const MoviesList: React.FC<MoviesListProps> = ({
         })}
       </motion.div>
 
-      {isFetching && <Loader />}
+      {isLoading && <Loader />}
     </>
   );
 };

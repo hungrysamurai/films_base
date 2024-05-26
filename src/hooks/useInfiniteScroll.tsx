@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 function useInfiniteScroll(
   currentPage: number,
@@ -7,21 +7,31 @@ function useInfiniteScroll(
   isError: boolean,
 ) {
   const currentPageRef = useRef(currentPage);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     currentPageRef.current = currentPage;
   }, [currentPage]);
 
-  const scrollHandler = () => {
+  const debouncedIncreasePage = useCallback(() => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+    debounceRef.current = setTimeout(() => {
+      increasePage();
+    }, 100);
+  }, [increasePage]);
+
+  const scrollHandler = useCallback(() => {
     if (currentPageRef.current < totalPages) {
       if (
         window.innerHeight + window.scrollY >=
-        document.body.scrollHeight - 100
+        document.body.scrollHeight - 300
       ) {
-        increasePage();
+        debouncedIncreasePage();
       }
     }
-  };
+  }, [totalPages, debouncedIncreasePage]);
 
   useEffect(() => {
     if (isError) {
@@ -33,7 +43,16 @@ function useInfiniteScroll(
     }
 
     return () => window.removeEventListener('scroll', scrollHandler);
-  }, [isError, totalPages]);
+  }, [isError, totalPages, scrollHandler]);
+
+  useEffect(() => {
+    // Cleanup debounce timer on unmount
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
+  }, []);
 }
 
 export default useInfiniteScroll;
