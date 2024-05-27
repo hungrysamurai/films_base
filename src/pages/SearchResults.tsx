@@ -19,6 +19,7 @@ import {
   extendedApi,
   useGetSearchResultsQuery,
 } from '../store/slices/api/endpoints/getSearchResults';
+import Loader from '../components/Loader';
 
 const SearchResults: React.FC = () => {
   const { query: paramsQuery } = useParams();
@@ -73,7 +74,7 @@ const SearchResults: React.FC = () => {
     [dispatch],
   );
 
-  const { data, isError, isLoading } = useGetSearchResultsQuery({
+  const { data, isError, isLoading, isFetching } = useGetSearchResultsQuery({
     lang,
     searchQuery,
     currentPage,
@@ -91,6 +92,8 @@ const SearchResults: React.FC = () => {
         isError={isError}
         isLoading={isLoading}
       />
+
+      {!isLoading && isFetching && <Loader fixedPosition={true} />}
     </section>
   );
 };

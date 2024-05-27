@@ -1,6 +1,12 @@
-const Loader: React.FC = () => {
+type LoaderProps = {
+  fixedPosition?: boolean;
+};
+
+const Loader: React.FC<LoaderProps> = ({ fixedPosition = false }) => {
   return (
-    <div className="loader-container">
+    <div
+      className={`loader-container ${fixedPosition ? 'fixed-on-screen' : ''}`}
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="200px"
@@ -22,7 +28,7 @@ const Loader: React.FC = () => {
           cx="70"
           cy="50"
           style={{
-            fill: "var(--primary-color)",
+            fill: 'var(--primary-color)',
           }}
           r="20"
         >

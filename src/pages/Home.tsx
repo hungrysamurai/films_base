@@ -21,6 +21,7 @@ import {
 } from '../store/slices/api/endpoints/getMoviesList';
 
 import { useCallback, useEffect, useMemo } from 'react';
+import Loader from '../components/Loader';
 
 const Home: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -56,7 +57,7 @@ const Home: React.FC = () => {
     }
   }, [cachedData]);
 
-  const { data, isError, isLoading } = useGetMoviesListQuery({
+  const { data, isError, isLoading, isFetching } = useGetMoviesListQuery({
     mediaType,
     filterList,
     filterGenre,
@@ -79,7 +80,6 @@ const Home: React.FC = () => {
     <section className="section-home">
       <ListsContainer />
       <GenresList />
-
       <MoviesList
         increasePageCount={increasePageCount}
         currentPage={currentPage}
@@ -90,6 +90,8 @@ const Home: React.FC = () => {
         isError={isError}
         isLoading={isLoading}
       />
+
+      {!isLoading && isFetching && <Loader fixedPosition={true} />}
     </section>
   );
 };

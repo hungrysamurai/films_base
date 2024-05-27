@@ -13,6 +13,10 @@ export const IMG_BASE_URL_780: string =
   import.meta.env.MODE === 'development'
     ? `${import.meta.env.VITE_PROXY_DATA_FILE_URL_DEV}w780`
     : `${import.meta.env.VITE_PROXY_DATA_FILE_URL_PROD}w780`;
+export const IMG_BASE_URL_92: string =
+  import.meta.env.MODE === 'development'
+    ? `${import.meta.env.VITE_PROXY_DATA_FILE_URL_DEV}w92`
+    : `${import.meta.env.VITE_PROXY_DATA_FILE_URL_PROD}w92`;
 
 const baseQuery = fetchBaseQuery({
   baseUrl: API_BASE,

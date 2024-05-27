@@ -1,13 +1,13 @@
-import { removeFromUserList } from "../../utils/firebase/firebase.utils";
+import { removeFromUserList } from '../../utils/firebase/firebase.utils';
 
-import { motion } from "framer-motion";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import useListenWindowWidth from "../../hooks/useListenWindowWidth";
+import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import useListenWindowWidth from '../../hooks/useListenWindowWidth';
 
-import DeleteMovieIcon from "./icons/DeleteMovieIcon";
-import { MediaType } from "../../types";
-import getBaseURL from "../../utils/getBaseURL";
+import DeleteMovieIcon from './icons/DeleteMovieIcon';
+import { MediaType } from '../../types';
+import getBaseURL from '../../utils/getBaseURL';
 
 type SingleMovieProps = {
   title: string;
@@ -43,8 +43,8 @@ const SingleMovie: React.FC<SingleMovieProps> = ({
       initial={{ opacity: 0 }}
       exit={{ opacity: 0 }}
       whileHover={{
-        scale: currentWindowWidth === "desktop" ? 1.05 : 1,
-        zIndex: 999,
+        scale: currentWindowWidth === 'desktop' ? 1.05 : 1,
+        zIndex: 2,
       }}
       onHoverStart={() =>
         removeItemButton ? setShowDeleteButton(() => true) : null
@@ -57,8 +57,8 @@ const SingleMovie: React.FC<SingleMovieProps> = ({
       <Link
         style={{
           pointerEvents: isDrag
-            ? ("none" as React.CSSProperties["pointerEvents"])
-            : ("" as React.CSSProperties["pointerEvents"]),
+            ? ('none' as React.CSSProperties['pointerEvents'])
+            : ('' as React.CSSProperties['pointerEvents']),
         }}
         to={getBaseURL(`${mediaType}/${id}`)}
         draggable="false"
@@ -97,7 +97,7 @@ const SingleMovie: React.FC<SingleMovieProps> = ({
       {/* If it is user movies list  */}
       {removeItemButton &&
         !imageLoading &&
-        (showDeleteButton || currentWindowWidth === "mobile") && (
+        (showDeleteButton || currentWindowWidth === 'mobile') && (
           <button
             className="remove-item-button"
             onClick={() => {

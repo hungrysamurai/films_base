@@ -19,7 +19,7 @@ function useInfiniteScroll(
     }
     debounceRef.current = setTimeout(() => {
       increasePage();
-    }, 100);
+    }, 125);
   }, [increasePage]);
 
   const scrollHandler = useCallback(() => {

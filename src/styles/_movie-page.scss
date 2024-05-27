@@ -7,6 +7,7 @@
 
   .movie-wrapper {
     display: flex;
+    z-index: 1;
 
     .left-col {
       flex: 3.5;

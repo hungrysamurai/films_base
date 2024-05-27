@@ -1,21 +1,23 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 function useOutsideClick(
   ref: React.MutableRefObject<HTMLElement>,
-  cb: Function
+  cb: Function,
 ) {
   useEffect(() => {
     function handleClickOutside(event: Event) {
+      console.log(ref.current);
+
       if (ref.current && !ref.current.contains(event.target as HTMLElement)) {
         cb();
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("touchstart", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("touchstart", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
     };
   }, [ref, cb]);
 }

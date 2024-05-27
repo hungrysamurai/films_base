@@ -1,28 +1,55 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { MutableRefObject, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 import SearchIcon from './icons/SearchIcon';
-import { Lang } from '../../types';
+import { Lang, MediaType } from '../../types';
 import getBaseURL from '../../utils/getBaseURL';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { getCurrentLang } from '../../store/slices/mainSlice';
-import { getHomePageMediaType } from '../../store/slices/homePageParamsSlice';
 import { setSearchPageSearchQuery } from '../../store/slices/searchPageParamsSlice';
+import useDebounce from '../../hooks/useDebounce';
+
+import { useGetSearchHintsItemsQuery } from '../../store/slices/api/endpoints/getSearchHintsItems';
+import SearchHintsList from './SearchHintsList';
+import useOutsideClick from '../../hooks/useOutsideClick';
 
 const SearchBox: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const lang = useAppSelector(getCurrentLang);
-  const mediaType = useAppSelector(getHomePageMediaType);
-
-  const text =
-    lang === Lang.En
-      ? ['Find', 'movie...', 'tv show...']
-      : ['Найти', 'фильм...', 'сериал...'];
 
   const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [hintsVisible, setHintsVisible] = useState(false);
+
+  const debouncedInput = useDebounce(searchTerm, 200);
+
+  const searchBoxContainerRef = useRef<HTMLDivElement>(null);
+
+  const hideHints = () => {
+    setHintsVisible(false);
+  };
+
+  useOutsideClick(
+    searchBoxContainerRef as MutableRefObject<HTMLDivElement>,
+    hideHints,
+  );
+
+  const { data = [], isLoading } = useGetSearchHintsItemsQuery({
+    lang,
+    searchInput: debouncedInput,
+  });
+
+  const openItem = (id: string, mediaType: MediaType) => {
+    navigate(getBaseURL(`${mediaType}/${id}`));
+    setHintsVisible(false);
+    setSearchTerm('');
+  };
+
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
 
   const search = () => {
     if (searchTerm) {
@@ -33,9 +60,9 @@ const SearchBox: React.FC = () => {
   };
 
   return (
-    <div className="search-box-container">
+    <div className="search-box-container" ref={searchBoxContainerRef}>
       <form
-        className="search-box-form"
+        className={`search-box-form ${hintsVisible ? 'show-hints' : ''}`}
         onSubmit={(e) => {
           e.preventDefault();
           search();
@@ -47,13 +74,19 @@ const SearchBox: React.FC = () => {
         <input
           type="text"
           className="search-box-input"
-          placeholder={`${text[0]} ${
-            mediaType === 'movie' ? text[1] : text[2]
-          }`}
+          placeholder={`${lang === Lang.Ru ? 'Поиск' : 'Search'}`}
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={handleInput}
+          onFocus={() => setHintsVisible(true)}
         />
       </form>
+      {/* focus && */}
+      {hintsVisible && data.length !== 0 && !isLoading && (
+        <>
+          <SearchHintsList data={data} lang={lang} openItem={openItem} />
+          <div className="search-hints-overlay"></div>
+        </>
+      )}
     </div>
   );
 };
