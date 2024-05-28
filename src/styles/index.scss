@@ -24,12 +24,8 @@
   box-sizing: border-box;
   scroll-behavior: smooth;
 
-
-  scrollbar-width: none;
-    
-      &::-webkit-scrollbar {
-        display: none;
-      }
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color) var(--secondary-color);
 }
 
 body {
