@@ -9,6 +9,7 @@ import { useAppSelector } from '../../store/hooks';
 import { getCurrentLang } from '../../store/slices/mainSlice';
 import { useGetSimilarMoviesQuery } from '../../store/slices/api/endpoints/getSimilarMovies';
 import useDraggableList from '../../hooks/useDraggableList';
+import useListenWindowWidth from '../../hooks/useListenWindowWidth';
 
 type SimilarMoviesListProps = {
   itemID: string;
@@ -38,6 +39,8 @@ const SimilarMoviesList: React.FC<SimilarMoviesListProps> = memo(
         containerRef: moviesListRef,
         dataTrigger: itemsList,
       });
+
+    const currentWindowWidth = useListenWindowWidth();
 
     if (isError) {
       return (
@@ -85,6 +88,7 @@ const SimilarMoviesList: React.FC<SimilarMoviesListProps> = memo(
                 id={`${id}`}
                 mediaType={mediaType}
                 isDrag={isDrag}
+                currentWindowWidth={currentWindowWidth}
               />
             );
           })}

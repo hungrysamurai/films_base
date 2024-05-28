@@ -3,7 +3,6 @@ import { removeFromUserList } from '../../utils/firebase/firebase.utils';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import useListenWindowWidth from '../../hooks/useListenWindowWidth';
 
 import DeleteMovieIcon from './icons/DeleteMovieIcon';
 import { MediaType } from '../../types';
@@ -14,6 +13,7 @@ type SingleMovieProps = {
   poster: string;
   id: string;
   mediaType: MediaType;
+  currentWindowWidth: 'desktop' | 'mobile' | undefined;
   isDrag?: boolean;
   removeItemButton?: boolean;
   listIndex?: number;
@@ -24,13 +24,13 @@ const SingleMovie: React.FC<SingleMovieProps> = ({
   poster,
   id,
   mediaType,
+  currentWindowWidth,
   isDrag,
   removeItemButton,
   listIndex,
 }) => {
   const [imageLoading, setImageLoading] = useState(true);
   const [showDeleteButton, setShowDeleteButton] = useState(false);
-  const currentWindowWidth = useListenWindowWidth();
 
   const imageLoaded = () => {
     setImageLoading(false);

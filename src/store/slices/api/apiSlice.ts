@@ -13,6 +13,10 @@ export const IMG_BASE_URL_780: string =
   import.meta.env.MODE === 'development'
     ? `${import.meta.env.VITE_PROXY_DATA_FILE_URL_DEV}w780`
     : `${import.meta.env.VITE_PROXY_DATA_FILE_URL_PROD}w780`;
+export const IMG_BASE_URL_1280: string =
+  import.meta.env.MODE === 'development'
+    ? `${import.meta.env.VITE_PROXY_DATA_FILE_URL_DEV}w1280`
+    : `${import.meta.env.VITE_PROXY_DATA_FILE_URL_PROD}w1280`;
 export const IMG_BASE_URL_92: string =
   import.meta.env.MODE === 'development'
     ? `${import.meta.env.VITE_PROXY_DATA_FILE_URL_DEV}w92`

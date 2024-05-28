@@ -45,10 +45,10 @@ export const extendedApi = apiSlice.injectEndpoints({
           return Number(b.rate) - Number(a.rate);
         });
 
-        if (sorted.length < 7) {
-          return sorted
+        if (sorted.length < 10) {
+          return sorted;
         } else {
-          return sorted.splice(0, 7)
+          return sorted.splice(0, 10);
         }
       },
     }),

@@ -5,6 +5,7 @@ import Loader from '../Loader';
 import ErrorMessage from '../ErrorMessage';
 
 import useInfiniteScroll from '../../hooks/useInfiniteScroll';
+import useListenWindowWidth from '../../hooks/useListenWindowWidth';
 
 type MoviesListProps = {
   increasePageCount: () => void;
@@ -42,6 +43,8 @@ const MoviesList: React.FC<MoviesListProps> = ({
 
   useInfiniteScroll(currentPage, totalPages, increasePageCount, isError);
 
+  const currentWindowWidth = useListenWindowWidth();
+
   if (isError) {
     return (
       <ErrorMessage
@@ -73,6 +76,7 @@ const MoviesList: React.FC<MoviesListProps> = ({
                   title={title}
                   id={`${id}`}
                   mediaType={mediaType}
+                  currentWindowWidth={currentWindowWidth}
                 />
               </div>
             </AnimatePresence>

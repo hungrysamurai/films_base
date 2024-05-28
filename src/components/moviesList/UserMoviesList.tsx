@@ -6,6 +6,7 @@ import ErrorMessage from '../ErrorMessage';
 import { useAppSelector } from '../../store/hooks';
 import { getCurrentLang } from '../../store/slices/mainSlice';
 import { useGetUserMoviesListQuery } from '../../store/slices/api/endpoints/getUserMoviesList';
+import useListenWindowWidth from '../../hooks/useListenWindowWidth';
 type UserMoviesListProps = {
   currentUserList: UserListItem[];
   listIndex: number;
@@ -25,6 +26,8 @@ const UserMoviesList: React.FC<UserMoviesListProps> = ({
     lang,
     currentUserList,
   });
+
+  const currentWindowWidth = useListenWindowWidth();
 
   if (isError) {
     return (
@@ -58,6 +61,7 @@ const UserMoviesList: React.FC<UserMoviesListProps> = ({
                 mediaType={mediaType}
                 removeItemButton={true}
                 listIndex={listIndex}
+                currentWindowWidth={currentWindowWidth}
               />
               ;
             </AnimatePresence>

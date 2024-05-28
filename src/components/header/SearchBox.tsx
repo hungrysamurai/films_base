@@ -10,7 +10,7 @@ import { setSearchPageSearchQuery } from '../../store/slices/searchPageParamsSli
 import useDebounce from '../../hooks/useDebounce';
 
 import { useGetSearchHintsItemsQuery } from '../../store/slices/api/endpoints/getSearchHintsItems';
-import SearchHintsList from './SearchHintsList';
+import SearchHintsList from './searchHints/SearchHintsList';
 import useOutsideClick from '../../hooks/useOutsideClick';
 
 const SearchBox: React.FC = () => {

@@ -6,8 +6,6 @@ function useOutsideClick(
 ) {
   useEffect(() => {
     function handleClickOutside(event: Event) {
-      console.log(ref.current);
-
       if (ref.current && !ref.current.contains(event.target as HTMLElement)) {
         cb();
       }

@@ -1,5 +1,5 @@
 import { MediaType } from '../../../../types';
-import { API_KEY, IMG_BASE_URL_780, apiSlice } from '../apiSlice';
+import { API_KEY, IMG_BASE_URL_1280, apiSlice } from '../apiSlice';
 
 const extendedApi = apiSlice.injectEndpoints({
   endpoints: (build) => ({
@@ -22,7 +22,7 @@ const extendedApi = apiSlice.injectEndpoints({
           }
 
           backdrops.forEach((backdropObj) => {
-            imagesPaths.push(IMG_BASE_URL_780 + backdropObj.file_path);
+            imagesPaths.push(IMG_BASE_URL_1280 + backdropObj.file_path);
           });
         }
 
