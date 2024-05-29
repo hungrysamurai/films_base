@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { memo, useState } from 'react';
+import { motion } from 'framer-motion';
 
 type YoutubeEmbedProps = {
   videoKey: string;
@@ -41,4 +41,4 @@ const YoutubeEmbed: React.FC<YoutubeEmbedProps> = ({ videoKey }) => {
   );
 };
 
-export default YoutubeEmbed;
+export default memo(YoutubeEmbed);

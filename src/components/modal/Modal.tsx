@@ -1,9 +1,9 @@
-import { ReactElement } from "react";
+import { ModalMode } from '../../types';
 
-import { motion } from "framer-motion";
+import { ReactElement, memo, useMemo } from 'react';
+import { motion } from 'framer-motion';
 
-import CloseModalIcon from "./icons/CloseModalIcon";
-import { ModalMode } from "../../types";
+import CloseModalIcon from './icons/CloseModalIcon';
 
 type ModalProps = {
   children: ReactElement;
@@ -12,54 +12,52 @@ type ModalProps = {
 };
 
 const Modal: React.FC<ModalProps> = ({ children, mode, hideModal }) => {
-  if (mode === ModalMode.Gallery) {
-    return (
-      <motion.div
-        animate={{ opacity: 1 }}
-        initial={{ opacity: 0 }}
-        exit={{ opacity: 0 }}
-        className="modal-container"
-      >
-        {children}
-      </motion.div>
-    );
-  }
+  const renderCloseButton = useMemo(
+    () =>
+      hideModal ? (
+        <button className="close-modal" onClick={hideModal}>
+          <CloseModalIcon />
+        </button>
+      ) : null,
+    [hideModal],
+  );
 
-  if (mode === ModalMode.Box) {
-    return (
-      <motion.div
-        animate={{ opacity: 1 }}
-        initial={{ opacity: 0 }}
-        exit={{ opacity: 0 }}
-        className="modal-container"
-      >
-        <div className="modal-box-container">
-          <button className="close-modal" onClick={hideModal}>
-            <CloseModalIcon />
-          </button>
-          {children}
-        </div>
-      </motion.div>
-    );
-  }
+  const modalContent = useMemo(() => {
+    switch (mode) {
+      case ModalMode.Gallery:
+        return children;
 
-  if (mode === ModalMode.Overlay) {
-    return (
-      <motion.div
-        animate={{ opacity: 1 }}
-        initial={{ opacity: 0 }}
-        exit={{ opacity: 0 }}
-        className="modal-container"
-      >
-        <div className="modal-overlay-container">
-          <button className="close-modal" onClick={hideModal}>
-            <CloseModalIcon />
-          </button>
-          {children}
-        </div>
-      </motion.div>
-    );
-  }
+      case ModalMode.Box:
+        return (
+          <div className="modal-box-container">
+            {renderCloseButton}
+            {children}
+          </div>
+        );
+
+      case ModalMode.Overlay:
+        return (
+          <div className="modal-overlay-container">
+            {renderCloseButton}
+            {children}
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  }, [mode, children, renderCloseButton]);
+
+  return (
+    <motion.div
+      animate={{ opacity: 1 }}
+      initial={{ opacity: 0 }}
+      exit={{ opacity: 0 }}
+      className="modal-container"
+    >
+      {modalContent}
+    </motion.div>
+  );
 };
 
-export default Modal;
+export default memo(Modal);

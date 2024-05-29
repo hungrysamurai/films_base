@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, memo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 
 import useDraggableGallery from '../../hooks/useDraggableGallery';
@@ -27,11 +27,26 @@ const ImageGallery: React.FC<ImageGalleryProp> = ({
     elementsArray: imagesArray,
   });
 
-  const openImage = (index: number) => {
-    if (totalElementsLoaded === galleryRow.length) {
-      openModal(galleryRow as string[], index);
-    }
-  };
+  const openImage = useCallback(
+    (index: number) => {
+      if (totalElementsLoaded === galleryRow.length) {
+        openModal(galleryRow as string[], index);
+      }
+    },
+    [openModal, totalElementsLoaded, galleryRow],
+  );
+
+  const handleDrag = useCallback(() => {
+    setIsDrag(true);
+  }, []);
+
+  const handleDragEnd = useCallback(() => {
+    setIsDrag(false);
+  }, []);
+
+  const handleImageLoad = useCallback(() => {
+    setTotalElementsLoaded((prev) => prev + 1);
+  }, [setTotalElementsLoaded]);
 
   return (
     <div className="gallery-container">
@@ -42,8 +57,8 @@ const ImageGallery: React.FC<ImageGalleryProp> = ({
           left: (containerWidth - containerWidth / galleryRow.length) * -1,
           right: 0,
         }}
-        onDrag={() => setIsDrag(() => true)}
-        onDragEnd={() => setIsDrag(() => false)}
+        onDrag={handleDrag}
+        onDragEnd={handleDragEnd}
         className="gallery-wrapper"
         animate={control}
         initial={{ opacity: 0 }}
@@ -60,13 +75,7 @@ const ImageGallery: React.FC<ImageGalleryProp> = ({
                   : ('' as React.CSSProperties['pointerEvents']),
               }}
             >
-              <img
-                src={image as string}
-                alt="img"
-                onLoad={() => {
-                  setTotalElementsLoaded((prev) => prev + 1);
-                }}
-              />
+              <img src={image as string} alt="img" onLoad={handleImageLoad} />
             </div>
           );
         })}
@@ -84,4 +93,4 @@ const ImageGallery: React.FC<ImageGalleryProp> = ({
   );
 };
 
-export default ImageGallery;
+export default memo(ImageGallery);

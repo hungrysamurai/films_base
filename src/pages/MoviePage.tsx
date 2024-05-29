@@ -1,11 +1,16 @@
 import { Lang, MediaType, ModalMode } from '../types';
 
-import { ReactElement } from 'react';
-
+import { ReactElement, useCallback, useMemo } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-
 import { useEffect, useState, Suspense } from 'react';
 import { useAnimation, AnimatePresence } from 'framer-motion';
+
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { getCurrentUser } from '../store/slices/authSlice';
+import { getCurrentLang, setMainTitle } from '../store/slices/mainSlice';
+import useGetSingleMovie from '../hooks/useGetSingleMovie';
+
+import getBaseURL from '../utils/getBaseURL';
 
 import ImageGallery from '../components/moviePage/ImageGallery';
 import Loader from '../components/Loader';
@@ -16,12 +21,6 @@ import Modal from '../components/modal/Modal';
 import ImagesGalleryModal from '../components/modal/ImagesGalleryModal';
 import UserListsWidget from '../components/moviePage/UserListsWidget/UserListsWidget';
 import SimilarMoviesList from '../components/moviesList/SimilarMoviesList';
-import getBaseURL from '../utils/getBaseURL';
-
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { getCurrentUser } from '../store/slices/authSlice';
-import { getCurrentLang, setMainTitle } from '../store/slices/mainSlice';
-import useGetSingleMovie from '../hooks/useGetSingleMovie';
 
 export enum ModalDirection {
   Next = 'next',
@@ -44,9 +43,13 @@ const MoviePage: React.FC = () => {
   const location = useLocation();
 
   // Set media type of item based on provided URL
-  const currentMediaType = location.pathname
-    .substring(getBaseURL().length)
-    .split('/')[0] as MediaType;
+  const currentMediaType = useMemo(
+    () =>
+      location.pathname
+        .substring(getBaseURL().length)
+        .split('/')[0] as MediaType,
+    [location.pathname],
+  );
 
   const [imagesGalleryModalState, setImagesGalleryModalState] =
     useState<ImagesGalleryModalState>({
@@ -94,7 +97,7 @@ const MoviePage: React.FC = () => {
     } else {
       dispatch(setMainTitle(title as string));
     }
-  }, [title, isLoading, lang, isDataError]);
+  }, [title, isLoading, lang, isDataError, dispatch]);
 
   useEffect(() => {
     control.start({
@@ -102,7 +105,7 @@ const MoviePage: React.FC = () => {
     });
   }, [imagesGalleryModalState.imageIndex, control]);
 
-  const openModal = (data: string[], imageIndex: number) => {
+  const openModal = useCallback((data: string[], imageIndex: number) => {
     setImagesGalleryModalState(() => {
       const images = data.map((item: string, i: number) => {
         return (
@@ -114,9 +117,9 @@ const MoviePage: React.FC = () => {
 
       return { show: true, imagesArray: images, imageIndex };
     });
-  };
+  }, []);
 
-  const hideModal = (target: HTMLDivElement) => {
+  const hideModal = useCallback((target: HTMLDivElement) => {
     if (target.classList.contains('modal-index-controls')) {
       setImagesGalleryModalState((prev) => {
         return {
@@ -125,31 +128,19 @@ const MoviePage: React.FC = () => {
         };
       });
     }
-  };
+  }, []);
 
-  const changeModalImage = (direction: ModalDirection) => {
-    let nextIndex: number;
-
-    if (direction === ModalDirection.Next) {
-      nextIndex =
-        imagesGalleryModalState.imageIndex ===
-        imagesGalleryModalState.imagesArray.length - 1
-          ? 0
-          : imagesGalleryModalState.imageIndex + 1;
-    } else if (direction === ModalDirection.Prev) {
-      nextIndex =
-        imagesGalleryModalState.imageIndex === 0
-          ? imagesGalleryModalState.imagesArray.length - 1
-          : imagesGalleryModalState.imageIndex - 1;
-    }
-
+  const changeModalImage = useCallback((direction: ModalDirection) => {
     setImagesGalleryModalState((prev) => {
-      return {
-        ...prev,
-        imageIndex: nextIndex,
-      };
+      const newIndex =
+        direction === ModalDirection.Next
+          ? (prev.imageIndex + 1) % prev.imagesArray.length
+          : (prev.imageIndex - 1 + prev.imagesArray.length) %
+            prev.imagesArray.length;
+
+      return { ...prev, imageIndex: newIndex };
     });
-  };
+  }, []);
 
   if (isLoading) {
     return <Loader />;

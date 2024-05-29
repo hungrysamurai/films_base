@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
-import { useState } from "react";
+import { motion } from 'framer-motion';
+import { memo, useState } from 'react';
 
 type MoviePosterProps = {
   image: string;
@@ -41,4 +41,4 @@ const MoviePoster: React.FC<MoviePosterProps> = ({ image }) => {
   );
 };
 
-export default MoviePoster;
+export default memo(MoviePoster);

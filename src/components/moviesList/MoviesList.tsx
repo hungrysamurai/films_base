@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect } from 'react';
+import { useRef, useLayoutEffect, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SingleMovie from './SingleMovie';
 import Loader from '../Loader';
@@ -89,4 +89,4 @@ const MoviesList: React.FC<MoviesListProps> = ({
   );
 };
 
-export default MoviesList;
+export default memo(MoviesList);

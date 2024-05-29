@@ -1,24 +1,25 @@
-import { ColorTheme, ModalMode } from "../../types";
+import { ColorTheme, ModalMode } from '../../types';
 
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
-import { getTheme } from "../../utils/getTheme";
-import { useEffect, useState } from "react";
-import { AnimatePresence } from "framer-motion";
+import { useCallback, useEffect, useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
 
-import ProfilePicPlaceholder from "./icons/ProfilePicPlaceholderIcon";
+import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
+import { getCurrentUser } from '../../store/slices/authSlice.ts';
+import { getCurrentLang, switchLang } from '../../store/slices/mainSlice.ts';
+import { setHomePageCurrentPage } from '../../store/slices/homePageParamsSlice.ts';
 
-import Modal from "../modal/Modal.tsx";
-import UserModal from "../modal/UserModal";
-import AuthIcon from "./icons/AuthIcon";
-import ThemeDarkIcon from "./icons/ThemeDarkIcon";
-import ThemeLightIcon from "./icons/ThemeLightIcon";
-import LangEnIcon from "./icons/LangEnIcon";
-import LangRuIcon from "./icons/LangRuIcon";
+import { getTheme } from '../../utils/getTheme';
 
-import { useAppDispatch, useAppSelector } from "../../store/hooks.ts";
-import { getCurrentUser } from "../../store/slices/authSlice.ts";
-import { getCurrentLang, switchLang } from "../../store/slices/mainSlice.ts";
+import ProfilePicPlaceholder from './icons/ProfilePicPlaceholderIcon';
+import Modal from '../modal/Modal.tsx';
+import UserModal from '../modal/UserModal';
+import AuthIcon from './icons/AuthIcon';
+import ThemeDarkIcon from './icons/ThemeDarkIcon';
+import ThemeLightIcon from './icons/ThemeLightIcon';
+import LangEnIcon from './icons/LangEnIcon';
+import LangRuIcon from './icons/LangRuIcon';
 
 const HeaderIconsContainer = () => {
   const dispatch = useAppDispatch();
@@ -29,22 +30,25 @@ const HeaderIconsContainer = () => {
   const [showModal, setShowModal] = useState(false);
   const [theme, setTheme] = useState(() => getTheme());
 
-  const hideModal = () => {
-    setShowModal(() => false);
-  };
-
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
   }, [theme]);
 
-  const toggleTheme = () => {
-    if (theme === ColorTheme.Dark) {
-      setTheme(() => ColorTheme.Light);
-    } else {
-      setTheme(ColorTheme.Dark);
-    }
-  };
+  const hideModal = useCallback(() => {
+    setShowModal(() => false);
+  }, []);
+
+  const toggleTheme = useCallback(() => {
+    setTheme((prevTheme) =>
+      prevTheme === ColorTheme.Dark ? ColorTheme.Light : ColorTheme.Dark,
+    );
+  }, []);
+
+  const handleLangSwitch = useCallback(() => {
+    dispatch(switchLang());
+    dispatch(setHomePageCurrentPage(1));
+  }, [dispatch]);
 
   return (
     <>
@@ -76,7 +80,7 @@ const HeaderIconsContainer = () => {
           </Link>
         )}
 
-        <a href="#" onClick={toggleTheme} className="theme-icons-container">
+        <a onClick={toggleTheme} className="theme-icons-container">
           <AnimatePresence>
             {theme === ColorTheme.Dark ? (
               <ThemeDarkIcon key="dark-mode-icon" />
@@ -86,8 +90,8 @@ const HeaderIconsContainer = () => {
           </AnimatePresence>
         </a>
 
-        <button onClick={() => dispatch(switchLang())}>
-          {lang === "en" ? <LangEnIcon /> : <LangRuIcon />}
+        <button onClick={handleLangSwitch}>
+          {lang === 'en' ? <LangEnIcon /> : <LangRuIcon />}
         </button>
       </div>
     </>

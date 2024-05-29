@@ -1,16 +1,19 @@
+import { Lang } from '../../types';
+
+import { useRef, MutableRefObject, memo } from 'react';
+
 import {
   addToUserList,
   removeFromUserList,
-} from "../../utils/firebase/firebase.utils";
+} from '../../utils/firebase/firebase.utils';
 
-import { useRef, MutableRefObject } from "react";
-import useOutsideClick from "../../hooks/useOutsideClick";
+import { useAppSelector } from '../../store/hooks';
+import { getCurrentLang } from '../../store/slices/mainSlice';
 
-import UserListIconAdd from "../moviePage/UserListsWidget/icons/UserListIconAdd";
-import UserListIconRemove from "../moviePage/UserListsWidget/icons/UserListIconRemove";
-import { Lang } from "../../types";
-import { useAppSelector } from "../../store/hooks";
-import { getCurrentLang } from "../../store/slices/mainSlice";
+import useOutsideClick from '../../hooks/useOutsideClick';
+
+import UserListIconAdd from '../moviePage/UserListsWidget/icons/UserListIconAdd';
+import UserListIconRemove from '../moviePage/UserListsWidget/icons/UserListIconRemove';
 
 type UserListsWidgetModalProps = {
   hideModal: () => void;
@@ -61,7 +64,7 @@ const UserListsWidgetModal: React.FC<UserListsWidgetModalProps> = ({
                       removeFromUserList(
                         listIndex,
                         currentItemID,
-                        currentItemMediaType
+                        currentItemMediaType,
                       )
                     }
                   >
@@ -73,7 +76,7 @@ const UserListsWidgetModal: React.FC<UserListsWidgetModalProps> = ({
                       addToUserList(
                         listIndex,
                         currentItemID,
-                        currentItemMediaType
+                        currentItemMediaType,
                       )
                     }
                   >
@@ -89,4 +92,4 @@ const UserListsWidgetModal: React.FC<UserListsWidgetModalProps> = ({
   );
 };
 
-export default UserListsWidgetModal;
+export default memo(UserListsWidgetModal);

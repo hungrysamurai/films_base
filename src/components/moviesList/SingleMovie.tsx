@@ -1,7 +1,7 @@
 import { removeFromUserList } from '../../utils/firebase/firebase.utils';
 
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import DeleteMovieIcon from './icons/DeleteMovieIcon';
@@ -111,4 +111,4 @@ const SingleMovie: React.FC<SingleMovieProps> = ({
   );
 };
 
-export default SingleMovie;
+export default memo(SingleMovie);

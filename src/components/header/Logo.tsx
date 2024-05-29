@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+
 import getBaseURL from '../../utils/getBaseURL';
 
 const Logo: React.FC = () => {

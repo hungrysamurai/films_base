@@ -1,6 +1,4 @@
-import GenresList from '../components/home/GenresList';
-import ListsContainer from '../components/home/ListsContainer';
-import MoviesList from '../components/moviesList/MoviesList';
+import { useCallback, useEffect, useMemo } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { getCurrentLang } from '../store/slices/mainSlice';
@@ -14,14 +12,15 @@ import {
   setHomePageCurrentPage,
   setHomePageLastActiveItem,
 } from '../store/slices/homePageParamsSlice';
-
 import {
   extendedApi,
   useGetMoviesListQuery,
 } from '../store/slices/api/endpoints/getMoviesList';
 
-import { useCallback, useEffect, useMemo } from 'react';
 import Loader from '../components/Loader';
+import GenresList from '../components/home/GenresList';
+import ListsContainer from '../components/home/ListsContainer';
+import MoviesList from '../components/moviesList/MoviesList';
 
 const Home: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -55,7 +54,7 @@ const Home: React.FC = () => {
         dispatch(setHomePageCurrentPage(cachedData.lastFetchedPage));
       }
     }
-  }, [cachedData]);
+  }, [cachedData, currentPage, dispatch]);
 
   const { data, isError, isLoading, isFetching } = useGetMoviesListQuery({
     mediaType,

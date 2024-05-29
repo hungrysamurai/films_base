@@ -1,5 +1,5 @@
-import { useAppSelector } from "../../store/hooks";
-import { getCurrentMainTitle } from "../../store/slices/mainSlice";
+import { useAppSelector } from '../../store/hooks';
+import { getCurrentMainTitle } from '../../store/slices/mainSlice';
 
 const Title: React.FC = () => {
   const currentTitle = useAppSelector(getCurrentMainTitle);

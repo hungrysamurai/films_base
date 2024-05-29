@@ -1,7 +1,10 @@
-import { motion } from 'framer-motion';
-
 import { Lang, MediaType } from '../../../types';
+
+import { motion } from 'framer-motion';
+import { memo } from 'react';
+
 import useListenWindowWidth from '../../../hooks/useListenWindowWidth';
+
 import SearchHint from './SearchHint';
 
 type SearchHintsListProps = {
@@ -39,4 +42,4 @@ const SearchHintsList: React.FC<SearchHintsListProps> = ({
   );
 };
 
-export default SearchHintsList;
+export default memo(SearchHintsList);

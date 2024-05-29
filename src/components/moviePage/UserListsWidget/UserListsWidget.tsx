@@ -1,18 +1,19 @@
-import { db } from "../../../utils/firebase/firebase.utils";
-import { onSnapshot, doc } from "firebase/firestore";
+import { Lang, MediaType, ModalMode } from '../../../types';
 
-import { useEffect, useState } from "react";
-import { AnimatePresence } from "framer-motion";
+import { db } from '../../../utils/firebase/firebase.utils';
+import { onSnapshot, doc } from 'firebase/firestore';
 
-import Modal from "../../modal/Modal";
-import UserListsWidgetModal from "../../modal/UserListsWidgetModal";
-import UserListIcon from "../../profilePage/icons/UserListIcon";
-import { AuthUser } from "../../../store/slices/authSlice";
-import { Lang, MediaType, ModalMode } from "../../../types";
+import { useCallback, useEffect, useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
 
-import { useAppSelector } from "../../../store/hooks";
-import { getCurrentUser } from "../../../store/slices/authSlice";
-import { getCurrentLang } from "../../../store/slices/mainSlice";
+import { AuthUser } from '../../../store/slices/authSlice';
+import { useAppSelector } from '../../../store/hooks';
+import { getCurrentUser } from '../../../store/slices/authSlice';
+import { getCurrentLang } from '../../../store/slices/mainSlice';
+
+import Modal from '../../modal/Modal';
+import UserListsWidgetModal from '../../modal/UserListsWidgetModal';
+import UserListIcon from '../../profilePage/icons/UserListIcon';
 
 type UserListsWidgetProps = {
   id: string;
@@ -31,12 +32,12 @@ const UserListsWidget: React.FC<UserListsWidgetProps> = ({
   const [showModal, setShowModal] = useState(false);
   const [userLists, setUserLists] = useState<UserList[]>([]);
 
-  const hideModal = () => {
+  const hideModal = useCallback(() => {
     setShowModal(() => false);
-  };
+  }, []);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(doc(db, "users", currentUser.uid), (doc) => {
+    const unsubscribe = onSnapshot(doc(db, 'users', currentUser.uid), (doc) => {
       setUserLists(doc.data()?.userLists);
     });
     return unsubscribe;
@@ -61,7 +62,7 @@ const UserListsWidget: React.FC<UserListsWidgetProps> = ({
         className="add-to-user-list-container"
         onClick={() => setShowModal(() => true)}
       >
-        <h3>{lang === Lang.En ? "Add to list" : "Добавить в список"}</h3>
+        <h3>{lang === Lang.En ? 'Add to list' : 'Добавить в список'}</h3>
         <UserListIcon />
       </div>
     </>

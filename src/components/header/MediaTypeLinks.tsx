@@ -1,10 +1,11 @@
+import { Lang, MediaType } from '../../types';
+
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
   getHomePageMediaType,
   setHomePageMediaType,
 } from '../../store/slices/homePageParamsSlice';
 import { getCurrentLang } from '../../store/slices/mainSlice';
-import { Lang, MediaType } from '../../types';
 
 const MediaTypeLinks: React.FC = () => {
   const dispatch = useAppDispatch();

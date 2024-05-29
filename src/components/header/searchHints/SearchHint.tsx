@@ -1,7 +1,10 @@
-import { AnimatePresence, motion } from 'framer-motion';
-import getMediaTypeString from '../../../utils/getMediaTypeString';
 import { Lang, MediaType } from '../../../types';
-import React from 'react';
+
+import { AnimatePresence, motion } from 'framer-motion';
+import { memo } from 'react';
+
+import getMediaTypeString from '../../../utils/getMediaTypeString';
+
 import SearchHintImage from './SearchHintImage';
 
 type SearchHintProps = {
@@ -61,4 +64,4 @@ const SearchHint: React.FC<SearchHintProps> = ({
   );
 };
 
-export default SearchHint;
+export default memo(SearchHint);

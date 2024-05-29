@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 
 type SearchHintImageProps = {
   posterUrl: string;
@@ -40,4 +40,4 @@ const SearchHintImage: React.FC<SearchHintImageProps> = ({ posterUrl }) => {
   );
 };
 
-export default SearchHintImage;
+export default memo(SearchHintImage);
