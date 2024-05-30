@@ -1,5 +1,5 @@
-import { ChangeEvent, InputHTMLAttributes } from "react";
-import { useState } from "react";
+import { ChangeEvent, InputHTMLAttributes, memo } from 'react';
+import { useState } from 'react';
 
 type FormInputProps = {
   label: string;
@@ -28,9 +28,9 @@ const FormInput: React.FC<FormInputProps> = ({
   return (
     <div className="form-input-group">
       <input {...props} onChange={handleChange} />
-      <label className={labelActive ? "active" : ""}>{label}</label>
+      <label className={labelActive ? 'active' : ''}>{label}</label>
     </div>
   );
 };
 
-export default FormInput;
+export default memo(FormInput);

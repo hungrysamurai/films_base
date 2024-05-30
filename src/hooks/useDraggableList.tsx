@@ -59,10 +59,8 @@ function useDraggableList({
 
   // Jump to active
   useEffect(() => {
-    if (activeElementRef) {
-      if (activeElementRef.current && containerWidth !== 0) {
-        animateTransition(control, containerWidth, activeElementRef);
-      }
+    if (activeElementRef?.current && containerWidth !== 0) {
+      animateTransition(control, containerWidth, activeElementRef);
     }
   }, [activeElementRef?.current, containerWidth]);
 

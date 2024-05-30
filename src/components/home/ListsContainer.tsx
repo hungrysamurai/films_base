@@ -1,5 +1,6 @@
-import { movieLists, tvLists } from '../../data/lists';
 import { MovieFilterListTerm, TVFilterListTerm } from '../../types';
+
+import { memo } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { getCurrentLang } from '../../store/slices/mainSlice';
@@ -8,6 +9,8 @@ import {
   getHomePageMediaType,
   setHomePageFilterList,
 } from '../../store/slices/homePageParamsSlice';
+
+import { movieLists, tvLists } from '../../data/lists';
 
 const ListsContainer: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -45,4 +48,4 @@ const ListsContainer: React.FC = () => {
   );
 };
 
-export default ListsContainer;
+export default memo(ListsContainer);

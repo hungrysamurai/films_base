@@ -1,21 +1,21 @@
-import { Lang } from "../../types";
-import { FormEvent, ChangeEvent } from "react";
+import { Lang } from '../../types';
+import { FormEvent, ChangeEvent, useCallback } from 'react';
 
 import {
   signInWithGoogglePopup,
   signInAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
-} from "../../utils/firebase/firebase.utils";
+} from '../../utils/firebase/firebase.utils';
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState } from 'react';
+import { motion } from 'framer-motion';
 
-import FormInput from "./FormInput";
-import Button from "./Button";
-import getBaseURL from "../../utils/getBaseURL";
+import FormInput from './FormInput';
+import Button from './Button';
+import getBaseURL from '../../utils/getBaseURL';
 
-import { useAppSelector } from "../../store/hooks";
-import { getCurrentLang } from "../../store/slices/mainSlice";
+import { useAppSelector } from '../../store/hooks';
+import { getCurrentLang } from '../../store/slices/mainSlice';
 
 type SignInFormFields = {
   email: string;
@@ -23,48 +23,54 @@ type SignInFormFields = {
 };
 
 const defaultSignInFormFields: SignInFormFields = {
-  email: "",
-  password: "",
+  email: '',
+  password: '',
 };
 
 const SignInForm: React.FC = () => {
   const lang = useAppSelector(getCurrentLang);
 
   const [signInFormFields, setSignInFormFields] = useState<SignInFormFields>(
-    defaultSignInFormFields
+    defaultSignInFormFields,
   );
   const { email, password } = signInFormFields;
 
-  const handleSignInSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!email || !password) return;
+  const handleSignInSubmit = useCallback(
+    async (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      if (!email || !password) return;
 
-    try {
-      await signInAuthUserWithEmailAndPassword(email, password);
-    } catch (err) {
-      alert(
-        lang === Lang.En
-          ? "No user found with provided email!"
-          : "Пользователь не найден!!"
-      );
-      console.log("handleSignInSubmit error:");
-      console.log(err);
-    }
-  };
+      try {
+        await signInAuthUserWithEmailAndPassword(email, password);
+      } catch (err) {
+        alert(
+          lang === Lang.En
+            ? 'No user found with provided email!'
+            : 'Пользователь не найден!!',
+        );
+        console.log('handleSignInSubmit error:');
+        console.log(err);
+      }
+    },
+    [email, password, lang],
+  );
 
-  const logGoogleUser = async () => {
+  const logGoogleUser = useCallback(async () => {
     const { user } = await signInWithGoogglePopup();
     await createUserDocumentFromAuth(user);
-  };
+  }, []);
 
-  const handleSignInChanges = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  const handleSignInChanges = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      setSignInFormFields((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    },
+    [],
+  );
 
-    setSignInFormFields({
-      ...signInFormFields,
-      [name]: value,
-    });
-  };
   return (
     <motion.form
       animate={{
@@ -83,7 +89,7 @@ const SignInForm: React.FC = () => {
         name="email"
         handleSignUpChanges={handleSignInChanges}
         value={email}
-        label={lang === Lang.En ? "Email" : "Почта"}
+        label={lang === Lang.En ? 'Email' : 'Почта'}
       />
 
       <FormInput
@@ -92,16 +98,16 @@ const SignInForm: React.FC = () => {
         name="password"
         handleSignUpChanges={handleSignInChanges}
         value={password}
-        label={lang === Lang.En ? "Password" : "Пароль"}
+        label={lang === Lang.En ? 'Password' : 'Пароль'}
       />
 
       <div className="buttons-container">
-        <Button type="submit" text={lang === Lang.En ? "Sign-In" : "Войти"} />
+        <Button type="submit" text={lang === Lang.En ? 'Sign-In' : 'Войти'} />
 
         <Button
           onClick={logGoogleUser}
           type="button"
-          imgPath={getBaseURL("assets/images/icons/icon-google.svg")}
+          imgPath={getBaseURL('assets/images/icons/icon-google.svg')}
         />
       </div>
     </motion.form>

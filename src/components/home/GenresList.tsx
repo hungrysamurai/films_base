@@ -1,7 +1,5 @@
-import { useRef } from 'react';
+import { memo, useCallback, useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
-
-import ErrorMessage from '../ErrorMessage';
 
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { getCurrentLang } from '../../store/slices/mainSlice';
@@ -10,9 +8,11 @@ import {
   getHomePageMediaType,
   setHomePageFilterGenre,
 } from '../../store/slices/homePageParamsSlice';
-
 import { useGetGenresQuery } from '../../store/slices/api/endpoints/getGenres';
+
 import useDraggableList from '../../hooks/useDraggableList';
+
+import ErrorMessage from '../ErrorMessage';
 
 const GenresList: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -29,7 +29,7 @@ const GenresList: React.FC = () => {
 
   const genresListContainerRef = useRef<HTMLUListElement>(null);
   const allGenresElementRef = useRef<HTMLLIElement>(null);
-  const activeGenreElementRef = useRef<HTMLLIElement>(null);
+  const activeGenreElementRef = useRef<HTMLLIElement | null>(null);
 
   const { containerWidth: genresListWidth, control } = useDraggableList({
     containerRef: genresListContainerRef,
@@ -40,9 +40,37 @@ const GenresList: React.FC = () => {
   });
 
   // Set current genre
-  const setActiveGenre = (id: string) => {
-    dispatch(setHomePageFilterGenre(id));
-  };
+  const setActiveGenre = useCallback(
+    (id: string, e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
+      activeGenreElementRef.current = e.target as HTMLLIElement;
+      dispatch(setHomePageFilterGenre(id));
+    },
+    [dispatch],
+  );
+
+  const genresElements = useMemo(
+    () =>
+      genresFetchedList.map((genre) => {
+        const isActive = filterGenre === `${genre.id}`;
+        return (
+          <li
+            key={genre.id}
+            onClick={(e) => setActiveGenre(genre.id.toString(), e)}
+            className={isActive ? 'active' : ''}
+            ref={
+              genre.id === ''
+                ? allGenresElementRef
+                : isActive
+                ? activeGenreElementRef
+                : null
+            }
+          >
+            {`${genre.name[0].toUpperCase()}${genre.name.slice(1)}`}
+          </li>
+        );
+      }),
+    [genresFetchedList, filterGenre, setActiveGenre],
+  );
 
   if (isLoading) {
     return (
@@ -86,27 +114,10 @@ const GenresList: React.FC = () => {
           x: activeGenreElementRef.current?.offsetLeft,
         }}
       >
-        {genresFetchedList.map((genre) => {
-          return (
-            <li
-              key={genre.id}
-              onClick={() => setActiveGenre(genre.id.toString())}
-              className={filterGenre === `${genre.id}` ? 'active' : ''}
-              ref={
-                genre.id === ''
-                  ? allGenresElementRef
-                  : filterGenre === genre.id.toString()
-                  ? activeGenreElementRef
-                  : null
-              }
-            >
-              {`${genre.name[0].toUpperCase()}${genre.name.slice(1)}`}
-            </li>
-          );
-        })}
+        {genresElements}
       </motion.ul>
     </div>
   );
 };
 
-export default GenresList;
+export default memo(GenresList);
