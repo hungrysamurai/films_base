@@ -1,17 +1,10 @@
-import { db } from '../utils/firebase/firebase.utils';
-import { onSnapshot, doc } from 'firebase/firestore';
+import { ModalMode } from '../types.ts';
 
 import { useEffect, useRef, useState } from 'react';
-
-import useListenWindowWidth from '../hooks/useListenWindowWidth';
 import { AnimatePresence } from 'framer-motion';
 
-import UserLists from '../components/profilePage/UserLists/UserLists';
-import UserMoviesList from '../components/moviesList/UserMoviesList';
-import Modal from '../components/modal/Modal.tsx';
-import UserListIcon from '../components/profilePage/icons/UserListIcon';
-
-import { ModalMode } from '../types.ts';
+import { db } from '../utils/firebase/firebase.utils';
+import { onSnapshot, doc } from 'firebase/firestore';
 
 import { useAppDispatch, useAppSelector } from '../store/hooks.ts';
 import { AuthUser, getCurrentUser } from '../store/slices/authSlice.ts';
@@ -22,6 +15,13 @@ import {
   loadUserLists,
   updateUserLists,
 } from '../store/slices/userListsSlice.ts';
+
+import useListenWindowWidth from '../hooks/useListenWindowWidth';
+
+import UserLists from '../components/profilePage/UserLists/UserLists';
+import UserMoviesList from '../components/moviesList/UserMoviesList';
+import Modal from '../components/modal/Modal.tsx';
+import UserListIcon from '../components/profilePage/icons/UserListIcon';
 
 const ProfilePage: React.FC = () => {
   const dispatch = useAppDispatch();

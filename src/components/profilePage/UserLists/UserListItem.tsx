@@ -3,14 +3,15 @@ import {
   editUserListTitle,
 } from '../../../utils/firebase/firebase.utils';
 
-import { useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+
+import { useAppDispatch } from '../../../store/hooks';
+import { setCurrentListIndex } from '../../../store/slices/userListsSlice';
 
 import EditListIcon from '../icons/EditListIcon';
 import DeleteListIcon from '../icons/DeleteListIcon';
 import CustomInput from '../../CustomInput';
-import { useAppDispatch } from '../../../store/hooks';
-import { setCurrentListIndex } from '../../../store/slices/userListsSlice';
 
 type UserListItemProps = {
   title: string;
@@ -29,11 +30,11 @@ const UserListItem: React.FC<UserListItemProps> = ({
 
   const [editTitleInputShow, setEditTitleInputShow] = useState(false);
 
-  const hideEditTitleInput = () => {
+  const hideEditTitleInput = useCallback(() => {
     setEditTitleInputShow(() => false);
-  };
+  }, []);
 
-  const submitEditListTitle = (inputValue: string) => {
+  const submitEditListTitle = useCallback((inputValue: string) => {
     if (
       inputValue === '' ||
       inputValue.length < 3 ||
@@ -45,7 +46,7 @@ const UserListItem: React.FC<UserListItemProps> = ({
 
     editUserListTitle(listIndex, inputValue);
     hideEditTitleInput();
-  };
+  }, []);
 
   return (
     <>
@@ -107,4 +108,4 @@ const UserListItem: React.FC<UserListItemProps> = ({
   );
 };
 
-export default UserListItem;
+export default memo(UserListItem);

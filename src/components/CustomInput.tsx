@@ -1,9 +1,10 @@
-import { useRef, useState, MutableRefObject } from "react";
-import useOutsideClick from "../hooks/useOutsideClick";
-import { motion } from "framer-motion";
+import { useRef, useState, MutableRefObject, memo, useCallback } from 'react';
+import { motion } from 'framer-motion';
 
-import EditListSubmitIcon from "./icons/EditSubmitIcon";
-import EditListCancelIcon from "./icons/EditCancelIcon";
+import useOutsideClick from '../hooks/useOutsideClick';
+
+import EditListSubmitIcon from './icons/EditSubmitIcon';
+import EditListCancelIcon from './icons/EditCancelIcon';
 
 type CustomInputProps = {
   initialValue: string;
@@ -23,10 +24,23 @@ const CustomInput: React.FC<CustomInputProps> = ({
   const [customInputValue, setCustomInputValue] = useState(initialValue);
 
   const formElementRef = useRef<HTMLFormElement>(null);
+
   useOutsideClick(
     formElementRef as MutableRefObject<HTMLFormElement>,
-    hideCustomInput
+    hideCustomInput,
   );
+
+  const handleSubmit = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      submit(customInputValue);
+    },
+    [customInputValue, submit],
+  );
+
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setCustomInputValue(e.target.value);
+  }, []);
 
   return (
     <motion.div
@@ -44,17 +58,11 @@ const CustomInput: React.FC<CustomInputProps> = ({
         y: 20,
       }}
     >
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          submit(customInputValue);
-        }}
-        ref={formElementRef}
-      >
+      <form onSubmit={handleSubmit} ref={formElementRef}>
         <input
           type="text"
           value={customInputValue}
-          onChange={(e) => setCustomInputValue(() => e.target.value)}
+          onChange={handleChange}
           placeholder={placeholder && placeholder}
           autoFocus
         />
@@ -76,4 +84,4 @@ const CustomInput: React.FC<CustomInputProps> = ({
   );
 };
 
-export default CustomInput;
+export default memo(CustomInput);

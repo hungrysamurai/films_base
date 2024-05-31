@@ -1,16 +1,18 @@
-import { createNewUserList } from '../../../utils/firebase/firebase.utils';
+import { Lang } from '../../../types';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { memo, useCallback, useState } from 'react';
+
+import { createNewUserList } from '../../../utils/firebase/firebase.utils';
+
+import { useAppSelector } from '../../../store/hooks';
+import { getCurrentLang } from '../../../store/slices/mainSlice';
 
 import CustomInput from '../../CustomInput';
 import ErrorMessage from '../../ErrorMessage';
 import UserListItem from './UserListItem';
 import UserListIcon from '../icons/UserListIcon';
 import AddNewListIcon from '../icons/AddNewListIcon';
-import { Lang } from '../../../types';
-import { useAppSelector } from '../../../store/hooks';
-import { getCurrentLang } from '../../../store/slices/mainSlice';
 
 type UserListsProps = {
   userLists: UserList[];
@@ -27,22 +29,25 @@ const UserLists: React.FC<UserListsProps> = ({
 
   const [newListInputShow, setNewListInputShow] = useState(false);
 
-  const showNewUserListInput = () => {
+  const showNewUserListInput = useCallback(() => {
     setNewListInputShow(() => true);
-  };
+  }, []);
 
-  const hideNewUserListInput = () => {
+  const hideNewUserListInput = useCallback(() => {
     setNewListInputShow(() => false);
-  };
+  }, []);
 
-  const submitNewUserList = (inputValue: string) => {
-    if (inputValue === '' || inputValue.length < 3 || inputValue.length > 100) {
+  const submitNewUserList = useCallback((inputValue: string) => {
+    if (
+      inputValue.trim() === '' ||
+      inputValue.length < 3 ||
+      inputValue.length > 100
+    ) {
       return;
     }
-
-    setNewListInputShow(() => false);
+    setNewListInputShow(false);
     createNewUserList(inputValue);
-  };
+  }, []);
 
   return (
     <div className="user-lists-container">
@@ -110,4 +115,4 @@ const UserLists: React.FC<UserListsProps> = ({
   );
 };
 
-export default UserLists;
+export default memo(UserLists);

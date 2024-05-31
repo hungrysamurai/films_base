@@ -1,28 +1,37 @@
-import { ChangeEvent, MutableRefObject } from "react";
-import { Lang } from "../../types";
+import { Lang } from '../../types';
+
+import {
+  useRef,
+  useState,
+  memo,
+  ChangeEvent,
+  MutableRefObject,
+  useCallback,
+} from 'react';
+
+import { useNavigate } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import {
   updateUserPhoto,
   signOutUser,
   updateUserLogin,
-} from "../../utils/firebase/firebase.utils";
+} from '../../utils/firebase/firebase.utils';
 
-import useOutsideClick from "../../hooks/useOutsideClick";
-import { useRef, useState, memo } from "react";
-import { useNavigate } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
-
-import ProfilePicPlaceholder from "../header/icons/ProfilePicPlaceholderIcon";
-import CustomInput from "../CustomInput";
-import getBaseURL from "../../utils/getBaseURL";
-
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
   getCurrentUser,
   logout,
   updateUserDisplayName,
-} from "../../store/slices/authSlice";
-import { getCurrentLang } from "../../store/slices/mainSlice";
+} from '../../store/slices/authSlice';
+import { getCurrentLang } from '../../store/slices/mainSlice';
+
+import useOutsideClick from '../../hooks/useOutsideClick';
+
+import getBaseURL from '../../utils/getBaseURL';
+
+import ProfilePicPlaceholder from '../header/icons/ProfilePicPlaceholderIcon';
+import CustomInput from '../CustomInput';
 
 type UserModalProps = {
   hideModal: () => void;
@@ -30,46 +39,54 @@ type UserModalProps = {
 
 const UserModal: React.FC<UserModalProps> = memo(({ hideModal }) => {
   const lang = useAppSelector(getCurrentLang);
-
   const dispatch = useAppDispatch();
   const currentUser = useAppSelector(getCurrentUser);
-
   const navigate = useNavigate();
 
   const [newUserNameInputShow, setNewUserNameInputShow] = useState(false);
 
   const modalInnerRef = useRef<HTMLDivElement>(null);
 
-  const navigateProfile = () => {
+  const navigateProfile = useCallback(() => {
     hideModal();
-    navigate(getBaseURL("profile"));
-  };
+    navigate(getBaseURL('profile'));
+  }, [hideModal, navigate]);
 
-  const hideUserNameInput = () => {
+  const hideUserNameInput = useCallback(() => {
     setNewUserNameInputShow(() => false);
-  };
+  }, []);
 
-  const submitNewUserName = (inputValue: string) => {
-    if (inputValue === "" || inputValue.length < 3 || inputValue.length > 100) {
-      return;
-    }
+  const submitNewUserName = useCallback(
+    (inputValue: string) => {
+      if (
+        inputValue === '' ||
+        inputValue.length < 3 ||
+        inputValue.length > 100
+      ) {
+        return;
+      }
 
-    dispatch(updateUserDisplayName(inputValue));
+      dispatch(updateUserDisplayName(inputValue));
 
-    setNewUserNameInputShow(() => false);
-    updateUserLogin(inputValue);
-  };
+      setNewUserNameInputShow(() => false);
+      updateUserLogin(inputValue);
+    },
+    [dispatch],
+  );
 
-  const changeUserPic = async (file: File) => {
-    await updateUserPhoto(file, dispatch);
-  };
+  const changeUserPic = useCallback(
+    async (file: File) => {
+      await updateUserPhoto(file, dispatch);
+    },
+    [dispatch],
+  );
 
-  const logoutAndRemoveUserFromStore = () => {
+  const logoutAndRemoveUserFromStore = useCallback(() => {
     hideModal();
     dispatch(logout());
     navigate(getBaseURL());
     signOutUser();
-  };
+  }, [dispatch, hideModal, navigate]);
 
   useOutsideClick(modalInnerRef as MutableRefObject<HTMLDivElement>, hideModal);
 
@@ -90,7 +107,7 @@ const UserModal: React.FC<UserModalProps> = memo(({ hideModal }) => {
               initialValue={currentUser?.displayName as string}
               submit={submitNewUserName}
               hideCustomInput={hideUserNameInput}
-              customClass={"user-name-input"}
+              customClass={'user-name-input'}
             />
           ) : (
             <motion.h3
@@ -123,22 +140,22 @@ const UserModal: React.FC<UserModalProps> = memo(({ hideModal }) => {
       <ul className="profile-actions-container">
         <li>
           <button onClick={navigateProfile}>
-            {lang === Lang.En ? "Profile page" : "Профиль"}
+            {lang === Lang.En ? 'Profile page' : 'Профиль'}
           </button>
         </li>
         <li>
           <button onClick={() => setNewUserNameInputShow(() => true)}>
-            {lang === Lang.En ? "Change username" : "Изменить логин"}
+            {lang === Lang.En ? 'Change username' : 'Изменить логин'}
           </button>
         </li>
         <li>
           <label htmlFor="file">
-            {lang === Lang.En ? "Change profile pic" : "Изменить фото"}
+            {lang === Lang.En ? 'Change profile pic' : 'Изменить фото'}
           </label>
         </li>
         <li>
           <button onClick={logoutAndRemoveUserFromStore}>
-            {lang === Lang.En ? "Sign-Out" : "Выйти"}
+            {lang === Lang.En ? 'Sign-Out' : 'Выйти'}
           </button>
         </li>
       </ul>
