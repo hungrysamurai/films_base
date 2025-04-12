@@ -12,7 +12,7 @@ dist
 build
 dist-ssr
 *.local
-_stuff
+___temp
 
 # Editor directories and files
 .vscode/*
