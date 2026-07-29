@@ -18,29 +18,29 @@
     "postinstall": "node -e \"if(process.env.npm_execpath.indexOf('pnpm') === -1) { console.error('\\n\\x1b[31m✖ Please use pnpm to install dependencies\\x1b[0m\\n'); process.exit(1); }\""
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^2.2.3",
+    "@reduxjs/toolkit": "^2.12.0",
     "firebase": "^9.23.0",
-    "framer-motion": "^10.12.16",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-redux": "^9.1.2",
-    "react-router-dom": "^6.12.1",
+    "framer-motion": "^10.18.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-redux": "^9.3.0",
+    "react-router-dom": "^6.30.4",
     "redux-persist": "^6.0.0",
-    "sass": "^1.63.4"
+    "sass": "^1.102.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.38",
-    "@types/react-dom": "^18.2.17",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
     "@types/react-router": "^5.1.20",
-    "@typescript-eslint/eslint-plugin": "^6.12.0",
-    "@typescript-eslint/parser": "^6.12.0",
-    "@vitejs/plugin-react": "^4.2.1",
-    "eslint": "^8.38.0",
-    "eslint-plugin-react": "^7.32.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.3.4",
-    "typescript": "^5.3.2",
-    "vite": "^5.2.10",
-    "only-allow": "^1.2.1"
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "@vitejs/plugin-react": "^4.7.0",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.3.5",
+    "only-allow": "^1.2.2",
+    "typescript": "^5.9.3",
+    "vite": "^5.4.21"
   }
 }
