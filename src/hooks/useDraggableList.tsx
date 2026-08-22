@@ -3,16 +3,18 @@ import { useState, useEffect } from 'react';
 
 const animateTransition = (
   control: AnimationControls,
-  containerWidth: number,
-  ref: React.RefObject<HTMLElement>,
-): void => {
-  const el = ref.current as HTMLElement;
+  container: HTMLElement,
+  element: HTMLElement,
+) => {
+  const containerRect = container.getBoundingClientRect();
+  const elementRect = element.getBoundingClientRect();
 
-  // If el.offsetLeft negative - just default it to 0
-  const leftOffset = el.offsetLeft < 0 ? 0 : el.offsetLeft;
+  const elementLeft = elementRect.left - containerRect.left;
+
+  const x = container.clientWidth / 2 - elementLeft - elementRect.width / 2;
 
   control.start({
-    x: containerWidth / 2 - leftOffset - el.scrollWidth / 2,
+    x,
     transition: {
       stiffness: 50,
       type: 'spring',
@@ -53,17 +55,25 @@ function useDraggableList({
       if (
         defaultElementRef.current &&
         !activeElementRef?.current &&
-        containerWidth !== 0
+        containerRef.current
       ) {
-        animateTransition(control, containerWidth, defaultElementRef);
+        animateTransition(
+          control,
+          containerRef.current,
+          defaultElementRef.current,
+        );
       }
     }
   }, [activeElementRef?.current, containerWidth, ...additionalTriggers]);
 
   // Jump to active
   useEffect(() => {
-    if (activeElementRef?.current && containerWidth !== 0) {
-      animateTransition(control, containerWidth, activeElementRef);
+    if (activeElementRef?.current && containerRef.current) {
+      animateTransition(
+        control,
+        containerRef.current,
+        activeElementRef.current,
+      );
     }
   }, [activeElementRef?.current, containerWidth]);
 
