@@ -8,8 +8,11 @@ const animateTransition = (
 ): void => {
   const el = ref.current as HTMLElement;
 
+  // If el.offsetLeft negative - just default it to 0
+  const leftOffset = el.offsetLeft < 0 ? 0 : el.offsetLeft;
+
   control.start({
-    x: containerWidth / 2 - el.offsetLeft - el.scrollWidth / 2,
+    x: containerWidth / 2 - leftOffset - el.scrollWidth / 2,
     transition: {
       stiffness: 50,
       type: 'spring',

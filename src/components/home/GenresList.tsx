@@ -61,8 +61,8 @@ const GenresList: React.FC = () => {
               genre.id === ''
                 ? allGenresElementRef
                 : isActive
-                ? activeGenreElementRef
-                : null
+                  ? activeGenreElementRef
+                  : null
             }
           >
             {`${genre.name[0].toUpperCase()}${genre.name.slice(1)}`}
