@@ -9,9 +9,8 @@
     "npm": "please-use-pnpm"
   },
   "scripts": {
-    "dev": "vite --host --base=/",
-    "build": "vite build --base=/",
-    "deploy": "vite build --outDir ../../server/dist/public/projects/films_base --base=/projects/films_base/",
+    "dev": "vite --host",
+    "build": "vite build",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "preinstall": "npx only-allow pnpm",
